@@ -1,9 +1,8 @@
 import React from 'react';
-import './App.css';
+import classes from './App.module.css';
 import { Routes, Route} from "react-router-dom";
 import {Home} from './components/Home/Home';
 import { Footer } from './components/Footer/Footer';
-
 
 function App() {
   return (
@@ -15,6 +14,5 @@ function App() {
     </div>
   );
 }
-
 export default App;
 

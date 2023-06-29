@@ -1,4 +1,4 @@
-import './Home.module.css';
+import classes from './Home.module.css';
 
 export function Home() {
     return (
@@ -9,10 +9,10 @@ export function Home() {
   </header>
   
   <section className={classes.hero}>
-    <div className={classes.hero-content}>
+    <div className={classes.content}>
       <h2>Connect with fellow dog owners for dog walking adventures!</h2>
       <p>Join our community and find the perfect walking buddy for your furry friend.</p>
-      <a href="#" className={classes.cta-button}>Get Started</a>
+      <a href="#" className={classes.button}>Get Started</a>
     </div>
   </section>
 
