@@ -12,16 +12,14 @@
     margin-bottom: 10px;
   }
 
-  button[type="submit"] {
+  .button {
+    display: inline-block;
     background-color: #ff5500;
     color: #fff;
-    border: none;
+    text-decoration: none;
     padding: 10px 20px;
     border-radius: 5px;
-    cursor: pointer;
+    margin-top: 20px;
+    font-weight: bold;
+    border:none;
   }
-/* 
-  button[type="submit"]:hover {
-    background-color: #ff5500;
-  } */
-  

@@ -1,13 +1,15 @@
-
-
-
 .content {
-  width:100%;
+  width: 100%;
   text-align: center;
-  color:  #333;;
+  color: #333;
   padding: 20px;
-  background: rgb(255,110,159);
-background: linear-gradient(346deg, rgba(255,110,159,1) 5%, rgba(255,255,255,1) 39%, rgba(122,146,254,1) 93%);
+  background: rgb(255, 110, 159);
+  background: linear-gradient(
+    346deg,
+    rgba(255, 110, 159, 1) 5%,
+    rgba(255, 255, 255, 1) 39%,
+    rgba(122, 146, 254, 1) 93%
+  );
 }
 
 h2 {
@@ -25,5 +27,3 @@ h2 {
   margin-top: 20px;
   font-weight: bold;
 }
-
-

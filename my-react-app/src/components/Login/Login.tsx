@@ -10,10 +10,10 @@ export function Login() {
           <input type="text" placeholder="Name" required />
           <input type="email" placeholder="Email" required />
           <input type="password" placeholder="Password" required />
-          <button type="submit">Sign Up</button>
+          <button type="submit" className={classes.button}>Sign Up</button>
         </form>
         <p>
-          Already have an account? <a href="login.html">Log in</a>
+          Already have an account? <a href="login.html" className={classes.button}>Log in</a>
         </p>
       </div>
   </div>
