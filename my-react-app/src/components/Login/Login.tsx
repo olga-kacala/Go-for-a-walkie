@@ -1,11 +1,10 @@
 import classes from './Login.module.css';
-import { Footer } from '../Footer/Footer';
 
 export function Login() {
 
     return (
   <div>
-  <div className="registration-form">
+  <div className={classes.registration}>
         <h2>Create an Account</h2>
         <form>
           <input type="text" placeholder="Name" required />

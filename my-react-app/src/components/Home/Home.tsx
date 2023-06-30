@@ -1,5 +1,4 @@
 import classes from './Home.module.css';
-import { Login } from '../Login/Login';
 import { Link } from 'react-router-dom';
 
 export function Home() {

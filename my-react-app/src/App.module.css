@@ -4,34 +4,14 @@ body {
   padding: 0;
 }
 
-header {
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  padding: 20px;
-}
-
 h1 {
-  font-size: 32px;
+  font-size: 40px;
   margin: 0;
-}
-
-.registration-form {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
 }
 
 h2 {
   font-size: 24px;
   margin-bottom: 20px;
-}
-
-form input {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
 }
 
 button[type="submit"] {
@@ -43,6 +23,3 @@ button[type="submit"] {
   cursor: pointer;
 }
 
-button[type="submit"]:hover {
-  background-color: #ff4400;
-}

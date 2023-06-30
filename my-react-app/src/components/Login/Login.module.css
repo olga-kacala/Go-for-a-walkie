@@ -1,0 +1,27 @@
+
+.registration {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  form input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  button[type="submit"] {
+    background-color: #ff5500;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+/* 
+  button[type="submit"]:hover {
+    background-color: #ff5500;
+  } */
+  
