@@ -2,7 +2,6 @@ header {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100px;
   background-color: #333;
   color: #fff;
   text-align: center;
@@ -14,11 +13,7 @@ header {
   text-decoration: none;
 }
 
-h1 {
+h1, p {
   margin: 10px;
-  letter-spacing: 2px;
-}
-p {
-  margin: 0px;
   letter-spacing: 2px;
 }

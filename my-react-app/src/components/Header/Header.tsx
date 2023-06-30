@@ -7,7 +7,7 @@ export function Header() {
       <Link className={classes.link} to="*">
         <h1>Walkie</h1>
       </Link>
-      <p>Find a Dog Walking Buddy</p>
+      <p>Find a Dog Walking Buddy </p>
     </header>
   );
 }
