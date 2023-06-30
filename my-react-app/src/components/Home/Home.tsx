@@ -6,10 +6,6 @@ export function Home() {
 
     return (
   <div>
-  <header>
-    <h1>Walkie</h1>
-    <p>Find a Dog Walking Buddy</p>
-  </header>
   <section>
     <div className={classes.content}>
       <h2>Connect with fellow dog owners for dog walking adventures!</h2>
@@ -23,8 +19,6 @@ export function Home() {
 								</Link>
     </div>
   </section>
-
-
   </div>
     )
 }
