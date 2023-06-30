@@ -1,11 +1,15 @@
+section {
+  display: flex;
+}
+
 .content {
+  flex: 1;
+  height: 82vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 78vh;
   text-align: center;
   color: #333;
-  padding: 20px;
   background: linear-gradient(
     346deg,
     rgba(255, 110, 159, 1) 5%,
@@ -15,7 +19,8 @@
 }
 
 .text {
-margin-right: 50px;
+  margin-right: 50px;
+  max-width: 710px;
 }
 
 h2 {
