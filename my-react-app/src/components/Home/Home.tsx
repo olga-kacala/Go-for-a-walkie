@@ -10,7 +10,7 @@ export function Home() {
     <h1>Walkie</h1>
     <p>Find a Dog Walking Buddy</p>
   </header>
-  <section className={classes.hero}>
+  <section>
     <div className={classes.content}>
       <h2>Connect with fellow dog owners for dog walking adventures!</h2>
       <p>Join our community and find the perfect walking buddy for your furry friend.</p>
