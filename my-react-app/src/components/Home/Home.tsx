@@ -17,6 +17,8 @@ export function Home() {
 									Get Started
 								</Link>
     </div>
+    {/* <img src="../../Img/Pola.png" alt="Description of the image"/> */}
+
   </section>
   </div>
     )
