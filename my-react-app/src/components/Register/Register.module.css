@@ -1,0 +1,11 @@
+.button {
+    display: inline-block;
+    background-color: #ff5500;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-family: "Dosis", sans-serif;
+    border: none;
+  }
