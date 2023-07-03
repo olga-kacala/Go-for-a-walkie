@@ -2,6 +2,13 @@ import classes from "./Home.module.css";
 import { Link } from "react-router-dom";
 
 export function Home() {
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "hidden") {
+      document.title = "Walkie - go back to me!";
+    } else {
+      document.title = "Walkie";
+    }
+  });
   return (
     <div>
       <section>
