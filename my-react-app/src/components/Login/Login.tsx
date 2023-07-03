@@ -1,4 +1,6 @@
 import classes from './Login.module.css';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 export function Login() {
 
