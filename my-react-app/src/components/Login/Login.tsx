@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../../App";
+import { Link } from "react-router-dom";
 
 export function Login() {
   const [username, setUsername] = useState("");
@@ -30,21 +31,42 @@ export function Login() {
 
   return (
     <div>
-      <div className={classes.registration}>
-        <h2>Create an Account</h2>
+      <div className={classes.login}>
+        <h2>Please Log in</h2>
         <form>
-          <input type="text" placeholder="Name" required />
-          <input type="email" placeholder="Email" required />
-          <input type="password" placeholder="Password" required />
-          <button type="submit" className={classes.button}>
-            Sign Up
+          <input
+            name="login"
+            type="email"
+            id="email"
+            value={username}
+            placeholder="Email"
+            required
+            onChange={(e)=>{
+              setUsername(e.target.value);
+              setIsInputError(false);
+            }}
+          />
+          <input 
+          name="password"
+          id="password"
+          type="password" 
+          value={password}
+          placeholder="Password" 
+          required
+          onChange={(e)=>{
+            setPassword(e.target.value);
+            setIsInputError(false);
+          }} />
+          <p>{error}</p>
+          <button className={classes.button} onClick={signIn}>
+            Go
           </button>
         </form>
         <p>
-          Already have an account?{" "}
-          <a href="login.html" className={classes.button}>
-            Log in
-          </a>
+          Don't have an account?{" "}
+          <Link className={classes.button} to="/Register">
+            Create an Walkie Account
+          </Link>
         </p>
       </div>
     </div>
