@@ -62,11 +62,11 @@ export function Login() {
             Go
           </button>
         </form>
-        
-          Don't have an account?{" "}
+        <p> Don't have an account?{" "}
           <Link className={classes.button} to="/Register">
             Create an Walkie Account
-          </Link>
+          </Link></p>
+         
   
       </div>
     </div>
