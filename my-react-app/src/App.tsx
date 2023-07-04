@@ -12,6 +12,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { firebaseConfig } from "./firebase";
+import { MyPets } from './components/MyPets/MyPets';
 
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -28,6 +29,7 @@ function App() {
         <Route path="*" element={<Home/>}/>
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register/>}/>
+        <Route path="/MyPets" element={<MyPets/>}/>
       </Routes>
       <Footer/>
     </div>
