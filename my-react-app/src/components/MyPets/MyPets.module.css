@@ -4,12 +4,21 @@
     padding: 20px;
   }
   
-  form input {
+  .input {
     display: block;
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
   }
+
+    .input select {
+      display: block;
+      width: 424px;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+     ;
+    }
   
   .button {
     display: inline-block;

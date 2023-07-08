@@ -24,7 +24,7 @@ export function MyPets({ myPets }: MyPetsProps): JSX.Element {
     <div className={classes.login}>
       <h2>My Pets</h2>
       <h2>{resultMyPets}</h2>
-      <form>
+      <form className={classes.input}>
         <input
           name="pet name"
           type="string"
