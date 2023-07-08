@@ -7,10 +7,7 @@ import { firebaseAuth } from "../../App";
 
 export function Header(): JSX.Element {
   const { isLogged, setIsLogged, username, myPets } = useContext(AppContext);
-  console.log("Header username:", username);
-
   const navigate = useNavigate();
-
   const handleLogout = async (): Promise<void> => {
     try {
       await signOut(firebaseAuth);

@@ -12,7 +12,8 @@ export type Pet = {
     name:string;
     age: number;
     breed: string;
-    sex: string;  
+    sex: string;
+    temper: string;  
 }
 
 export type AppContextState = {
