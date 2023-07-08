@@ -7,12 +7,12 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../../App";
 import { Link } from "react-router-dom";
 
-export function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+export function Login(): JSX.Element {
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
-  const [isinputError, setIsInputError] = useState(false);
+  const [isinputError, setIsInputError] = useState<boolean>(false);
 
   const signIn = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();

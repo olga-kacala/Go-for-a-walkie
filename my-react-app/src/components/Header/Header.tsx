@@ -6,29 +6,19 @@ import { AppContext } from "../Providers/Providers";
 export function Header():JSX.Element {
 
   const {isLogged, setIsLogged, username, myPets} = useContext(AppContext);
+console.log("Header username:",username);
 
-const contentIsLogged = (
-  <header className={classes.header}>
-      <Link className={classes.link} to="*">
-        <h1>Walkie</h1>
-      </Link>
-      <p>Find a Dog Walking Buddy </p>
-    <Link className={classes.link} to="/MyPets">My Pets</Link>
-    <span>Hello, {username}!</span>
-    </header>
-
-)
   return (
     <div>
-    {!isLogged}
+    {/* {!isLogged}
     <header className={classes.header}>
       <Link className={classes.link} to="*">
         <h1>Walkie</h1>
       </Link>
       <p>Find a Dog Walking Buddy </p>
-    </header>
+    </header> */}
 
-    {isLogged && contentIsLogged}
+    {isLogged}
       <header className={classes.header}>
       <Link className={classes.link} to="*">
         <h1>Walkie</h1>
@@ -36,6 +26,7 @@ const contentIsLogged = (
       <p>Find a Dog Walking Buddy </p>
     <Link className={classes.link} to="/MyPets">My Pets</Link>
     </header>
+    <span>Hello, {username}!</span>
    </div> 
   );
 }
