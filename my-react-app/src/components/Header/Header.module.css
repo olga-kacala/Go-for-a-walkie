@@ -9,12 +9,18 @@ header {
   height: 13vh;
 }
 
+h1, p {
+  margin: 10px 0px;
+  letter-spacing: 2px;
+}
+
 .link {
   color: white;
   text-decoration: none;
 }
 
-h1, p {
-  margin: 10px 0px;
-  letter-spacing: 2px;
+.nav {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 10px;
 }

@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { useCallback } from 'react';
 import { doc, setDoc } from 'firebase/firestore';
 import { firebaseDb } from '../../App';
 
@@ -33,14 +32,17 @@ type AppProviderProps = {
     children: React.ReactNode;
 };
 
-export const AppContext = createContext<AppContextState>({}as AppContextState);
+export const AppContext = createContext<AppContextState>({} as AppContextState);
 
 export const AppProvider =({children}:AppProviderProps):JSX.Element => {
     const [pets, setPets]=useState([]);
     const [isLogged, setIsLogged]=useState(false);
     const [myPets, setMyPets]=useState([] as AddPet[]);
-    const [username, setUsername] = useState<string | null>("nazwa");
+    const [username, setUsername] = useState<string | null>('');
     const [ resultMyPets, setResultMyPets] = useState('');
+    
+
+    
     return (
        <AppContext.Provider
        value={{

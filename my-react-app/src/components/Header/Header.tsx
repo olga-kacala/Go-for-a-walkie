@@ -29,13 +29,15 @@ export function Header(): JSX.Element {
           <h1>Walkie</h1>
         </Link>
         <p>Find a Dog Walking Buddy </p>
+        <nav className={classes.nav}>
         <span>Hello, {username}!</span>
         <Link className={classes.link} to="/MyPets">
           My Pets
         </Link>
-        <Link className={classes.link} to="/Logout">
+        <Link className={classes.link} to="*" onClick={handleLogout}>
           Log out
         </Link>
+        </nav>
       </header>
     </div>
   );

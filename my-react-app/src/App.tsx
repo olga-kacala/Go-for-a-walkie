@@ -14,7 +14,8 @@ import { getFirestore } from "firebase/firestore";
 import { firebaseConfig } from "./firebase";
 import { MyPets } from './components/MyPets/MyPets';
 import { AppContext } from './components/Providers/Providers';
-import {Logout} from './components/Logout/Logout';
+import { Logout } from './components/Logout/Logout';
+
 
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -28,14 +29,14 @@ function App() {
 
   useEffect(():void=> {
 onAuthStateChanged(firebaseAuth, async (user)=> {
-  // console.log('Auth state changed:', user);
   if (user){
     const userEmail = user.email;
-    console.log('user email:',userEmail)
+    console.log('App user email:',userEmail)
     setUsername(userEmail);
     setIsLogged(true);
     const docRef = doc(firebaseDb, "MyPets", `${user.email}`);
     const docSnap = await getDoc(docRef);
+    
     if (docSnap.exists()) {
       const data = docSnap.data();
       setMyPets(data.pets);

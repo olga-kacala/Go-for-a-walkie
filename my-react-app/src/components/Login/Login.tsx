@@ -1,11 +1,10 @@
 import classes from "./Login.module.css";
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../../App";
 import { Link } from "react-router-dom";
+import React from "react";
 
 export function Login(): JSX.Element {
   const [username, setUsername] = useState<string>("");
@@ -19,6 +18,7 @@ export function Login(): JSX.Element {
     try {
       await signInWithEmailAndPassword(firebaseAuth, username, password);
       navigate("*");
+      console.log('Login:', username)
     } catch ({ message }) {
       console.log(message);
       setIsInputError(true);
