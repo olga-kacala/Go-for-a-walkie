@@ -18,7 +18,6 @@ export function MyPets({ myPets }: MyPetsProps): JSX.Element {
 
   const handleSubmitPet = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    console.log(petName);
   };
   return (
     <div className={classes.login}>

@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import { AppContext } from "../Providers/Providers";
 import { signOut } from "firebase/auth";
 import { firebaseAuth } from "../../App";
+import { Login } from "../Login/Login";
 
 export function Header(): JSX.Element {
   const { isLogged, setIsLogged, username, myPets } = useContext(AppContext);

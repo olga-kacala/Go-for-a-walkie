@@ -18,7 +18,6 @@ export function Login(): JSX.Element {
     try {
       await signInWithEmailAndPassword(firebaseAuth, username, password);
       navigate("*");
-      console.log('Login:', username)
     } catch ({ message }) {
       console.log(message);
       setIsInputError(true);

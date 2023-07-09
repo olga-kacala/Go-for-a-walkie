@@ -31,7 +31,6 @@ function App() {
 onAuthStateChanged(firebaseAuth, async (user)=> {
   if (user){
     const userEmail = user.email;
-    console.log('App user email:',userEmail)
     setUsername(userEmail);
     setIsLogged(true);
     const docRef = doc(firebaseDb, "MyPets", `${user.email}`);
