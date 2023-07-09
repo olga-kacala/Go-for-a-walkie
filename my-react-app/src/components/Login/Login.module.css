@@ -1,15 +1,29 @@
 .login {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
 }
 
-form input {
+.PolaBackgr {
+  width: 30%;
+  align-items: center;
+}
+
+.inputContainer {
+  justify-content: right;
+}
+
+.form input {
   display: block;
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
 }
+
 
 .button {
   display: inline-block;
@@ -25,3 +39,4 @@ form input {
   letter-spacing: 2px;
   cursor: pointer;
 }
+

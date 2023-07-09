@@ -29,8 +29,12 @@ export function Login(): JSX.Element {
   };
 
   return (
-    <div>
+       
       <div className={classes.login}>
+      <div className={classes.PolaBackgr}>
+        <img src={"/Img/Pola.png"} alt="Pola picture"/>
+      </div>
+      <div className={classes.inputContainer}>
         <h2>Please Log in</h2>
         <form>
           <input
@@ -65,9 +69,8 @@ export function Login(): JSX.Element {
           <Link className={classes.button} to="/Register">
             Create an Walkie Account
           </Link></p>
-         
-  
       </div>
-    </div>
+      </div>
+   
   );
 }
