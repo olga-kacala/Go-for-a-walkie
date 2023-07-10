@@ -1,7 +1,6 @@
 header {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   background-color: #333;
   color: #fff;
   text-align: center;
@@ -20,7 +19,11 @@ h1, p {
 }
 
 .nav {
-  display: flex;
-  justify-content: space-evenly;
+  text-align: end;
   margin-top: 10px;
+  font-weight: 700;
+}
+
+.nav > * {
+padding: 0px 25px;
 }
