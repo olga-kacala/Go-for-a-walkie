@@ -32,7 +32,7 @@ export function Register(): JSX.Element {
     }
     try {
       await createUserWithEmailAndPassword(firebaseAuth, username, password);
-      navigate("*");
+      navigate("/MyPets");
     } catch ({ code, message, password, repeatPassword }) {
       if (code === "auth/email-already-in-use") {
         setIsUsernameError(true);

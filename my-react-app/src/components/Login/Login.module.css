@@ -10,20 +10,13 @@
 
 .PolaBackgr {
   width: 30%;
-  align-items: center;
-}
-
-.inputContainer {
-  justify-content: right;
 }
 
 .form input {
   display: block;
   width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
 }
-
 
 .button {
   display: inline-block;

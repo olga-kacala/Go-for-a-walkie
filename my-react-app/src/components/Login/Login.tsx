@@ -17,7 +17,7 @@ export function Login(): JSX.Element {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(firebaseAuth, username, password);
-      navigate("*");
+      navigate("/MyPets");
     } catch ({ message }) {
       console.log(message);
       setIsInputError(true);
