@@ -1,0 +1,25 @@
+.logoutContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 74vh;
+}
+
+.logout {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 0;
+  padding: 20px;
+  justify-content: center;
+}
+
+.Perek {
+  border-radius: 50%;
+  justify-content: center;
+}
+
+.bottomH2 {
+  text-align: right;
+  color: #ff5500;
+}
