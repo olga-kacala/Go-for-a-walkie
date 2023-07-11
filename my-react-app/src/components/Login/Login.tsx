@@ -1,12 +1,14 @@
 import classes from "./Login.module.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../../App";
 import { Link } from "react-router-dom";
 import React from "react";
+import { AppContext } from "../Providers/Providers";
 
 export function Login(): JSX.Element {
+  const {setIsLogged} = useContext(AppContext);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -17,6 +19,7 @@ export function Login(): JSX.Element {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(firebaseAuth, username, password);
+      setIsLogged(true);
       navigate("/MyPets");
     } catch ({ message }) {
       console.log(message);
@@ -32,7 +35,7 @@ export function Login(): JSX.Element {
        
       <div className={classes.login}>
       <div className={classes.PolaBackgr}>
-        <img src={"/Img/Pola.png"} alt="Pola picture"/>
+        <img src={"/Img/Polka.png"} alt="Pola picture"/>
       </div>
       <div className={classes.inputContainer}>
         <h2>Please Log in</h2>

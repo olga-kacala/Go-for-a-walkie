@@ -8,7 +8,8 @@ header {
   height: 13vh;
 }
 
-h1, p {
+h1,
+p {
   margin: 10px 0px;
   letter-spacing: 2px;
 }
@@ -25,5 +26,5 @@ h1, p {
 }
 
 .nav > * {
-padding: 0px 25px;
+  padding: 0px 25px;
 }

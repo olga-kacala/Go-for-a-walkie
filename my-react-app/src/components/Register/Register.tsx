@@ -1,10 +1,12 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { firebaseAuth } from "../../App";
+import { AppContext } from "../Providers/Providers";
 import classes from "./Register.module.css";
 
 export function Register(): JSX.Element {
+  const {setIsLogged} = useContext(AppContext);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -32,6 +34,7 @@ export function Register(): JSX.Element {
     }
     try {
       await createUserWithEmailAndPassword(firebaseAuth, username, password);
+      setIsLogged(true);
       navigate("/MyPets");
     } catch ({ code, message, password, repeatPassword }) {
       if (code === "auth/email-already-in-use") {
