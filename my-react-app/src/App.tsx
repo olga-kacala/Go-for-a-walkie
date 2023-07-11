@@ -55,7 +55,7 @@ onAuthStateChanged(firebaseAuth, async (user)=> {
         <Route path="*" element={<Home/>}/>
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register/>}/>
-        <Route path="/MyPets" element={<MyPets myPets={myPets}/>}/>
+        <Route path="/MyPets" element={<MyPets myPetsList={myPets}/>}/>
         <Route path ="/Logout" element={<Logout/>}/>
       </Routes>
       <Footer/>

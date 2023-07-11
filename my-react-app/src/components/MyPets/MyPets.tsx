@@ -2,13 +2,16 @@ import { useContext, useState } from "react";
 import { AppContext } from "../Providers/Providers";
 import { AddPet } from "../Providers/Providers";
 import classes from "./MyPets.module.css";
+import { doc, setDoc } from "firebase/firestore";
+import { firebaseDb } from "../../App";
+import { Pet } from "../Providers/Providers";
 
 type MyPetsProps = {
-  myPets: AddPet[];
+  myPetsList: AddPet[];
 };
 
-export function MyPets({ myPets }: MyPetsProps): JSX.Element {
-  const { resultMyPets } = useContext(AppContext);
+export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
+  const { resultMyPets, username, myPets, setMyPets } = useContext(AppContext);
   const [petName, setPetName] = useState<string>("");
   const [age, setAge] = useState<number | null>(null);
   const [breed, setBreed] = useState<string>("");
@@ -16,13 +19,21 @@ export function MyPets({ myPets }: MyPetsProps): JSX.Element {
   const [selectedTemper, setSelectedTemper] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  const handleSubmitPet = async (e: React.FormEvent): Promise<void> => {
-    e.preventDefault();
+  const handleSubmitPet = async (product: Pet): Promise<void> => {
+    try {
+      await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
+        pets: [...myPets, product],
+      });
+      setMyPets([...myPets, product]);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   return (
     <div className={classes.login}>
       <h2>My Pets</h2>
-      <h2>{resultMyPets}</h2>
+      <h2>List:{resultMyPets}</h2>
       <form className={classes.input}>
         <input
           name="pet name"
@@ -34,7 +45,7 @@ export function MyPets({ myPets }: MyPetsProps): JSX.Element {
             setPetName(e.target.value);
           }}
         />
-        <input
+        {/* <input
           name="age"
           type="number"
           value={age ?? ""}
@@ -43,7 +54,7 @@ export function MyPets({ myPets }: MyPetsProps): JSX.Element {
           onChange={(e) => {
             setAge(Number(e.target.value));
           }}
-        />
+        /> */}
         <input
           name="breed"
           type="string"
@@ -85,7 +96,19 @@ export function MyPets({ myPets }: MyPetsProps): JSX.Element {
         </select>
 
         <p>{error}</p>
-        <button className={classes.button} onClick={handleSubmitPet}>
+        <button
+          className={classes.button}
+          onClick={() => {
+            handleSubmitPet({
+              id: username,
+              name: petName,
+              // age: age,
+              breed: breed,
+              sex: selectedSex,
+              temper: selectedTemper,
+            });
+          }}
+        >
           Add Pet
         </button>
       </form>
