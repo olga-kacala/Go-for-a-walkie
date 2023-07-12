@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { AppContext } from "../Providers/Providers";
 import { AddPet } from "../Providers/Providers";
 import classes from "./MyPets.module.css";
-import { doc, setDoc } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc } from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import { Pet } from "../Providers/Providers";
 
@@ -11,29 +11,57 @@ type MyPetsProps = {
 };
 
 export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
-  const { resultMyPets, username, myPets, setMyPets } = useContext(AppContext);
+  const {resultMyPets, username, pets, myPets, setMyPets } = useContext(AppContext);
   const [petName, setPetName] = useState<string>("");
-  const [age, setAge] = useState<number | null>(null);
+  const [age, setAge] = useState<number | undefined>();
   const [breed, setBreed] = useState<string>("");
   const [selectedSex, setSelectedSex] = useState<string>("");
   const [selectedTemper, setSelectedTemper] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [myMessagesList, setmyMessagesList] = useState([] as Pet[]);
+
+  // const handleSubmitPet = async (product: Pet): Promise<void> => {
+  //   try {
+  //     await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
+  //       messages: [...myMessagesList, product],
+	// 		});
+	// 		setmyMessagesList([...myMessagesList, product]);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
 
   const handleSubmitPet = async (product: Pet): Promise<void> => {
-    try {
-      await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
-        pets: [...myPets, product],
-      });
-      setMyPets([...myPets, product]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      try {
+        
+    		setmyMessagesList([...myMessagesList, product]);
+      } catch (error) {
+        console.log(error);
+      }
+      console.log(...myMessagesList)
+    };
+  
 
   return (
     <div className={classes.login}>
       <h2>My Pets</h2>
-      <h2>List:{resultMyPets}</h2>
+<div>
+  {username};
+  {myMessagesList.map((pet) => (
+    <div key={pet.id}>
+      <span>{pet.name}</span>
+      <span>{pet.id}</span>
+      <span>{pet.age}</span>
+      <span>{pet.breed}</span>
+      <span>{pet.sex}</span>
+      <span>{pet.temper}</span>
+    </div>
+  ))}
+</div>
+
+      
+
       <form className={classes.input}>
         <input
           name="pet name"
@@ -45,16 +73,16 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
             setPetName(e.target.value);
           }}
         />
-        {/* <input
+        <input
           name="age"
           type="number"
-          value={age ?? ""}
+          value={age}
           placeholder="Age (years)"
           required
           onChange={(e) => {
             setAge(Number(e.target.value));
           }}
-        /> */}
+        />
         <input
           name="breed"
           type="string"
@@ -98,11 +126,12 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
         <p>{error}</p>
         <button
           className={classes.button}
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
             handleSubmitPet({
-              id: username,
+              id:Date.now(),
               name: petName,
-              // age: age,
+              age: age,
               breed: breed,
               sex: selectedSex,
               temper: selectedTemper,

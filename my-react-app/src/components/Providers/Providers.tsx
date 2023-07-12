@@ -3,14 +3,14 @@ import { doc, setDoc } from 'firebase/firestore';
 import { firebaseDb } from '../../App';
 
 export type AddPet = {
-    id: string;
+    id: number;
     name:string;
 } 
 
 export type Pet = {
-    id: string;
+    id: number;
     name:string;
-    age: number;
+    age: number | undefined;
     breed: string;
     sex: string;
     temper: string;  
