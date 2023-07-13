@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../Providers/Providers";
 import { AddPet } from "../Providers/Providers";
 import classes from "./MyPets.module.css";
@@ -11,7 +11,8 @@ type MyPetsProps = {
 };
 
 export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
-  const {resultMyPets, username, pets, myPets, setMyPets } = useContext(AppContext);
+  const { resultMyPets, username, pets, myPets, setMyPets } =
+    useContext(AppContext);
   const [petName, setPetName] = useState<string>("");
   const [age, setAge] = useState<number | undefined>();
   const [breed, setBreed] = useState<string>("");
@@ -24,43 +25,37 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
   //   try {
   //     await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
   //       messages: [...myMessagesList, product],
-	// 		});
-	// 		setmyMessagesList([...myMessagesList, product]);
+  // 		});
+  // 		setmyMessagesList([...myMessagesList, product]);
   //   } catch (error) {
   //     console.log(error);
   //   }
   // };
 
-
   const handleSubmitPet = async (product: Pet): Promise<void> => {
-      try {
-        
-    		setmyMessagesList([...myMessagesList, product]);
-      } catch (error) {
-        console.log(error);
-      }
-      console.log(...myMessagesList)
-    };
-  
+    try {
+      setmyMessagesList([...myMessagesList, product]);
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(...myMessagesList);
+  };
 
   return (
     <div className={classes.login}>
       <h2>My Pets</h2>
-<div>
-  {username};
-  {myMessagesList.map((pet) => (
-    <div key={pet.id}>
-      <span>{pet.name}</span>
-      <span>{pet.id}</span>
-      <span>{pet.age}</span>
-      <span>{pet.breed}</span>
-      <span>{pet.sex}</span>
-      <span>{pet.temper}</span>
-    </div>
-  ))}
-</div>
-
-      
+      <div>
+        {myMessagesList.map((pet) => (
+          <div key={pet.id}>
+            <span>{pet.name}</span>
+            <span>{pet.id}</span>
+            <span>{pet.age}</span>
+            <span>{pet.breed}</span>
+            <span>{pet.sex}</span>
+            <span>{pet.temper}</span>
+          </div>
+        ))}
+      </div>
 
       <form className={classes.input}>
         <input
@@ -129,7 +124,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
           onClick={(e) => {
             e.preventDefault();
             handleSubmitPet({
-              id:Date.now(),
+              id: Date.now(),
               name: petName,
               age: age,
               breed: breed,
