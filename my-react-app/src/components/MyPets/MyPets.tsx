@@ -19,33 +19,25 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
   const [selectedSex, setSelectedSex] = useState<string>("");
   const [selectedTemper, setSelectedTemper] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [myMessagesList, setmyMessagesList] = useState([] as Pet[]);
-
-  // const handleSubmitPet = async (product: Pet): Promise<void> => {
-  //   try {
-  //     await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
-  //       messages: [...myMessagesList, product],
-  // 		});
-  // 		setmyMessagesList([...myMessagesList, product]);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const [myAnimalsList, setmyAnimalsList] = useState([] as Pet[]);
 
   const handleSubmitPet = async (product: Pet): Promise<void> => {
     try {
-      setmyMessagesList([...myMessagesList, product]);
+      await setDoc(doc(firebaseDb, 'MyPets', `${username}`),
+      { animals: [...myAnimalsList, product],
+      })
+      setmyAnimalsList([...myAnimalsList, product]);
     } catch (error) {
       console.log(error);
     }
-    console.log(...myMessagesList);
+    console.log(...myAnimalsList);
   };
 
   return (
     <div className={classes.login}>
       <h2>My Pets</h2>
       <div>
-        {myMessagesList.map((pet) => (
+        {myAnimalsList.map((pet) => (
           <div key={pet.id}>
             <span>{pet.name}</span>
             <span>{pet.id}</span>
@@ -124,6 +116,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
           onClick={(e) => {
             e.preventDefault();
             handleSubmitPet({
+              owner: username,
               id: Date.now(),
               name: petName,
               age: age,

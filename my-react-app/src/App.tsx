@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import classes from './App.module.css';
 import { Routes, Route} from "react-router-dom";
 import {Home} from './components/Home/Home';
@@ -15,17 +15,16 @@ import { firebaseConfig } from "./firebase";
 import { MyPets } from './components/MyPets/MyPets';
 import { AppContext } from './components/Providers/Providers';
 import { Logout } from './components/Logout/Logout';
-
-
+import { Pet } from "./components/Providers/Providers";
 
 const firebaseApp = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(firebaseApp);
 export const firebaseAuth = getAuth(firebaseApp);
 export const firebaseDb = getFirestore(firebaseApp)
 
-
 function App() {
   const {setUsername, myPets, setMyPets, setIsLogged, pets}=useContext(AppContext);
+  const [myAnimalsList, setmyAnimalsList] = useState([] as Pet[]);
 
   useEffect(():void=> {
 onAuthStateChanged(firebaseAuth, async (user)=> {
@@ -33,20 +32,21 @@ onAuthStateChanged(firebaseAuth, async (user)=> {
     const userEmail = user.email;
     setUsername(userEmail);
     setIsLogged(true);
-    const docRef = doc(firebaseDb, "MyPets", `${user.email}`);
+    const docRef = doc(firebaseDb, 'MyPets', `${user.email}`);
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
       const data = docSnap.data();
-      setMyPets(data.pets);
+      setmyAnimalsList(data.pets);
+      console.log(data.pets)
     }
   } else {
     setUsername("");
-    setMyPets([]);
+    setmyAnimalsList([]);
    
   }
 });
-  },[setMyPets, setUsername, setIsLogged, pets]);
+  },[setmyAnimalsList, setUsername, setIsLogged, pets]);
 
   return (
     <div className={classes.main}>

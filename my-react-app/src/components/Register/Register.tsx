@@ -20,7 +20,7 @@ export function Register(): JSX.Element {
     if (username === "") {
       setError("Pls enter your email");
       setIsUsernameError(true);
-      return;
+      return; 
     }
     if (password !== repeatPassword) {
       setError("Password is not repeated correctly");

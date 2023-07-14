@@ -8,6 +8,7 @@ export type AddPet = {
 } 
 
 export type Pet = {
+    owner: string | null;
     id: number;
     name:string;
     age: number | undefined;
