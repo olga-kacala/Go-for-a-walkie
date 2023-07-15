@@ -26,7 +26,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
       await setDoc(doc(firebaseDb, 'MyPets', `${username}`),
       { animals: [...myAnimalsList, product],
       })
-      setmyAnimalsList([...myAnimalsList, product]);
+      setmyAnimalsList((prevList) => [...prevList, product]);
     } catch (error) {
       console.log(error);
     }
