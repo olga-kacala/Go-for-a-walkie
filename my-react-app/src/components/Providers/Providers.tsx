@@ -52,7 +52,19 @@ export const AppProvider =({children}:AppProviderProps):JSX.Element => {
         } else {
             setResultMyPets("Your pet list:")
         }
-    },[myAnimalsList])
+    },[myAnimalsList]);
+
+    const removeFromList = async (petId: number): Promise<void> => {
+		const newArr = myAnimalsList.filter((obj) => obj.id !== petId);
+		try {
+			await setDoc(doc(firebaseDb, 'MyPets', `${username}`), {
+				animals: newArr,
+			});
+			setmyAnimalsList(newArr);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
     
     return (
