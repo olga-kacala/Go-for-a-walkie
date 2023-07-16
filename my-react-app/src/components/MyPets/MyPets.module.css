@@ -1,23 +1,21 @@
-.login {
-    max-width: 400px;
+.Pets {
     margin: 0 auto;
     padding: 20px;
+    display: flex;
+    justify-content: center;
   }
   
   .input {
     display: block;
-    width: 100%;
-    padding: 10px;
+    width: 80%;
     margin-bottom: 10px;
+    background-color: -internal-light-dark(rgb(232, 240, 254)),
   }
-
     .input select {
       display: block;
-      width: 424px;
+      width: 100%;
       padding: 10px;
       margin-bottom: 10px;
-      border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
-     ;
     }
   
   .button {
@@ -33,4 +31,15 @@
     font-size: inherit;
     letter-spacing: 2px;
     cursor: pointer;
+  }
+
+  .PetList {
+    border: 5px solid black;
+    width: 40vw;
+  }
+
+  .InputContainer {
+    border: 1px solid red;
+    width: 40vw;
+    padding-left: 30px;
   }

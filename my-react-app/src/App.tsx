@@ -23,7 +23,7 @@ export const firebaseAuth = getAuth(firebaseApp);
 export const firebaseDb = getFirestore(firebaseApp)
 
 function App() {
-  const {setUsername, myPets, setMyPets, setIsLogged, pets}=useContext(AppContext);
+  const {setUsername, myPets, setMyPets, setIsLogged, animals}=useContext(AppContext);
   const [myAnimalsList, setmyAnimalsList] = useState([] as Pet[]);
 
   useEffect(():void=> {
@@ -37,8 +37,8 @@ onAuthStateChanged(firebaseAuth, async (user)=> {
     
     if (docSnap.exists()) {
       const data = docSnap.data();
-      setmyAnimalsList(data.pets);
-      console.log(data.pets)
+      setmyAnimalsList(data.animals);
+      console.log(data.animals)
     }
   } else {
     setUsername("");
@@ -46,7 +46,7 @@ onAuthStateChanged(firebaseAuth, async (user)=> {
    
   }
 });
-  },[setmyAnimalsList, setUsername, setIsLogged, pets]);
+  },[setmyAnimalsList, setUsername, setIsLogged, animals]);
 
   return (
     <div className={classes.main}>
