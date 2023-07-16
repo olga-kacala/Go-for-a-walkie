@@ -11,7 +11,6 @@ export type Pet = {
     owner: string | null;
     id: number;
     name:string;
-    // age: string;
     dateOfBirth: Date | null;
     breed: string;
     sex: string;
@@ -46,9 +45,14 @@ export const AppProvider =({children}:AppProviderProps):JSX.Element => {
     const [username, setUsername] = useState<string | null>('');
     const [ resultMyPets, setResultMyPets] = useState('');
     const [myAnimalsList, setmyAnimalsList] = useState([] as Pet[]);
-    // useEffect(()=>{
-    //     if(my)
-    // })
+
+    useEffect(()=>{
+        if(myAnimalsList.length===0){
+            setResultMyPets("Your list of pets is empty.");
+        } else {
+            setResultMyPets("Your pet list:")
+        }
+    },[myAnimalsList])
 
     
     return (

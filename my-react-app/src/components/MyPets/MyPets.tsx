@@ -76,6 +76,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
       <h2>My Pets</h2>
       <div className={classes.Pets}>
         <div className={classes.PetList}>
+          {resultMyPets}
           {myAnimalsList.map((pet) => (
             
             <div key={pet.id}>
