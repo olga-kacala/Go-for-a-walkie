@@ -21,7 +21,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
     setmyAnimalsList,
   } = useContext(AppContext);
   const [petName, setPetName] = useState<string>("");
-  const [age, setAge] = useState<number | undefined>();
+  const [age, setAge] = useState<string>("");
   const [breed, setBreed] = useState<string>("");
   const [selectedSex, setSelectedSex] = useState<string>("");
   const [selectedTemper, setSelectedTemper] = useState<string>("");
@@ -34,7 +34,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
       });
       setmyAnimalsList([...myAnimalsList, product]);
       setPetName("");
-      setAge(undefined);
+      setAge("");
       setBreed("");
       setSelectedSex("");
       setSelectedTemper("");
@@ -77,7 +77,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
               placeholder="Age (years)"
               required
               onChange={(e) => {
-                setAge(Number(e.target.value));
+                setAge(e.target.value);
               }}
             />
             <input

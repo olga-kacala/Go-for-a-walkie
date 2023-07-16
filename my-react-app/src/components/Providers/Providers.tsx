@@ -11,7 +11,7 @@ export type Pet = {
     owner: string | null;
     id: number;
     name:string;
-    age: number | undefined;
+    age: string;
     breed: string;
     sex: string;
     temper: string;  
