@@ -55,9 +55,14 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
   const handleSubmitPet = async (product: Pet): Promise<void> => {
     try {
       await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
-        animals: [...myAnimalsList, product],
+        animals: [...myAnimalsList, product] as Pet[],
       });
-      setmyAnimalsList([...myAnimalsList, product]);
+      setmyAnimalsList((prevList: Pet[]) => {
+        const updatedList = prevList.concat(product);
+        return updatedList;
+      });;
+
+
       setPetName("");
       setDateOfBirth(null);
       setBreed("");
