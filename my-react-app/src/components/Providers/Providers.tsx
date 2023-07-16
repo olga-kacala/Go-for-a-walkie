@@ -30,6 +30,7 @@ export type AppContextState = {
     setResultMyPets: (param: string) => void;
     myAnimalsList: Pet [];
     setmyAnimalsList: (animals: Pet[]) => void;
+    removeFromList: (petId: number) =>void;
 }
 
 type AppProviderProps = {
@@ -82,6 +83,7 @@ export const AppProvider =({children}:AppProviderProps):JSX.Element => {
         setResultMyPets,
         myAnimalsList,
         setmyAnimalsList,
+        removeFromList,
        }}>
         {children}
        </AppContext.Provider> 

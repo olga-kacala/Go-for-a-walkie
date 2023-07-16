@@ -22,6 +22,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
     setMyPets,
     myAnimalsList,
     setmyAnimalsList,
+    removeFromList,
   } = useContext(AppContext);
   const [petName, setPetName] = useState<string>("");
   const [age, setAge] = useState<string>("");
@@ -48,11 +49,8 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
     ) {
       age--;
     }
-  
     return age;
   }
-  
-  
 
   const handleSubmitPet = async (product: Pet): Promise<void> => {
     try {
@@ -61,7 +59,6 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
       });
       setmyAnimalsList([...myAnimalsList, product]);
       setPetName("");
-      // setAge("");
       setDateOfBirth(null);
       setBreed("");
       setSelectedSex("");
@@ -71,12 +68,14 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
       console.log(error);
     }
   };
+
+  
+
   return (
     <div>
       <h2>My Pets</h2>
       <div className={classes.Pets}>
         <div className={classes.PetList}>
-          {resultMyPets}
           {myAnimalsList.map((pet) => (
             
             <div key={pet.id}>
@@ -87,6 +86,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
               <div>Breed: {pet.breed}</div>
               <div>Sex: {pet.sex}</div>
               <div>Temper: {pet.temper}</div>
+              <button onClick={() => removeFromList(pet.id)}>Delete ❌</button>
               </div>
             </div>
           ))}
@@ -103,16 +103,6 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
                 setPetName(e.target.value);
               }}
             />
-            {/* <input
-              name="age"
-              type="number"
-              value={age}
-              placeholder="Age (years)"
-              required
-              onChange={(e) => {
-                setAge(e.target.value);
-              }}
-            /> */}
             <DatePicker   
   selected={dateOfBirth}
   placeholderText="Date of Birth"
