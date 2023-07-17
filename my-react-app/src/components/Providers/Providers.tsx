@@ -32,7 +32,18 @@ export type AppContextState = {
   setmyAnimalsList: (animals: Pet[]) => void;
   removeFromList: (petId: number) => void;
   addToList: (product: Pet) => void;
-  
+  petName: string | null;
+  setPetName: (param: string) => void;
+  breed: string | null;
+  setBreed: (param: string) => void;
+  selectedSex: string | null;
+  setSelectedSex: (param: string) => void;
+  selectedTemper: string | null;
+  setSelectedTemper: (param: string) => void;
+  error: string | null;
+  setError: (param: string) => void;
+  dateOfBirth: Date | null;
+  setDateOfBirth: (param: Date) => void;
 };
 
 type AppProviderProps = {
@@ -54,7 +65,6 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   const [selectedTemper, setSelectedTemper] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
-
   const addToList = async (product: Pet): Promise<void> => {
     try {
       await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
@@ -109,6 +119,18 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
         setmyAnimalsList,
         removeFromList,
         addToList,
+        petName,
+        breed,
+        selectedSex,
+        selectedTemper,
+        error,
+        dateOfBirth,
+        setPetName,
+        setDateOfBirth,
+        setBreed,
+        setSelectedSex,
+        setSelectedTemper,
+        setError,
       }}
     >
       {children}
