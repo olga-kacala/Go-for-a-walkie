@@ -15,22 +15,13 @@ type MyPetsProps = {
 
 export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
   const {
-    resultMyPets,
     username,
-    animals,
-    myPets,
-    setMyPets,
     myAnimalsList,
-    setmyAnimalsList,
     removeFromList,
+    addToList,
+    setPetName,
   } = useContext(AppContext);
-  const [petName, setPetName] = useState<string>("");
-  const [age, setAge] = useState<string>("");
-  const [breed, setBreed] = useState<string>("");
-  const [selectedSex, setSelectedSex] = useState<string>("");
-  const [selectedTemper, setSelectedTemper] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
+  
 
   function calculateAge(dateOfBirth: Date | null): number | string {
     if (!dateOfBirth) {
@@ -52,27 +43,27 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
     return age;
   }
 
-  const handleSubmitPet = async (product: Pet): Promise<void> => {
-    try {
-      await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
-        animals: [...myAnimalsList, product] as Pet[],
-      });
-      setmyAnimalsList((prevList: Pet[]) => {
-        const updatedList = prevList.concat(product);
-        return updatedList;
-      });;
+  // const handleSubmitPet = async (product: Pet): Promise<void> => {
+  //   try {
+  //     await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
+  //       animals: [...myAnimalsList, product] as Pet[],
+  //     });
+  //     setmyAnimalsList((prevList: Pet[]) => {
+  //       const updatedList = prevList.concat(product);
+  //       return updatedList;
+  //     });;
 
 
-      setPetName("");
-      setDateOfBirth(null);
-      setBreed("");
-      setSelectedSex("");
-      setSelectedTemper("");
-      setError("");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     setPetName("");
+  //     setDateOfBirth(null);
+  //     setBreed("");
+  //     setSelectedSex("");
+  //     setSelectedTemper("");
+  //     setError("");
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   
 
@@ -159,7 +150,8 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
               className={classes.button}
               onClick={(e) => {
                 e.preventDefault();
-                handleSubmitPet({
+                addToList
+                ({
                   owner: username,
                   id: Date.now(),
                   name: petName,
