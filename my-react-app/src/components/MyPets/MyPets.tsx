@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "../Providers/Providers";
 import { AddPet } from "../Providers/Providers";
 import classes from "./MyPets.module.css";
@@ -8,14 +8,15 @@ import { Pet } from "../Providers/Providers";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-type MyPetsProps = {
-  myPetsList: AddPet[];
+type MyAnimalsListProps = {
+  myList: Pet[];
 };
 
-export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
+export function MyPets({myList}:MyAnimalsListProps): JSX.Element {
   const {
     username,
     myAnimalsList,
+    setmyAnimalsList,
     removeFromList,
     addToList,
     petName,
