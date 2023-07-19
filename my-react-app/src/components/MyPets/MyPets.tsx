@@ -1,18 +1,24 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../Providers/Providers";
-import { AddPet } from "../Providers/Providers";
+// import { AddPet } from "../Providers/Providers";
 import classes from "./MyPets.module.css";
-import { doc, setDoc } from "firebase/firestore";
+import { getDocs, collection, query, where, QuerySnapshot } from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import { Pet } from "../Providers/Providers";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-type MyAnimalsListProps = {
-  myList: Pet[];
-};
+// type MyAnimalsListProps = {
+//   myList: Pet[];
+// };
+type MyPetsProps = {
+  myPetsList: Pet[];
+}
 
-export function MyPets({myList}:MyAnimalsListProps): JSX.Element {
+// export function MyPets({myList}:MyAnimalsListProps): JSX.Element {
+
+export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
+ 
   const {
     username,
     myAnimalsList,
@@ -32,6 +38,22 @@ export function MyPets({myList}:MyAnimalsListProps): JSX.Element {
     setSelectedTemper,
     setError,
   } = useContext(AppContext);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch pets from Firebase and update the state
+        const q = query(collection(firebaseDb, "MyPets"), where("owner", "==", username));
+        const querySnapshot: QuerySnapshot = await getDocs(q);
+        const petsData: Pet[] = querySnapshot.docs.map((doc) => doc.data() as Pet);
+        setmyAnimalsList(petsData);
+      } catch (error) {
+        console.error("Error fetching pets: ", error);
+      }
+    };
+
+    fetchData();
+  }, [username, setmyAnimalsList]);
 
   function calculateAge(dateOfBirth: Date | null): number | string {
     if (!dateOfBirth) {

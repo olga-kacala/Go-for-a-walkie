@@ -24,8 +24,8 @@ export type AppContextState = {
   setUsername: (username: string | null) => void;
   isLogged: boolean;
   setIsLogged: (param: boolean) => void;
-//   myPets: AddPet[];
-//   setMyPets: (animals: AddPet[]) => void;
+  myPets: Pet[];
+  setMyPets: (animals: Pet[]) => void;
   resultMyPets: string | null;
   setResultMyPets: (param: string) => void;
   myAnimalsList: Pet[];
@@ -55,7 +55,7 @@ export const AppContext = createContext<AppContextState>({} as AppContextState);
 export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   const [animals, setPets] = useState([]);
   const [isLogged, setIsLogged] = useState(false);
-//   const [myPets, setMyPets] = useState([] as AddPet[]);
+  const [myPets, setMyPets] = useState([] as Pet[]);
   const [username, setUsername] = useState<string | null>("");
   const [resultMyPets, setResultMyPets] = useState("");
   const [myAnimalsList, setmyAnimalsList] = useState([] as Pet[]);
@@ -65,6 +65,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   const [selectedTemper, setSelectedTemper] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
+
   const addToList = async (product: Pet): Promise<void> => {
     try {
       await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
@@ -109,8 +110,8 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
         setUsername,
         isLogged,
         setIsLogged,
-        // myPets,
-        // setMyPets,
+        myPets,
+        setMyPets,
         animals,
         setPets,
         resultMyPets,
