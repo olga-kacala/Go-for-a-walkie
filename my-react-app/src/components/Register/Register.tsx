@@ -6,7 +6,7 @@ import { AppContext } from "../Providers/Providers";
 import classes from "./Register.module.css";
 
 export function Register(): JSX.Element {
-  const {setIsLogged} = useContext(AppContext);
+  const { setIsLogged } = useContext(AppContext);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -20,7 +20,7 @@ export function Register(): JSX.Element {
     if (username === "") {
       setError("Pls enter your email");
       setIsUsernameError(true);
-      return; 
+      return;
     }
     if (password !== repeatPassword) {
       setError("Password is not repeated correctly");

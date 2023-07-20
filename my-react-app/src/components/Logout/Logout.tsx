@@ -8,7 +8,7 @@ export function Logout(): JSX.Element {
   useEffect(() => {
     setTimeout(() => {
       navigate("*");
-    }, 3000);
+    }, 2000);
   }, []);
 
   return (

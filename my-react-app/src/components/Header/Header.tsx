@@ -1,13 +1,12 @@
 import classes from "./Header.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AppContext } from "../Providers/Providers";
 import { signOut } from "firebase/auth";
 import { firebaseAuth } from "../../App";
-import { Login } from "../Login/Login";
 
 export function Header(): JSX.Element {
-  const { isLogged, setIsLogged, username, myPets } = useContext(AppContext);
+  const { isLogged, setIsLogged, username } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleLogout = async (): Promise<void> => {

@@ -8,7 +8,7 @@ import React from "react";
 import { AppContext } from "../Providers/Providers";
 
 export function Login(): JSX.Element {
-  const {setIsLogged} = useContext(AppContext);
+  const { setIsLogged } = useContext(AppContext);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -32,10 +32,9 @@ export function Login(): JSX.Element {
   };
 
   return (
-       
-      <div className={classes.login}>
+    <div className={classes.login}>
       <div className={classes.PolaBackgr}>
-        <img src={"/Img/Polka.png"} alt="Pola picture"/>
+        <img src={"/Img/Polka.png"} alt="Pola picture" />
       </div>
       <div className={classes.inputContainer}>
         <h2>Please Log in</h2>
@@ -47,33 +46,36 @@ export function Login(): JSX.Element {
             value={username}
             placeholder="Email"
             required
-            onChange={(e)=>{
+            onChange={(e) => {
               setUsername(e.target.value);
               setIsInputError(false);
             }}
           />
-          <input 
-          name="password"
-          id="password"
-          type="password" 
-          value={password}
-          placeholder="Password" 
-          required
-          onChange={(e)=>{
-            setPassword(e.target.value);
-            setIsInputError(false);
-          }} />
+          <input
+            name="password"
+            id="password"
+            type="password"
+            value={password}
+            placeholder="Password"
+            required
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setIsInputError(false);
+            }}
+          />
           <p>{error}</p>
           <button className={classes.button} onClick={signIn}>
             Go
           </button>
         </form>
-        <p> Don't have an account?{" "}
+        <p>
+          {" "}
+          Don't have an account?{" "}
           <Link className={classes.button} to="/Register">
             Create an Walkie Account
-          </Link></p>
+          </Link>
+        </p>
       </div>
-      </div>
-   
+    </div>
   );
 }

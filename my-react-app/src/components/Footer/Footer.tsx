@@ -7,7 +7,7 @@ export function Footer() {
       <div className={classes.logos}>
         <p>Author:</p>
         <a href="https://github.com/olga-kacala" target="_blank">
-          <img title="My GH" alt="GitHub" src={"../../Img/github-logo.png"}/>
+          <img title="My GH" alt="GitHub" src={"../../Img/github-logo.png"} />
         </a>
         <a href="https://www.linkedin.com/in/olga-kacala/" target="_blank">
           <img

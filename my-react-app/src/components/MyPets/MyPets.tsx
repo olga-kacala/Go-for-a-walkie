@@ -1,32 +1,17 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "../Providers/Providers";
-// import { AddPet } from "../Providers/Providers";
 import classes from "./MyPets.module.css";
-import { getDocs, collection, query, where, QuerySnapshot } from "firebase/firestore";
 import { firebaseDb, firebaseAuth } from "../../App";
-import { Pet } from "../Providers/Providers";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 
-
-// type MyAnimalsListProps = {
-//   myList: Pet[];
-// };
-type MyPetsProps = {
-  myPetsList: Pet[];
-}
-
-// export function MyPets({myList}:MyAnimalsListProps): JSX.Element {
-
-
-
-export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
-  const {setUsername, myPets, setMyPets, setIsLogged, animals}=useContext(AppContext);
- 
+export function MyPets(): JSX.Element {
   const {
+    animals,
     username,
+    setUsername,
     myAnimalsList,
     setmyAnimalsList,
     removeFromList,
@@ -42,59 +27,62 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
     setBreed,
     setSelectedSex,
     setSelectedTemper,
-    setError,
+    setIsLogged,
+    resultMyPets,
+    setResultMyPets,
   } = useContext(AppContext);
 
-
-  useEffect(():void=> {
-    onAuthStateChanged(firebaseAuth, async (user)=> {
-      if (user){
+  useEffect((): void => {
+    onAuthStateChanged(firebaseAuth, async (user) => {
+      if (user) {
         const userEmail = user.email;
         setUsername(userEmail);
         setIsLogged(true);
-        const docRef = doc(firebaseDb, 'MyPets', `${user.email}`);
+        const docRef = doc(firebaseDb, "MyPets", `${user.email}`);
         const docSnap = await getDoc(docRef);
-        
         if (docSnap.exists()) {
           const data = docSnap.data();
           setmyAnimalsList(data.animals);
-          console.log(data.animals)
+          setResultMyPets("Your pet list:");
         }
       } else {
         setUsername("");
         setmyAnimalsList([]);
-       
       }
     });
-      },[setmyAnimalsList, setUsername, setIsLogged, animals]);
+  }, [setmyAnimalsList, setUsername, setIsLogged, animals]);
 
-      function calculateAge(dateOfBirth: Date | null): number | string {
-        if (!dateOfBirth) {
-          return "Unknown";
-        }
-      
-        const today = new Date();
-        const birthDate = new Date(dateOfBirth);
-      
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDifference = today.getMonth() - birthDate.getMonth();
-      
-        if (
-          monthDifference < 0 ||
-          (monthDifference === 0 && today.getDate() < birthDate.getDate())
-        ) {
-          age--;
-        }
-      
-        return age;
-      }
+  useEffect(() => {
+    if (myAnimalsList.length === 0) {
+      setResultMyPets("Your list of pets is empty.");
+    } else {
+      setResultMyPets("Your pet list:");
+    }
+  }, [myAnimalsList]);
+
+  function calculateAge(dateOfBirth: Date | null): number | string {
+    if (!dateOfBirth) {
+      return "Unknown";
+    }
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+    return age;
+  }
 
   return (
     <div>
       <h2>My Pets</h2>
       <div className={classes.Pets}>
         <div className={classes.PetList}>
-          
+          {resultMyPets}
           {myAnimalsList.map((pet) => (
             <div key={pet.id}>
               <div>
@@ -126,7 +114,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
             <input
               name="pet name"
               type="string"
-              value={petName ?? ''}
+              value={petName ?? ""}
               placeholder="Pet name"
               required
               onChange={(e) => {
@@ -143,7 +131,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
             <input
               name="breed"
               type="string"
-              value={breed ?? ''}
+              value={breed ?? ""}
               placeholder="Breed"
               required
               onChange={(e) => {
@@ -152,7 +140,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
             />
             <select
               id="picklist"
-              value={selectedSex ?? ''}
+              value={selectedSex ?? ""}
               onChange={(e) => {
                 setSelectedSex(e.target.value);
               }}
@@ -163,7 +151,7 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
             </select>
             <select
               id="picklist"
-              value={selectedTemper ?? ''}
+              value={selectedTemper ?? ""}
               onChange={(e) => {
                 setSelectedTemper(e.target.value);
               }}
@@ -187,11 +175,11 @@ export function MyPets({ myPetsList }: MyPetsProps): JSX.Element {
                 addToList({
                   owner: username,
                   id: Date.now(),
-                  name: petName ?? '',
+                  name: petName ?? "",
                   dateOfBirth: dateOfBirth,
-                  breed: breed ?? '',
-                  sex: selectedSex ?? '',
-                  temper: selectedTemper ?? '',
+                  breed: breed ?? "",
+                  sex: selectedSex ?? "",
+                  temper: selectedTemper ?? "",
                 });
               }}
             >
