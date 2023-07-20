@@ -26,27 +26,27 @@ function App() {
   const {setUsername, myPets, setMyPets, setIsLogged, animals}=useContext(AppContext);
   const [myAnimalsList, setmyAnimalsList] = useState([] as Pet[]);
 
-  useEffect(():void=> {
-onAuthStateChanged(firebaseAuth, async (user)=> {
-  if (user){
-    const userEmail = user.email;
-    setUsername(userEmail);
-    setIsLogged(true);
-    const docRef = doc(firebaseDb, 'MyPets', `${user.email}`);
-    const docSnap = await getDoc(docRef);
+//   useEffect(():void=> {
+// onAuthStateChanged(firebaseAuth, async (user)=> {
+//   if (user){
+//     const userEmail = user.email;
+//     setUsername(userEmail);
+//     setIsLogged(true);
+//     const docRef = doc(firebaseDb, 'MyPets', `${user.email}`);
+//     const docSnap = await getDoc(docRef);
     
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      setmyAnimalsList(data.animals);
-      console.log(data.animals)
-    }
-  } else {
-    setUsername("");
-    setmyAnimalsList([]);
+//     if (docSnap.exists()) {
+//       const data = docSnap.data();
+//       setmyAnimalsList(data.animals);
+//       console.log(data.animals)
+//     }
+//   } else {
+//     setUsername("");
+//     setmyAnimalsList([]);
    
-  }
-});
-  },[setmyAnimalsList, setUsername, setIsLogged, animals]);
+//   }
+// });
+//   },[setmyAnimalsList, setUsername, setIsLogged, animals]);
 
   return (
     <div className={classes.main}>
