@@ -34,11 +34,35 @@
   }
 
   .PetList {
-    border: 5px solid black;
     width: 40vw;
+    font-size: large;
+    display: flex;
+    flex-direction: column;
   }
 
   .InputContainer {
     width: 40vw;
     padding-left: 30px;
+  }
+
+  .delete {
+    display: inline-block;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-family: "Dosis", sans-serif;
+    border: none;
+    font-size: inherit;
+    letter-spacing: 2px;
+    cursor: pointer;
+  }
+
+  .child {
+    display: flex;
+    flex-direction: row;
+    font-size: 28px;
+    margin-bottom: 5px;
   }

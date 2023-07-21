@@ -79,30 +79,36 @@ export function MyPets(): JSX.Element {
 
   return (
     <div>
-      <h2>My Pets</h2>
       <div className={classes.Pets}>
         <div className={classes.PetList}>
-          {resultMyPets}
+          <h2>{resultMyPets}</h2>
           {myAnimalsList.map((pet) => (
             <div key={pet.id}>
               <div>
-                <div>Name: {pet.name}</div>
-                {/* <div>
-                  Date of birth:{" "}
-                  {pet.dateOfBirth ? (
-  <div>Date of birth: {pet.dateOfBirth.toLocaleDateString()}</div>
-) : (
-  <div>Date of birth: Unknown</div>
-)}
-
-                </div> */}
+                <span className={classes.title}>name: </span>{" "}
+                <span className={classes.child}>{pet.name}</span>
                 <div>
-                  Age: {calculateAge(pet.dateOfBirth) || "Unknown"} years
+                  <span className={classes.title}>age: </span>{" "}
+                  <span className={classes.child}>
+                    {calculateAge(pet.dateOfBirth) || "Unknown"} years
+                  </span>
                 </div>
-                <div>Breed: {pet.breed}</div>
-                <div>Sex: {pet.sex}</div>
-                <div>Temper: {pet.temper}</div>
-                <button onClick={() => removeFromList(pet.id)}>
+                <div>
+                  <span className={classes.title}>breed: </span>{" "}
+                  <span className={classes.child}>{pet.breed}</span>
+                </div>
+                <div>
+                  <span className={classes.title}>sex: </span>{" "}
+                  <span className={classes.child}>{pet.sex}</span>
+                </div>
+                <div>
+                  <span className={classes.title}>temper: </span>{" "}
+                  <span className={classes.child}>{pet.temper}</span>
+                </div>
+                <button
+                  className={classes.delete}
+                  onClick={() => removeFromList(pet.id)}
+                >
                   Delete ❌
                 </button>
               </div>
