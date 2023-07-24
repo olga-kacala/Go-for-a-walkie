@@ -83,7 +83,7 @@ export function MyPets(): JSX.Element {
         <div className={classes.PetList}>
           <h2>{resultMyPets}</h2>
           {myAnimalsList.map((pet) => (
-            <div key={pet.id}>
+            <div className={pet.sex === "female" ? classes.female : classes.male} key={pet.id}>
               <div><img src={"/Img/profilePic.png"} alt="profile pic of a dog" className={classes.profilePic}/></div>
               <div>
                 <span className={classes.title}>name: </span>{" "}
