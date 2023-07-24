@@ -44,7 +44,12 @@
   }
 
   .InputContainer {
-    width: 40vw;
+    width: 35vw;
+  }
+ 
+  .dataContainer {
+    display: flex;
+    flex-direction: column;
   }
 
   .delete {
@@ -60,8 +65,7 @@
     font-size: inherit;
     letter-spacing: 2px;
     cursor: pointer;
-    justify-self: center;
-    justify-content: center;
+    justify-self: center !important;
   }
 
   .child {
