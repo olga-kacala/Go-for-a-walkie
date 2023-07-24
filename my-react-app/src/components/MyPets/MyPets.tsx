@@ -56,7 +56,7 @@ export function MyPets(): JSX.Element {
     if (myAnimalsList.length === 0) {
       setResultMyPets("Your list of pets is empty.");
     } else {
-      setResultMyPets("Your pet list:");
+      setResultMyPets("Your pet list");
     }
   }, [myAnimalsList]);
 
@@ -84,6 +84,7 @@ export function MyPets(): JSX.Element {
           <h2>{resultMyPets}</h2>
           {myAnimalsList.map((pet) => (
             <div key={pet.id}>
+              <div><img src={"/Img/profilePic.png"} alt="profile pic of a dog" className={classes.profilePic}/></div>
               <div>
                 <span className={classes.title}>name: </span>{" "}
                 <span className={classes.child}>{pet.name}</span>
@@ -109,14 +110,15 @@ export function MyPets(): JSX.Element {
                   className={classes.delete}
                   onClick={() => removeFromList(pet.id)}
                 >
-                  Delete ❌
+                  Delete
                 </button>
               </div>
             </div>
           ))}
         </div>
         <div className={classes.InputContainer}>
-          <form className={classes.input}>
+          <h2>Add your new pet</h2>
+          <form className={classes.myPetsInput}>
             <input
               name="pet name"
               type="string"
