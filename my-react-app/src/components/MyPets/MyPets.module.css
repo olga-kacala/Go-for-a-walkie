@@ -3,6 +3,7 @@
     padding: 20px;
     display: flex;
     justify-content: center;
+    padding-bottom: 124px;
   }
   
   .myPetsInput input, 
@@ -15,8 +16,6 @@
       margin-bottom: 10px;
       border: none;
       color:gray ;
-        
-   
   }
   
   .button {
