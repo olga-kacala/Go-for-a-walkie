@@ -1,14 +1,15 @@
 import classes from "./Header.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../Providers/Providers";
 import { signOut } from "firebase/auth";
 import { firebaseAuth } from "../../App";
 
 export function Header(): JSX.Element {
-  const { isLogged, setIsLogged, username } = useContext(AppContext);
+  const { isLogged, setIsLogged, username, myAnimalsList } = useContext(AppContext);
   const navigate = useNavigate();
-
+  const [logoPop, setLogoPop]= useState<boolean>(false);
+ 
   const handleLogout = async (): Promise<void> => {
     try {
       await signOut(firebaseAuth);
@@ -18,6 +19,18 @@ export function Header(): JSX.Element {
     setIsLogged(false);
     navigate("/Logout");
   };
+
+useEffect (()=>{
+setLogoPop(true);
+const timer = setTimeout(()=>{
+  setLogoPop(false);
+},300);
+return ()=>{
+clearTimeout(timer);
+};
+  },[myAnimalsList]);
+
+  const bumpClasses = `${classes['link']} ${logoPop ? classes.bump : ""}`;
 
   return (
     <div>
@@ -39,7 +52,7 @@ export function Header(): JSX.Element {
           </nav>
         ) : (
           <nav className={classes.nav}>
-            <Link className={classes.link} to="/Login">
+            <Link className={bumpClasses} to="/Login">
               Log in
             </Link>
             <Link className={classes.link} to="/Register">

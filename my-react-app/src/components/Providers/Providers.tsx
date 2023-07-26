@@ -59,10 +59,12 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
 
   const addToList = async (product: Pet): Promise<void> => {
+ 
     try {
       await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
         animals: [...myAnimalsList, product],
       });
+      
       setmyAnimalsList([...myAnimalsList, product]);
       setPetName("");
       setDateOfBirth(null);

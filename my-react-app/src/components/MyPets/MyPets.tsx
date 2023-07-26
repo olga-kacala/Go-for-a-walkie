@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../Providers/Providers";
 import classes from "./MyPets.module.css";
 import { firebaseDb, firebaseAuth } from "../../App";
@@ -20,7 +20,8 @@ export function MyPets(): JSX.Element {
     breed,
     selectedSex,
     selectedTemper,
-    error,
+    // error,
+    // setError,
     dateOfBirth,
     setPetName,
     setDateOfBirth,
@@ -31,6 +32,9 @@ export function MyPets(): JSX.Element {
     resultMyPets,
     setResultMyPets,
   } = useContext(AppContext);
+  
+  const [error, setError] = useState<string | null>(null);
+
 
   useEffect((): void => {
     onAuthStateChanged(firebaseAuth, async (user) => {
@@ -77,14 +81,39 @@ export function MyPets(): JSX.Element {
     return age;
   }
 
+
+
+  function isFormValid(): boolean {
+    return (
+      petName !== "" &&
+      dateOfBirth !== null &&
+      breed !== "" &&
+      selectedSex !== "" &&
+      selectedTemper !== ""
+    );
+  }
+  
+  
+
+  
+
   return (
     <div>
       <div className={classes.Pets}>
         <div className={classes.PetList}>
           <h2>{resultMyPets}</h2>
           {myAnimalsList.map((pet) => (
-            <div className={pet.sex === "female" ? classes.female : classes.male} key={pet.id}>
-              <div><img src={"/Img/profilePic.png"} alt="profile pic of a dog" className={classes.profilePic}/></div>
+            <div
+              className={pet.sex === "female" ? classes.female : classes.male}
+              key={pet.id}
+            >
+              <div>
+                <img
+                  src={"/Img/profilePic.png"}
+                  alt="profile pic of a dog"
+                  className={classes.profilePic}
+                />
+              </div>
               <div className={classes.dataContainer}>
                 <span className={classes.title}>name: </span>{" "}
                 <span className={classes.child}>{pet.name}</span>
@@ -130,6 +159,7 @@ export function MyPets(): JSX.Element {
               }}
             />
             <DatePicker
+            id="date"
               selected={dateOfBirth}
               placeholderText="Date of Birth"
               onChange={(date) => setDateOfBirth(date as Date)}
@@ -175,24 +205,34 @@ export function MyPets(): JSX.Element {
                 &#x1F419; Octopus - shy and secretive behavior
               </option>
             </select>
-            <p>{error}</p>
+            <p>here:{error}</p>
             <button
-              className={classes.button}
-              onClick={(e) => {
-                e.preventDefault();
-                addToList({
-                  owner: username,
-                  id: Date.now(),
-                  name: petName ?? "",
-                  dateOfBirth: dateOfBirth,
-                  breed: breed ?? "",
-                  sex: selectedSex ?? "",
-                  temper: selectedTemper ?? "",
-                });
-              }}
-            >
-              Add Pet
-            </button>
+  className={classes.button}
+  onClick={(e) => {
+    
+    e.preventDefault();
+    if (isFormValid()) {
+      setError("");
+      console.log("OK");
+      addToList({
+        owner: username,
+        id: Date.now(),
+        name: petName ?? "",
+        dateOfBirth: dateOfBirth,
+        breed: breed ?? "",
+        sex: selectedSex ?? "",
+        temper: selectedTemper ?? "",
+      });
+    } else {
+      setError("Please fill in all fields"); 
+      console.log("NOK");
+    }
+  }}
+  disabled={!isFormValid()}
+>
+  Add Pet
+</button>
+
           </form>
         </div>
       </div>

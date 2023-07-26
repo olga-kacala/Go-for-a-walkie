@@ -8,9 +8,10 @@
   
   .myPetsInput input, 
   .myPetsInput select,
+  #date,
   input:focus {
   background-color: rgb(232, 240, 254);
-      width: 100%;
+      width: 30vw;
       height: 60px;
       padding: 10px;
       margin-bottom: 10px;
