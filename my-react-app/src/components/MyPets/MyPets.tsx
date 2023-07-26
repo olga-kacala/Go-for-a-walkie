@@ -55,28 +55,35 @@ export function MyPets(): JSX.Element {
 
   useEffect(() => {
     if (myAnimalsList.length === 0) {
-      setResultMyPets("Your list of pets is empty.");
+      setResultMyPets("Your list of pets is empty");
     } else {
       setResultMyPets("Your pet list");
     }
   }, [myAnimalsList]);
 
-  function calculateAge(dateOfBirth: Date | null): number | string {
+  function calculateAge(dateOfBirth: Date | null): { years: number; months: number } {
     if (!dateOfBirth) {
-      return "Unknown";
+      return { years: 0, months: 0 };
     }
     const today = new Date();
     const birthDate = new Date(dateOfBirth);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDifference = today.getMonth() - birthDate.getMonth();
+    let age: { years: number; months: number } = {
+      years: today.getFullYear() - birthDate.getFullYear(),
+      months: today.getMonth() - birthDate.getMonth()
+    };
+  
     if (
-      monthDifference < 0 ||
-      (monthDifference === 0 && today.getDate() < birthDate.getDate())
+      today.getDate() < birthDate.getDate() ||
+      (today.getDate() === birthDate.getDate() && today.getHours() < birthDate.getHours())
     ) {
-      age--;
+      age.years--;
+      age.months += 12;
     }
+  
     return age;
   }
+  
+  
 
   function isFormValid(): boolean {
     return (
@@ -109,11 +116,16 @@ export function MyPets(): JSX.Element {
                 <span className={classes.title}>name: </span>{" "}
                 <span className={classes.child}>{pet.name}</span>
                 <div>
-                  <span className={classes.title}>age: </span>{" "}
-                  <span className={classes.child}>
-                    {calculateAge(pet.dateOfBirth) || "Unknown"} years
-                  </span>
-                </div>
+  <span className={classes.title}>age: </span>{" "}
+  <span className={classes.child}>
+    {typeof pet.dateOfBirth === 'string'
+      ? 'Unknown'
+      : `${calculateAge(pet.dateOfBirth).years} years ${calculateAge(pet.dateOfBirth).months} months`}
+  </span>
+</div>
+
+
+
                 <div>
                   <span className={classes.title}>breed: </span>{" "}
                   <span className={classes.child}>{pet.breed}</span>

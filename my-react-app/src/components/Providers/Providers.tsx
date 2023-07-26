@@ -96,7 +96,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
     setLogoPop(true);
     setTimeout(() => {
       setLogoPop(false);
-    }, 200);
+    }, 900);
   };
 
   return (
