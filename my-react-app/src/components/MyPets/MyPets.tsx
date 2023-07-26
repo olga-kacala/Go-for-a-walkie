@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "../Providers/Providers";
 import classes from "./MyPets.module.css";
 import { firebaseDb, firebaseAuth } from "../../App";
@@ -6,7 +6,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
-import { Header } from "../Header/Header";
 
 export function MyPets(): JSX.Element {
   const {
@@ -21,8 +20,6 @@ export function MyPets(): JSX.Element {
     breed,
     selectedSex,
     selectedTemper,
-    // error,
-    // setError,
     dateOfBirth,
     setPetName,
     setDateOfBirth,
@@ -34,11 +31,7 @@ export function MyPets(): JSX.Element {
     setResultMyPets,
     logoTransform,
     logoPop,
-    setLogoPop
   } = useContext(AppContext);
-  
-  const [error, setError] = useState<string | null>(null);
-
 
   useEffect((): void => {
     onAuthStateChanged(firebaseAuth, async (user) => {
@@ -85,8 +78,6 @@ export function MyPets(): JSX.Element {
     return age;
   }
 
-
-
   function isFormValid(): boolean {
     return (
       petName !== "" &&
@@ -96,10 +87,6 @@ export function MyPets(): JSX.Element {
       selectedTemper !== ""
     );
   }
-  
-  
-
-  
 
   return (
     <div>
@@ -163,7 +150,7 @@ export function MyPets(): JSX.Element {
               }}
             />
             <DatePicker
-            id="date"
+              id="date"
               selected={dateOfBirth}
               placeholderText="Date of Birth"
               onChange={(date) => setDateOfBirth(date as Date)}
@@ -181,7 +168,6 @@ export function MyPets(): JSX.Element {
               }}
             />
             <select
-              id="picklist"
               value={selectedSex ?? ""}
               onChange={(e) => {
                 setSelectedSex(e.target.value);
@@ -192,7 +178,6 @@ export function MyPets(): JSX.Element {
               <option value="male">Male&#9794;</option>
             </select>
             <select
-              id="picklist"
               value={selectedTemper ?? ""}
               onChange={(e) => {
                 setSelectedTemper(e.target.value);
@@ -209,34 +194,26 @@ export function MyPets(): JSX.Element {
                 &#x1F419; Octopus - shy and secretive behavior
               </option>
             </select>
-            <p>here:{error}</p>
             <button
-  className={classes.button}
-  onClick={(e) => {
-    
-    e.preventDefault();
-    if (isFormValid()) {
-      setError("");
-      logoTransform(logoPop);
-      addToList({
-        owner: username,
-        id: Date.now(),
-        name: petName ?? "",
-        dateOfBirth: dateOfBirth,
-        breed: breed ?? "",
-        sex: selectedSex ?? "",
-        temper: selectedTemper ?? "",
-      });
-    } else {
-      setError("Please fill in all fields"); 
-      console.log("NOK");
-    }
-  }}
-  disabled={!isFormValid()}
->
-  Add Pet
-</button>
-
+              className={classes.button}
+              onClick={(e) => {
+                e.preventDefault();
+                if (isFormValid()) {
+                  logoTransform(logoPop);
+                  addToList({
+                    owner: username,
+                    id: Date.now(),
+                    name: petName ?? "",
+                    dateOfBirth: dateOfBirth,
+                    breed: breed ?? "",
+                    sex: selectedSex ?? "",
+                    temper: selectedTemper ?? "",
+                  });
+                }
+              }}
+            >
+              Add Pet
+            </button>
           </form>
         </div>
       </div>
