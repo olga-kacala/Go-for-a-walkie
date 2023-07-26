@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
+import { Header } from "../Header/Header";
 
 export function MyPets(): JSX.Element {
   const {
@@ -31,6 +32,9 @@ export function MyPets(): JSX.Element {
     setIsLogged,
     resultMyPets,
     setResultMyPets,
+    logoTransform,
+    logoPop,
+    setLogoPop
   } = useContext(AppContext);
   
   const [error, setError] = useState<string | null>(null);
@@ -213,7 +217,7 @@ export function MyPets(): JSX.Element {
     e.preventDefault();
     if (isFormValid()) {
       setError("");
-      console.log("OK");
+      logoTransform(logoPop);
       addToList({
         owner: username,
         id: Date.now(),

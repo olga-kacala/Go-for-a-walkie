@@ -1,15 +1,15 @@
 import classes from "./Header.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import { AppContext } from "../Providers/Providers";
 import { signOut } from "firebase/auth";
 import { firebaseAuth } from "../../App";
 
 export function Header(): JSX.Element {
-  const { isLogged, setIsLogged, username, myAnimalsList } = useContext(AppContext);
+  const { isLogged, setIsLogged, username, logoPop } =
+    useContext(AppContext);
   const navigate = useNavigate();
-  const [logoPop, setLogoPop]= useState<boolean>(false);
- 
+
   const handleLogout = async (): Promise<void> => {
     try {
       await signOut(firebaseAuth);
@@ -20,17 +20,7 @@ export function Header(): JSX.Element {
     navigate("/Logout");
   };
 
-useEffect (()=>{
-setLogoPop(true);
-const timer = setTimeout(()=>{
-  setLogoPop(false);
-},300);
-return ()=>{
-clearTimeout(timer);
-};
-  },[myAnimalsList]);
-
-  const bumpClasses = `${classes['link']} ${logoPop ? classes.bump : ""}`;
+  const bumpClasses = `${classes["link"]} ${logoPop ? classes.bump : ""}`;
 
   return (
     <div>
@@ -43,7 +33,7 @@ clearTimeout(timer);
         {isLogged ? (
           <nav className={classes.nav}>
             <span>Hello, {username && username.split("@")[0]}!</span>
-            <Link className={classes.link} to="/MyPets">
+            <Link className={bumpClasses} to="/MyPets">
               My Pets
             </Link>
             <Link className={classes.link} to="*" onClick={handleLogout}>
@@ -52,7 +42,7 @@ clearTimeout(timer);
           </nav>
         ) : (
           <nav className={classes.nav}>
-            <Link className={bumpClasses} to="/Login">
+            <Link className={classes.link} to="/Login">
               Log in
             </Link>
             <Link className={classes.link} to="/Register">

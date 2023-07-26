@@ -37,6 +37,9 @@ export type AppContextState = {
   setError: (param: string) => void;
   dateOfBirth: Date | null;
   setDateOfBirth: (param: Date) => void;
+  logoPop: boolean;
+  setLogoPop: (param: boolean) => void;
+  logoTransform: (param: boolean) => void;
 };
 
 type AppProviderProps = {
@@ -57,14 +60,14 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   const [selectedTemper, setSelectedTemper] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
+  const [logoPop, setLogoPop] = useState<boolean>(false);
 
   const addToList = async (product: Pet): Promise<void> => {
- 
     try {
       await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
         animals: [...myAnimalsList, product],
       });
-      
+
       setmyAnimalsList([...myAnimalsList, product]);
       setPetName("");
       setDateOfBirth(null);
@@ -87,6 +90,13 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const logoTransform = async (): Promise<void> => {
+    setLogoPop(true);
+    setTimeout(() => {
+      setLogoPop(false);
+    }, 200);
   };
 
   return (
@@ -116,6 +126,9 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
         setSelectedSex,
         setSelectedTemper,
         setError,
+        logoPop,
+        setLogoPop,
+        logoTransform,
       }}
     >
       {children}
