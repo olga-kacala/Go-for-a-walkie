@@ -149,7 +149,7 @@ export function MyPets(): JSX.Element {
           ))}
         </div>
         <div className={classes.InputContainer}>
-          <h2>Add your new pet</h2>
+          <h2>Add your new pet!</h2>
           <form className={classes.myPetsInput}>
             <input
               name="pet name"
