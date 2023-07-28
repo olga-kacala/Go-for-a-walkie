@@ -4,8 +4,9 @@ import classes from "./MyPets.module.css";
 import { firebaseDb, firebaseAuth } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
+import {getDownloadURL, getStorage, uploadBytes, ref} from "firebase/storage";
 
 export function MyPets(): JSX.Element {
   
@@ -35,7 +36,10 @@ export function MyPets(): JSX.Element {
     photoURL,
     setPhotoURL
   } = useContext(AppContext);
-  const currentUser = useAuth()
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const currentUser = useAuth();
+  const storage = getStorage();
 
   useEffect((): void => {
     onAuthStateChanged(firebaseAuth, async (user) => {
@@ -100,6 +104,7 @@ export function MyPets(): JSX.Element {
       selectedTemper !== ""
     );
   }
+
 //Custom Hook
   function useAuth () {
     const [currentUser, setCurrentUser]
@@ -112,12 +117,51 @@ return currentUser;
   }
 
 
-  function handleChange () {
+// async function upload (file, currentUser, setLoading){
+//   const fileRef = ref(storage, currentUser.id + '.png');
+//   setLoading(true);
+//   const snapshot = await uploadBytes(fileRef, file);
+//   const photoURL = await getDownloadURL(fileRef);
+//   updateProfile(currentUser, {photoURL});
+//   setLoading(false);
+//   alert("uploaded");
+// }
 
-  };
+async function upload(file: File | null, currentUser: firebase.User | null, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+  if (!file) return; // If no file selected, return early
+  const storage = getStorage();
+  const fileRef = ref(storage, `${currentUser?.uid}.png`);
+  setLoading(true);
+  try {
+    await uploadBytes(fileRef, file);
+    const photoURL = await getDownloadURL(fileRef);
+    if (currentUser) {
+      await updateProfile(currentUser, { photoURL });
+      setPhotoURL(photoURL); // Set the photoURL in the state
+    }
+    setLoading(false);
+    alert("Uploaded");
+  } catch (error) {
+    setLoading(false);
+    console.error(error);
+    alert("Failed to upload");
+  }
+}
+
+  // function handleChange (e) {
+  //   if(e.target.files[0]){
+  //     setPhoto(e.target.files[0])
+  //   }
+  // };\\
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files[0]) {
+      setPhoto(e.target.files[0]);
+    }
+  }
 
   function handleProfile () {
-
+upload(photo, currentUser, setLoading);
   }
 
  useEffect(()=>{
@@ -139,7 +183,8 @@ return currentUser;
               <div>
                 <img
                   // src={"/Img/profilePic.png"}
-                  src={photoURL}
+                  src={photoURL ? URL.createObjectURL(photoURL) : "/Img/profilePic.png"}
+
                   alt="profile pic of a dog"
                   className={classes.profilePic}
                 />
@@ -237,8 +282,10 @@ return currentUser;
                 &#x1F419; Octopus - shy and secretive behavior
               </option>
             </select>
-            <input type="file" value="photoURL" onChange={handleChange}/>
+            {/* <input type="file" value="photoURL" onChange={handleChange}/> */}
+            <input type="file" onChange={handleChange}/>
             <button
+            disabled={loading}
               className={classes.button}
               onClick={(e) => {
                 e.preventDefault();

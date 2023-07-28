@@ -2,6 +2,7 @@ import React, { createContext, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { firebaseDb } from "../../App";
 
+
 export type Pet = {
   owner: string | null;
   id: number;
@@ -10,7 +11,7 @@ export type Pet = {
   breed: string;
   sex: string;
   temper: string;
-  photoURL:File;
+  photoURL: File | null;
 };
 
 export type AppContextState = {
@@ -64,7 +65,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   const [error, setError] = useState<string>("");
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
   const [logoPop, setLogoPop] = useState<boolean>(false);
-  const [photoURL, setPhotoURL] = useState("/Img/profilePic.png")
+  const [photoURL, setPhotoURL] = useState<File | null>(null);
 
   const addToList = async (product: Pet): Promise<void> => {
     try {
@@ -78,7 +79,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
       setBreed("");
       setSelectedSex("");
       setSelectedTemper("");
-      setPhotoURL("Img/profilePic.png")
+      setPhotoURL(null);
       setError("");
     } catch (error) {
       console.log(error);
