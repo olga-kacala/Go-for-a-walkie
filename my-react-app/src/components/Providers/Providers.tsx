@@ -11,7 +11,7 @@ export type Pet = {
   breed: string;
   sex: string;
   temper: string;
-  photoURL: File | null;
+  photoURL: string | null;
 };
 
 export type AppContextState = {
@@ -42,8 +42,8 @@ export type AppContextState = {
   logoPop: boolean;
   setLogoPop: (param: boolean) => void;
   logoTransform: (param: boolean) => void;
-  photoURL: File | null;
-  setPhotoURL: (param: File | null) => void;
+  photoURL: string | null;
+  setPhotoURL: (param: string | null) => void;
 };
 
 type AppProviderProps = {
@@ -65,7 +65,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   const [error, setError] = useState<string>("");
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
   const [logoPop, setLogoPop] = useState<boolean>(false);
-  const [photoURL, setPhotoURL] = useState<File | null>(null);
+  const [photoURL, setPhotoURL] = useState<string | null>(null);
 
   const addToList = async (product: Pet): Promise<void> => {
     try {

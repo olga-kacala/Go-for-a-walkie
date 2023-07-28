@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import {getDownloadURL, getStorage, uploadBytes, ref} from "firebase/storage";
+import firebase from "firebase/app";
 
 export function MyPets(): JSX.Element {
   
@@ -117,16 +118,6 @@ return currentUser;
   }
 
 
-// async function upload (file, currentUser, setLoading){
-//   const fileRef = ref(storage, currentUser.id + '.png');
-//   setLoading(true);
-//   const snapshot = await uploadBytes(fileRef, file);
-//   const photoURL = await getDownloadURL(fileRef);
-//   updateProfile(currentUser, {photoURL});
-//   setLoading(false);
-//   alert("uploaded");
-// }
-
 async function upload(file: File | null, currentUser: firebase.User | null, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
   if (!file) return; // If no file selected, return early
   const storage = getStorage();
@@ -148,17 +139,24 @@ async function upload(file: File | null, currentUser: firebase.User | null, setL
   }
 }
 
-  // function handleChange (e) {
-  //   if(e.target.files[0]){
-  //     setPhoto(e.target.files[0])
+  // function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  //   if (e.target.files && e.target.files[0]) {
+  //     setPhoto(e.target.files[0]);
+  //     setPhotoURL(URL.createObjectURL(e.target.files[0])); 
   //   }
-  // };\\
+  // }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
-      setPhoto(e.target.files[0]);
+      const file = e.target.files[0];
+      setPhoto(file);
+  
+      // Create a temporary URL for the selected image file
+      const objectURL = URL.createObjectURL(file);
+      setPhotoURL(objectURL);
     }
   }
+  
 
   function handleProfile () {
 upload(photo, currentUser, setLoading);
@@ -181,13 +179,20 @@ upload(photo, currentUser, setLoading);
               key={pet.id}
             >
               <div>
-                <img
+                {/* <img
                   // src={"/Img/profilePic.png"}
                   src={photoURL ? URL.createObjectURL(photoURL) : "/Img/profilePic.png"}
 
                   alt="profile pic of a dog"
                   className={classes.profilePic}
-                />
+                /> */}
+<img
+  src={photoURL ? photoURL : "/Img/profilePic.png"}
+  alt="profile pic of a dog"
+  className={classes.profilePic}
+/>
+
+
               </div>
               <div className={classes.dataContainer}>
                 <span className={classes.title}>name: </span>{" "}
