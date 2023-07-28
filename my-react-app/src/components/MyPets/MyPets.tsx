@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../Providers/Providers";
 import classes from "./MyPets.module.css";
 import { firebaseDb, firebaseAuth } from "../../App";
@@ -8,6 +8,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 
 export function MyPets(): JSX.Element {
+  
   const {
     animals,
     username,
@@ -31,7 +32,10 @@ export function MyPets(): JSX.Element {
     setResultMyPets,
     logoTransform,
     logoPop,
+    photoURL,
+    setPhotoURL
   } = useContext(AppContext);
+  const currentUser = useAuth()
 
   useEffect((): void => {
     onAuthStateChanged(firebaseAuth, async (user) => {
@@ -61,7 +65,10 @@ export function MyPets(): JSX.Element {
     }
   }, [myAnimalsList]);
 
-  function calculateAge(dateOfBirth: Date | null): { years: number; months: number } {
+  function calculateAge(dateOfBirth: Date | null): {
+    years: number;
+    months: number;
+  } {
     if (!dateOfBirth) {
       return { years: 0, months: 0 };
     }
@@ -69,21 +76,20 @@ export function MyPets(): JSX.Element {
     const birthDate = new Date(dateOfBirth);
     let age: { years: number; months: number } = {
       years: today.getFullYear() - birthDate.getFullYear(),
-      months: today.getMonth() - birthDate.getMonth()
+      months: today.getMonth() - birthDate.getMonth(),
     };
-  
+
     if (
       today.getDate() < birthDate.getDate() ||
-      (today.getDate() === birthDate.getDate() && today.getHours() < birthDate.getHours())
+      (today.getDate() === birthDate.getDate() &&
+        today.getHours() < birthDate.getHours())
     ) {
       age.years--;
       age.months += 12;
     }
-  
+
     return age;
   }
-  
-  
 
   function isFormValid(): boolean {
     return (
@@ -94,6 +100,31 @@ export function MyPets(): JSX.Element {
       selectedTemper !== ""
     );
   }
+//Custom Hook
+  function useAuth () {
+    const [currentUser, setCurrentUser]
+ = useState();
+useEffect(()=> {
+  const unsub = onAuthStateChanged(firebaseAuth, username => setCurrentUser(username));
+  return unsub;
+}, [])
+return currentUser;
+  }
+
+
+  function handleChange () {
+
+  };
+
+  function handleProfile () {
+
+  }
+
+ useEffect(()=>{
+  if(currentUser && currentUser.photoURL) {
+    setPhotoURL(currentUser.photoURL);
+  }
+ },[currentUser]);
 
   return (
     <div>
@@ -107,7 +138,8 @@ export function MyPets(): JSX.Element {
             >
               <div>
                 <img
-                  src={"/Img/profilePic.png"}
+                  // src={"/Img/profilePic.png"}
+                  src={photoURL}
                   alt="profile pic of a dog"
                   className={classes.profilePic}
                 />
@@ -116,16 +148,15 @@ export function MyPets(): JSX.Element {
                 <span className={classes.title}>name: </span>{" "}
                 <span className={classes.child}>{pet.name}</span>
                 <div>
-  <span className={classes.title}>age: </span>{" "}
-  <span className={classes.child}>
-    {typeof pet.dateOfBirth === 'string'
-      ? 'Unknown'
-      : `${calculateAge(pet.dateOfBirth).years} years ${calculateAge(pet.dateOfBirth).months} months`}
-  </span>
-</div>
-
-
-
+                  <span className={classes.title}>age: </span>{" "}
+                  <span className={classes.child}>
+                    {typeof pet.dateOfBirth === "string"
+                      ? "Unknown"
+                      : `${calculateAge(pet.dateOfBirth).years} years ${
+                          calculateAge(pet.dateOfBirth).months
+                        } months`}
+                  </span>
+                </div>
                 <div>
                   <span className={classes.title}>breed: </span>{" "}
                   <span className={classes.child}>{pet.breed}</span>
@@ -206,10 +237,12 @@ export function MyPets(): JSX.Element {
                 &#x1F419; Octopus - shy and secretive behavior
               </option>
             </select>
+            <input type="file" value="photoURL" onChange={handleChange}/>
             <button
               className={classes.button}
               onClick={(e) => {
                 e.preventDefault();
+                handleProfile();
                 if (isFormValid()) {
                   logoTransform(logoPop);
                   addToList({
@@ -220,6 +253,7 @@ export function MyPets(): JSX.Element {
                     breed: breed ?? "",
                     sex: selectedSex ?? "",
                     temper: selectedTemper ?? "",
+                    photoURL: photoURL ?? "Img/profilePic.png",
                   });
                 }
               }}
