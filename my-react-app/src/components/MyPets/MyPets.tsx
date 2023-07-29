@@ -158,6 +158,14 @@ upload(photo, currentUser, setLoading);
   }
  },[currentUser]);
 
+ function handleDelete(petId: number) {
+  const confirmDelete = window.confirm("Are you sure you want to delete this pet?");
+  if (confirmDelete) {
+    removeFromList(petId);
+  }
+}
+
+
   return (
     <div>
       <div className={classes.Pets}>
@@ -168,14 +176,6 @@ upload(photo, currentUser, setLoading);
               className={pet.sex === "female" ? classes.female : classes.male}
               key={pet.id}
             >
-              {/* <div>
-<img
-  src={photoURL ? photoURL : "/Img/profilePic.png"}
-  alt="profile pic of a dog"
-  className={classes.profilePic}
-/>
-              </div> */}
-
 <div>
       <img
         src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
@@ -211,7 +211,7 @@ upload(photo, currentUser, setLoading);
                 </div>
                 <button
                   className={classes.delete}
-                  onClick={() => removeFromList(pet.id)}
+                  onClick={() => handleDelete(pet.id)}
                 >
                   Delete
                 </button>
