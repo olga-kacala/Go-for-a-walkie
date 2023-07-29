@@ -70,6 +70,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
     try {
       const newProduct = {
         ...product,
+        name: petName.toUpperCase(),
         photoURL: photoURL ?? "Img/profilePic.png", 
       };
   

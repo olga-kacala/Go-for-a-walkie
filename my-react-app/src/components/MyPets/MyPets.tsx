@@ -6,11 +6,10 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
-import {getDownloadURL, getStorage, uploadBytes, ref} from "firebase/storage";
+import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
 import firebase from "firebase/app";
 
 export function MyPets(): JSX.Element {
-  
   const {
     animals,
     username,
@@ -35,7 +34,7 @@ export function MyPets(): JSX.Element {
     logoTransform,
     logoPop,
     photoURL,
-    setPhotoURL
+    setPhotoURL,
   } = useContext(AppContext);
   const [photo, setPhoto] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -54,13 +53,20 @@ export function MyPets(): JSX.Element {
           const data = docSnap.data();
           setmyAnimalsList(data.animals);
           setResultMyPets("Your pet list:");
+          const petWithDateOfBirth = data.animals.find(pet => pet.dateOfBirth instanceof Date);
+          if (petWithDateOfBirth) {
+            setDateOfBirth(petWithDateOfBirth.dateOfBirth);
         }
       } else {
         setUsername("");
         setmyAnimalsList([]);
       }
+    } else {
+      setUsername("");
+      setmyAnimalsList([]);
+    }
     });
-  }, [setmyAnimalsList, setUsername, setIsLogged, animals]);
+  }, [setmyAnimalsList, setUsername, setIsLogged, setDateOfBirth, animals]);
 
   useEffect(() => {
     if (myAnimalsList.length === 0) {
@@ -70,31 +76,54 @@ export function MyPets(): JSX.Element {
     }
   }, [myAnimalsList]);
 
-  function calculateAge(dateOfBirth: Date | null): {
-    years: number;
-    months: number;
-  } {
+  // function calculateAge(dateOfBirth: Date | null): {
+  //   years: number;
+  //   months: number;
+  // } {
+  //   if (!dateOfBirth) {
+  //     return { years: 0, months: 0 };
+  //   }
+  //   const today = new Date();
+  //   const birthDate = new Date(dateOfBirth);
+  //   let age: { years: number; months: number } = {
+  //     years: today.getFullYear() - birthDate.getFullYear(),
+  //     months: today.getMonth() - birthDate.getMonth(),
+  //   };
+
+  //   if (
+  //     today.getDate() < birthDate.getDate() ||
+  //     (today.getDate() === birthDate.getDate() &&
+  //       today.getHours() < birthDate.getHours())
+  //   ) {
+  //     age.years--;
+  //     age.months += 12;
+  //   }
+
+  //   return age;
+  // }
+
+
+  function calculateAge(dateOfBirth: Date | null): { years: number; months: number } {
     if (!dateOfBirth) {
       return { years: 0, months: 0 };
     }
+  
     const today = new Date();
     const birthDate = new Date(dateOfBirth);
-    let age: { years: number; months: number } = {
-      years: today.getFullYear() - birthDate.getFullYear(),
-      months: today.getMonth() - birthDate.getMonth(),
-    };
-
-    if (
-      today.getDate() < birthDate.getDate() ||
-      (today.getDate() === birthDate.getDate() &&
-        today.getHours() < birthDate.getHours())
-    ) {
-      age.years--;
-      age.months += 12;
+  
+    let years = today.getFullYear() - birthDate.getFullYear();
+    let months = today.getMonth() - birthDate.getMonth();
+  
+    if (today.getDate() < birthDate.getDate() ||
+        (today.getDate() === birthDate.getDate() && today.getHours() < birthDate.getHours())) {
+      // Adjust the years and months if the birth date is later in the current month
+      years--;
+      months += 12;
     }
-
-    return age;
+  
+    return { years, months };
   }
+  
 
   function isFormValid(): boolean {
     return (
@@ -106,37 +135,66 @@ export function MyPets(): JSX.Element {
     );
   }
 
-//Custom Hook
-  function useAuth () {
-    const [currentUser, setCurrentUser]
- = useState();
-useEffect(()=> {
-  const unsub = onAuthStateChanged(firebaseAuth, username => setCurrentUser(username));
-  return unsub;
-}, [])
-return currentUser;
+  //Custom Hook
+  function useAuth() {
+    const [currentUser, setCurrentUser] = useState();
+    useEffect(() => {
+      const unsub = onAuthStateChanged(firebaseAuth, (username) =>
+        setCurrentUser(username)
+      );
+      return unsub;
+    }, []);
+    return currentUser;
   }
 
+  // async function upload(
+  //   file: File | null,
+  //   currentUser: firebase.User | null,
+  //   setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  // ) {
+  //   if (!file) return;
+  //   const storage = getStorage();
+  //   const fileRef = ref(storage, `${currentUser?.uid}.png`);
+  //   setLoading(true);
+  //   try {
+  //     await uploadBytes(fileRef, file);
+  //     const photoURL = await getDownloadURL(fileRef);
+  //     if (currentUser) {
+  //       await updateProfile(currentUser, { photoURL });
+  //       setPhotoURL(photoURL);
+  //     }
+  //     setLoading(false);
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.error(error);
+  //     alert("Failed to upload");
+  //   }
+  // }
 
-async function upload(file: File | null, currentUser: firebase.User | null, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
-  if (!file) return; 
-  const storage = getStorage();
-  const fileRef = ref(storage, `${currentUser?.uid}.png`);
-  setLoading(true);
-  try {
-    await uploadBytes(fileRef, file);
-    const photoURL = await getDownloadURL(fileRef);
-    if (currentUser) {
+  async function upload(file: File | null, currentUser: firebase.User | null, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+    if (!file || !currentUser) return; // Check if file or currentUser is null
+    const storage = getStorage();
+    
+    if (!storage) {
+      console.error("Storage instance is undefined");
+      return;
+    }
+  
+    const fileRef = ref(storage, `${currentUser?.uid}.png`);
+    setLoading(true);
+    try {
+      await uploadBytes(fileRef, file);
+      const photoURL = await getDownloadURL(fileRef);
       await updateProfile(currentUser, { photoURL });
       setPhotoURL(photoURL); 
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.error(error);
+      alert("Failed to upload");
     }
-    setLoading(false);
-  } catch (error) {
-    setLoading(false);
-    console.error(error);
-    alert("Failed to upload");
   }
-}
+  
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
@@ -146,25 +204,25 @@ async function upload(file: File | null, currentUser: firebase.User | null, setL
       setPhotoURL(objectURL);
     }
   }
-  
 
-  function handleProfile () {
-upload(photo, currentUser, setLoading);
+  function handleProfile() {
+    upload(photo, currentUser, setLoading);
   }
 
- useEffect(()=>{
-  if(currentUser && currentUser.photoURL) {
-    setPhotoURL(currentUser.photoURL);
-  }
- },[currentUser]);
+  useEffect(() => {
+    if (currentUser && currentUser.photoURL) {
+      setPhotoURL(currentUser.photoURL);
+    }
+  }, [currentUser]);
 
- function handleDelete(petId: number) {
-  const confirmDelete = window.confirm("Are you sure you want to delete this pet?");
-  if (confirmDelete) {
-    removeFromList(petId);
+  function handleDelete(petId: number) {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this pet?"
+    );
+    if (confirmDelete) {
+      removeFromList(petId);
+    }
   }
-}
-
 
   return (
     <div>
@@ -176,13 +234,13 @@ upload(photo, currentUser, setLoading);
               className={pet.sex === "female" ? classes.female : classes.male}
               key={pet.id}
             >
-<div>
-      <img
-        src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
-        alt="profile pic of a dog"
-        className={classes.profilePic}
-      />
-      </div>
+              <div>
+                <img
+                  src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
+                  alt="profile pic of a dog"
+                  className={classes.profilePic}
+                />
+              </div>
 
               <div className={classes.dataContainer}>
                 <span className={classes.title}>name: </span>{" "}
@@ -277,9 +335,9 @@ upload(photo, currentUser, setLoading);
                 &#x1F419; Octopus - shy and secretive behavior
               </option>
             </select>
-            <input type="file" onChange={handleChange}/>
+            <input type="file" onChange={handleChange} />
             <button
-            disabled={loading}
+              disabled={loading}
               className={classes.button}
               onClick={(e) => {
                 e.preventDefault();
