@@ -119,7 +119,7 @@ return currentUser;
 
 
 async function upload(file: File | null, currentUser: firebase.User | null, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
-  if (!file) return; // If no file selected, return early
+  if (!file) return; 
   const storage = getStorage();
   const fileRef = ref(storage, `${currentUser?.uid}.png`);
   setLoading(true);
@@ -128,10 +128,9 @@ async function upload(file: File | null, currentUser: firebase.User | null, setL
     const photoURL = await getDownloadURL(fileRef);
     if (currentUser) {
       await updateProfile(currentUser, { photoURL });
-      setPhotoURL(photoURL); // Set the photoURL in the state
+      setPhotoURL(photoURL); 
     }
     setLoading(false);
-    alert("Uploaded");
   } catch (error) {
     setLoading(false);
     console.error(error);
@@ -139,19 +138,10 @@ async function upload(file: File | null, currentUser: firebase.User | null, setL
   }
 }
 
-  // function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-  //   if (e.target.files && e.target.files[0]) {
-  //     setPhoto(e.target.files[0]);
-  //     setPhotoURL(URL.createObjectURL(e.target.files[0])); 
-  //   }
-  // }
-
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setPhoto(file);
-  
-      // Create a temporary URL for the selected image file
       const objectURL = URL.createObjectURL(file);
       setPhotoURL(objectURL);
     }
@@ -178,22 +168,22 @@ upload(photo, currentUser, setLoading);
               className={pet.sex === "female" ? classes.female : classes.male}
               key={pet.id}
             >
-              <div>
-                {/* <img
-                  // src={"/Img/profilePic.png"}
-                  src={photoURL ? URL.createObjectURL(photoURL) : "/Img/profilePic.png"}
-
-                  alt="profile pic of a dog"
-                  className={classes.profilePic}
-                /> */}
+              {/* <div>
 <img
   src={photoURL ? photoURL : "/Img/profilePic.png"}
   alt="profile pic of a dog"
   className={classes.profilePic}
 />
+              </div> */}
 
+<div>
+      <img
+        src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
+        alt="profile pic of a dog"
+        className={classes.profilePic}
+      />
+      </div>
 
-              </div>
               <div className={classes.dataContainer}>
                 <span className={classes.title}>name: </span>{" "}
                 <span className={classes.child}>{pet.name}</span>
@@ -230,7 +220,7 @@ upload(photo, currentUser, setLoading);
           ))}
         </div>
         <div className={classes.InputContainer}>
-          <h2>Add your new pet!</h2>
+          <h2>Add your new pet</h2>
           <form className={classes.myPetsInput}>
             <input
               name="pet name"
@@ -287,7 +277,6 @@ upload(photo, currentUser, setLoading);
                 &#x1F419; Octopus - shy and secretive behavior
               </option>
             </select>
-            {/* <input type="file" value="photoURL" onChange={handleChange}/> */}
             <input type="file" onChange={handleChange}/>
             <button
             disabled={loading}

@@ -2,7 +2,6 @@ import React, { createContext, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { firebaseDb } from "../../App";
 
-
 export type Pet = {
   owner: string | null;
   id: number;
@@ -69,11 +68,16 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
 
   const addToList = async (product: Pet): Promise<void> => {
     try {
+      const newProduct = {
+        ...product,
+        photoURL: photoURL ?? "Img/profilePic.png", 
+      };
+  
       await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
-        animals: [...myAnimalsList, product],
+        animals: [...myAnimalsList, newProduct],
       });
-
-      setmyAnimalsList([...myAnimalsList, product]);
+  
+      setmyAnimalsList([...myAnimalsList, newProduct]);
       setPetName("");
       setDateOfBirth(null);
       setBreed("");
@@ -85,7 +89,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
       console.log(error);
     }
   };
-
+  
   const removeFromList = async (petId: number): Promise<void> => {
     const newArr = myAnimalsList.filter((obj) => obj.id !== petId);
     try {
