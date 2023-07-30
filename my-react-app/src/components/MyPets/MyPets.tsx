@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from "../Providers/Providers";
+import { AppContext, Pet } from "../Providers/Providers";
 import classes from "./MyPets.module.css";
 import { firebaseDb, firebaseAuth } from "../../App";
 import DatePicker from "react-datepicker";
@@ -53,18 +53,20 @@ export function MyPets(): JSX.Element {
           const data = docSnap.data();
           setmyAnimalsList(data.animals);
           setResultMyPets("Your pet list:");
-          const petWithDateOfBirth = data.animals.find(pet => pet.dateOfBirth instanceof Date);
+          const petWithDateOfBirth = data.animals.find(
+            (pet) => pet.dateOfBirth instanceof Date
+          );
           if (petWithDateOfBirth) {
             setDateOfBirth(petWithDateOfBirth.dateOfBirth);
+          }
+        } else {
+          setUsername("");
+          setmyAnimalsList([]);
         }
       } else {
         setUsername("");
         setmyAnimalsList([]);
       }
-    } else {
-      setUsername("");
-      setmyAnimalsList([]);
-    }
     });
   }, [setmyAnimalsList, setUsername, setIsLogged, setDateOfBirth, animals]);
 
@@ -76,54 +78,27 @@ export function MyPets(): JSX.Element {
     }
   }, [myAnimalsList]);
 
-  // function calculateAge(dateOfBirth: Date | null): {
-  //   years: number;
-  //   months: number;
-  // } {
-  //   if (!dateOfBirth) {
-  //     return { years: 0, months: 0 };
-  //   }
-  //   const today = new Date();
-  //   const birthDate = new Date(dateOfBirth);
-  //   let age: { years: number; months: number } = {
-  //     years: today.getFullYear() - birthDate.getFullYear(),
-  //     months: today.getMonth() - birthDate.getMonth(),
-  //   };
-
-  //   if (
-  //     today.getDate() < birthDate.getDate() ||
-  //     (today.getDate() === birthDate.getDate() &&
-  //       today.getHours() < birthDate.getHours())
-  //   ) {
-  //     age.years--;
-  //     age.months += 12;
-  //   }
-
-  //   return age;
-  // }
-
-
-  function calculateAge(dateOfBirth: Date | null): { years: number; months: number } {
+  function calculateAge(dateOfBirth: Date | null): {
+    years: number;
+    months: number;
+  } {
     if (!dateOfBirth) {
       return { years: 0, months: 0 };
     }
-  
     const today = new Date();
     const birthDate = new Date(dateOfBirth);
-  
     let years = today.getFullYear() - birthDate.getFullYear();
     let months = today.getMonth() - birthDate.getMonth();
-  
-    if (today.getDate() < birthDate.getDate() ||
-        (today.getDate() === birthDate.getDate() && today.getHours() < birthDate.getHours())) {
-      // Adjust the years and months if the birth date is later in the current month
+    if (
+      today.getDate() < birthDate.getDate() ||
+      (today.getDate() === birthDate.getDate() &&
+        today.getHours() < birthDate.getHours())
+    ) {
       years--;
       months += 12;
     }
-  
     return { years, months };
   }
-  
 
   function isFormValid(): boolean {
     return (
@@ -136,57 +111,37 @@ export function MyPets(): JSX.Element {
   }
 
   //Custom Hook
-  function useAuth() {
-    const [currentUser, setCurrentUser] = useState();
+  function useAuth(): firebase.User | null {
+    const [currentUser, setCurrentUser] = useState<firebase.User | null>(null);
     useEffect(() => {
-      const unsub = onAuthStateChanged(firebaseAuth, (username) =>
-        setCurrentUser(username)
+      const unsub = onAuthStateChanged(firebaseAuth, (user) =>
+        setCurrentUser(user)
       );
       return unsub;
     }, []);
     return currentUser;
   }
 
-  // async function upload(
-  //   file: File | null,
-  //   currentUser: firebase.User | null,
-  //   setLoading: React.Dispatch<React.SetStateAction<boolean>>
-  // ) {
-  //   if (!file) return;
-  //   const storage = getStorage();
-  //   const fileRef = ref(storage, `${currentUser?.uid}.png`);
-  //   setLoading(true);
-  //   try {
-  //     await uploadBytes(fileRef, file);
-  //     const photoURL = await getDownloadURL(fileRef);
-  //     if (currentUser) {
-  //       await updateProfile(currentUser, { photoURL });
-  //       setPhotoURL(photoURL);
-  //     }
-  //     setLoading(false);
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.error(error);
-  //     alert("Failed to upload");
-  //   }
-  // }
-
-  async function upload(file: File | null, currentUser: firebase.User | null, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+  async function upload(
+    file: File | null,
+    currentUser: firebase.User | null,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  ) {
     if (!file || !currentUser) return; // Check if file or currentUser is null
     const storage = getStorage();
-    
+
     if (!storage) {
       console.error("Storage instance is undefined");
       return;
     }
-  
+
     const fileRef = ref(storage, `${currentUser?.uid}.png`);
     setLoading(true);
     try {
       await uploadBytes(fileRef, file);
       const photoURL = await getDownloadURL(fileRef);
       await updateProfile(currentUser, { photoURL });
-      setPhotoURL(photoURL); 
+      setPhotoURL(photoURL);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -194,7 +149,6 @@ export function MyPets(): JSX.Element {
       alert("Failed to upload");
     }
   }
-  
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
@@ -215,12 +169,12 @@ export function MyPets(): JSX.Element {
     }
   }, [currentUser]);
 
-  function handleDelete(petId: number) {
+  function handleDelete(pet: Pet) {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this pet?"
     );
     if (confirmDelete) {
-      removeFromList(petId);
+      removeFromList(pet.id);
     }
   }
 
@@ -269,7 +223,7 @@ export function MyPets(): JSX.Element {
                 </div>
                 <button
                   className={classes.delete}
-                  onClick={() => handleDelete(pet.id)}
+                  onClick={() => handleDelete(pet)}
                 >
                   Delete
                 </button>
