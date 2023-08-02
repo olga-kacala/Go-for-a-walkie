@@ -7,7 +7,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
-import firebase from "firebase/app";
 
 export function MyPets(): JSX.Element {
   const {
@@ -53,9 +52,8 @@ export function MyPets(): JSX.Element {
           const data = docSnap.data();
           setmyAnimalsList(data.animals);
           setResultMyPets("Your pet list:");
-          const petWithDateOfBirth = data.animals.find(
-            (pet) => pet.dateOfBirth instanceof Date
-          );
+          const petWithDateOfBirth = data.animals.find((pet: Pet) => pet.dateOfBirth instanceof Date);
+
           if (petWithDateOfBirth) {
             setDateOfBirth(petWithDateOfBirth.dateOfBirth);
           }
@@ -111,8 +109,8 @@ export function MyPets(): JSX.Element {
   }
 
   //Custom Hook
-  function useAuth(): firebase.User | null {
-    const [currentUser, setCurrentUser] = useState<firebase.User | null>(null);
+  function useAuth(): any | null {
+    const [currentUser, setCurrentUser] = useState<any | null>(null);
     useEffect(() => {
       const unsub = onAuthStateChanged(firebaseAuth, (user) =>
         setCurrentUser(user)
@@ -124,10 +122,10 @@ export function MyPets(): JSX.Element {
 
   async function upload(
     file: File | null,
-    currentUser: firebase.User | null,
+    currentUser: any | null,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
   ) {
-    if (!file || !currentUser) return; // Check if file or currentUser is null
+    if (!file || !currentUser) return; 
     const storage = getStorage();
 
     if (!storage) {
