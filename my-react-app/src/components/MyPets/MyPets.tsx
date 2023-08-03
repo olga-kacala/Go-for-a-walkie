@@ -5,8 +5,17 @@ import { firebaseDb, firebaseAuth } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
+
+export type  MyPetsProps = {
+  upload: (
+    file: File | null,
+    currentUser: any | null,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    petId: number
+  ) => Promise<string | null>;
+}
 
 export function MyPets(): JSX.Element {
   const {
@@ -16,7 +25,7 @@ export function MyPets(): JSX.Element {
     myAnimalsList,
     setmyAnimalsList,
     removeFromList,
-    addToList,
+    // addToList,
     petName,
     breed,
     selectedSex,
@@ -34,11 +43,50 @@ export function MyPets(): JSX.Element {
     logoPop,
     photoURL,
     setPhotoURL,
+    setError
   } = useContext(AppContext);
   const [photo, setPhoto] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const currentUser = useAuth();
   const storage = getStorage();
+
+
+  const addToList = async (product: Pet): Promise<void> => {
+    try {
+      const petId = Date.now(); // Generate a unique ID for the pet
+      const newProduct = {
+        ...product,
+        id: petId,
+        // name: petName.toUpperCase(),
+        name: petName?.toUpperCase() ?? '',
+      };
+  
+      // Call upload function before updating the state
+      const uploadedPhotoURL = await upload(photo, currentUser, setLoading, petId);
+  
+      // If the upload was successful, set the new photoURL
+      if (uploadedPhotoURL) {
+        newProduct.photoURL = uploadedPhotoURL;
+      }
+  
+      await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
+        animals: [...myAnimalsList, newProduct],
+      });
+  
+      setmyAnimalsList([...myAnimalsList, newProduct]);
+      setPetName("");
+      setDateOfBirth(null);
+      setBreed("");
+      setSelectedSex("");
+      setSelectedTemper("");
+      setPhotoURL(null);
+      setError("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+
 
   useEffect((): void => {
     onAuthStateChanged(firebaseAuth, async (user) => {
@@ -123,28 +171,33 @@ export function MyPets(): JSX.Element {
   async function upload(
     file: File | null,
     currentUser: any | null,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    petId: number // Add the petId parameter here
   ) {
-    if (!file || !currentUser) return; 
+    if (!file || !currentUser) return;
     const storage = getStorage();
-
+  
     if (!storage) {
       console.error("Storage instance is undefined");
       return;
     }
-
-    const fileRef = ref(storage, `${currentUser?.uid}.png`);
+  
+    // Generate a unique file name based on the pet's ID and the current timestamp
+    const fileName = `${petId}.png`;
+  
+    const fileRef = ref(storage, fileName);
     setLoading(true);
     try {
       await uploadBytes(fileRef, file);
       const photoURL = await getDownloadURL(fileRef);
-      await updateProfile(currentUser, { photoURL });
-      setPhotoURL(photoURL);
-      setLoading(false);
+      // Return the photoURL from the function so it can be used in addToList
+      return photoURL;
     } catch (error) {
       setLoading(false);
       console.error(error);
       alert("Failed to upload");
+      // Return null in case of error to handle it in addToList
+      return null;
     }
   }
 
@@ -157,9 +210,23 @@ export function MyPets(): JSX.Element {
     }
   }
 
-  function handleProfile() {
-    upload(photo, currentUser, setLoading);
+  // async function handleProfile() {
+  //   upload(photo, currentUser, setLoading);
+  // }
+
+  async function handleProfile() {
+    if (isFormValid()) {
+      // Generate a unique ID for the pet
+      const petId = Date.now();
+      // Call upload function before updating the state
+      const uploadedPhotoURL = await upload(photo, currentUser, setLoading, petId);
+      if (uploadedPhotoURL) {
+        // If the upload was successful, update the photoURL state
+        setPhotoURL(uploadedPhotoURL);
+      }
+    }
   }
+  
 
   useEffect(() => {
     if (currentUser && currentUser.photoURL) {
@@ -175,6 +242,7 @@ export function MyPets(): JSX.Element {
       removeFromList(pet.id);
     }
   }
+  
 
   return (
     <div>
