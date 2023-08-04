@@ -9,7 +9,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { firebaseConfig } from "./firebase";
-import { MyPets} from "./components/MyPets/MyPets";
+import { MyPets } from "./components/MyPets/MyPets";
 import { Logout } from "./components/Logout/Logout";
 
 const firebaseApp = initializeApp(firebaseConfig);

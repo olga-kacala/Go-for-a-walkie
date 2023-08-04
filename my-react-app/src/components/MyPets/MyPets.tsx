@@ -4,18 +4,18 @@ import classes from "./MyPets.module.css";
 import { firebaseDb, firebaseAuth } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { onAuthStateChanged, updateProfile } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
 
-export type  MyPetsProps = {
+export type MyPetsProps = {
   upload: (
     file: File | null,
     currentUser: any | null,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     petId: number
   ) => Promise<string | null>;
-}
+};
 
 export function MyPets(): JSX.Element {
   const {
@@ -25,7 +25,6 @@ export function MyPets(): JSX.Element {
     myAnimalsList,
     setmyAnimalsList,
     removeFromList,
-    // addToList,
     petName,
     breed,
     selectedSex,
@@ -43,39 +42,37 @@ export function MyPets(): JSX.Element {
     logoPop,
     photoURL,
     setPhotoURL,
-    setError
+    setError,
   } = useContext(AppContext);
   const [photo, setPhoto] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const currentUser = useAuth();
-  const storage = getStorage();
-
+  // const storage = getStorage();
 
   const addToList = async (product: Pet): Promise<void> => {
     try {
-      const petId = Date.now(); 
+      const petId = Date.now();
       const newProduct = {
         ...product,
         id: petId,
-        name: petName?.toUpperCase() ?? '',
+        name: petName?.toUpperCase() ?? "",
         dateOfBirth: dateOfBirth || null,
       };
-  
-      // Call upload function before updating the state
-      const uploadedPhotoURL = await upload(photo, currentUser, setLoading, petId);
-  
-      // If the upload was successful, set the new photoURL
+      const uploadedPhotoURL = await upload(
+        photo,
+        currentUser,
+        setLoading,
+        petId
+      );
       if (uploadedPhotoURL) {
         newProduct.photoURL = uploadedPhotoURL;
       }
-  
       await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
         animals: [...myAnimalsList, newProduct],
       });
-  
       setmyAnimalsList([...myAnimalsList, newProduct]);
       setPetName("");
-      setDateOfBirth(new Date);
+      setDateOfBirth(new Date());
       setBreed("");
       setSelectedSex("");
       setSelectedTemper("");
@@ -85,8 +82,6 @@ export function MyPets(): JSX.Element {
       console.log(error);
     }
   };
-  
-
 
   useEffect((): void => {
     onAuthStateChanged(firebaseAuth, async (user) => {
@@ -100,8 +95,9 @@ export function MyPets(): JSX.Element {
           const data = docSnap.data();
           setmyAnimalsList(data.animals);
           setResultMyPets("Your pet list:");
-          const petWithDateOfBirth = data.animals.find((pet: Pet) => pet.dateOfBirth instanceof Date);
-
+          const petWithDateOfBirth = data.animals.find(
+            (pet: Pet) => pet.dateOfBirth instanceof Date
+          );
           if (petWithDateOfBirth) {
             setDateOfBirth(petWithDateOfBirth.dateOfBirth);
           }
@@ -172,11 +168,10 @@ export function MyPets(): JSX.Element {
     file: File | null,
     currentUser: any | null,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    petId: number,
+    petId: number
   ) {
     if (!file || !currentUser) return;
     const storage = getStorage();
-  
     if (!storage) {
       console.error("Storage instance is undefined");
       return;
@@ -208,9 +203,13 @@ export function MyPets(): JSX.Element {
   async function handleProfile() {
     if (isFormValid()) {
       const petId = Date.now();
-      const uploadedPhotoURL = await upload(photo, currentUser, setLoading, petId);
+      const uploadedPhotoURL = await upload(
+        photo,
+        currentUser,
+        setLoading,
+        petId
+      );
       if (uploadedPhotoURL) {
-        // If the upload was successful, update the photoURL state
         setPhotoURL(uploadedPhotoURL);
       }
       if (dateOfBirth === null) {
@@ -218,7 +217,6 @@ export function MyPets(): JSX.Element {
       }
     }
   }
-  
 
   useEffect(() => {
     if (currentUser && currentUser.photoURL) {
@@ -234,7 +232,6 @@ export function MyPets(): JSX.Element {
       removeFromList(pet.id);
     }
   }
-  
 
   return (
     <div>
@@ -253,7 +250,6 @@ export function MyPets(): JSX.Element {
                   className={classes.profilePic}
                 />
               </div>
-
               <div className={classes.dataContainer}>
                 <span className={classes.title}>name: </span>{" "}
                 <span className={classes.child}>{pet.name}</span>
@@ -309,7 +305,6 @@ export function MyPets(): JSX.Element {
               onChange={(date) => setDateOfBirth(date as Date)}
               value={dateOfBirth ? dateOfBirth.toLocaleDateString() : ""}
             />
-
             <input
               name="breed"
               type="string"

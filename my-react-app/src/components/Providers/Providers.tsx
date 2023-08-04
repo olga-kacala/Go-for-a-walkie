@@ -1,7 +1,6 @@
 import React, { createContext, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { firebaseDb } from "../../App";
-import { MyPets } from "../MyPets/MyPets";
 
 export type Pet = {
   owner: string | null;
@@ -26,7 +25,6 @@ export type AppContextState = {
   myAnimalsList: Pet[];
   setmyAnimalsList: (animals: Pet[]) => void;
   removeFromList: (petId: number) => void;
-  // addToList: (product: Pet) => void;
   petName: string | null;
   setPetName: (param: string) => void;
   breed: string | null;
@@ -63,13 +61,10 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   const [selectedSex, setSelectedSex] = useState<string>("");
   const [selectedTemper, setSelectedTemper] = useState<string>("");
   const [error, setError] = useState<string>("");
-  // const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(new Date());
-
   const [logoPop, setLogoPop] = useState<boolean>(false);
   const [photoURL, setPhotoURL] = useState<string | null>(null);
 
-  
   const removeFromList = async (petId: number): Promise<void> => {
     const newArr = myAnimalsList.filter((obj) => obj.id !== petId);
     try {
@@ -103,7 +98,6 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
         myAnimalsList,
         setmyAnimalsList,
         removeFromList,
-        // addToList,
         petName,
         breed,
         selectedSex,
@@ -120,7 +114,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
         setLogoPop,
         logoTransform,
         photoURL,
-        setPhotoURL
+        setPhotoURL,
       }}
     >
       {children}
