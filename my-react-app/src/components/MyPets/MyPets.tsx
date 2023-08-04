@@ -53,12 +53,12 @@ export function MyPets(): JSX.Element {
 
   const addToList = async (product: Pet): Promise<void> => {
     try {
-      const petId = Date.now(); // Generate a unique ID for the pet
+      const petId = Date.now(); 
       const newProduct = {
         ...product,
         id: petId,
-        // name: petName.toUpperCase(),
         name: petName?.toUpperCase() ?? '',
+        dateOfBirth: dateOfBirth || null,
       };
   
       // Call upload function before updating the state
@@ -75,7 +75,7 @@ export function MyPets(): JSX.Element {
   
       setmyAnimalsList([...myAnimalsList, newProduct]);
       setPetName("");
-      setDateOfBirth(null);
+      setDateOfBirth(new Date);
       setBreed("");
       setSelectedSex("");
       setSelectedTemper("");
@@ -172,7 +172,7 @@ export function MyPets(): JSX.Element {
     file: File | null,
     currentUser: any | null,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    petId: number // Add the petId parameter here
+    petId: number,
   ) {
     if (!file || !currentUser) return;
     const storage = getStorage();
@@ -181,22 +181,17 @@ export function MyPets(): JSX.Element {
       console.error("Storage instance is undefined");
       return;
     }
-  
-    // Generate a unique file name based on the pet's ID and the current timestamp
     const fileName = `${petId}.png`;
-  
     const fileRef = ref(storage, fileName);
     setLoading(true);
     try {
       await uploadBytes(fileRef, file);
       const photoURL = await getDownloadURL(fileRef);
-      // Return the photoURL from the function so it can be used in addToList
       return photoURL;
     } catch (error) {
       setLoading(false);
       console.error(error);
       alert("Failed to upload");
-      // Return null in case of error to handle it in addToList
       return null;
     }
   }
@@ -210,19 +205,16 @@ export function MyPets(): JSX.Element {
     }
   }
 
-  // async function handleProfile() {
-  //   upload(photo, currentUser, setLoading);
-  // }
-
   async function handleProfile() {
     if (isFormValid()) {
-      // Generate a unique ID for the pet
       const petId = Date.now();
-      // Call upload function before updating the state
       const uploadedPhotoURL = await upload(photo, currentUser, setLoading, petId);
       if (uploadedPhotoURL) {
         // If the upload was successful, update the photoURL state
         setPhotoURL(uploadedPhotoURL);
+      }
+      if (dateOfBirth === null) {
+        setDateOfBirth(new Date());
       }
     }
   }

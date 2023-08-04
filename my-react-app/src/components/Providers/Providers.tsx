@@ -63,34 +63,12 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   const [selectedSex, setSelectedSex] = useState<string>("");
   const [selectedTemper, setSelectedTemper] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
+  // const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
+  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(new Date());
+
   const [logoPop, setLogoPop] = useState<boolean>(false);
   const [photoURL, setPhotoURL] = useState<string | null>(null);
 
-  // const addToList = async (product: Pet): Promise<void> => {
-  //   try {
-  //     const newProduct = {
-  //       ...product,
-  //       name: petName.toUpperCase(),
-  //       photoURL: photoURL ?? "Img/profilePic.png", 
-  //     };
-  
-  //     await setDoc(doc(firebaseDb, "MyPets", `${username}`), {
-  //       animals: [...myAnimalsList, newProduct],
-  //     });
-  
-  //     setmyAnimalsList([...myAnimalsList, newProduct]);
-  //     setPetName("");
-  //     setDateOfBirth(null);
-  //     setBreed("");
-  //     setSelectedSex("");
-  //     setSelectedTemper("");
-  //     setPhotoURL(null);
-  //     setError("");
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   
   const removeFromList = async (petId: number): Promise<void> => {
     const newArr = myAnimalsList.filter((obj) => obj.id !== petId);
