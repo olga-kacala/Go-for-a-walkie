@@ -47,8 +47,7 @@ export function MyPets(): JSX.Element {
   const [photo, setPhoto] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const currentUser = useAuth();
-  // const storage = getStorage();
-
+  
   const addToList = async (product: Pet): Promise<void> => {
     try {
       const petId = Date.now();
@@ -200,23 +199,23 @@ export function MyPets(): JSX.Element {
     }
   }
 
-  async function handleProfile() {
-    if (isFormValid()) {
-      const petId = Date.now();
-      const uploadedPhotoURL = await upload(
-        photo,
-        currentUser,
-        setLoading,
-        petId
-      );
-      if (uploadedPhotoURL) {
-        setPhotoURL(uploadedPhotoURL);
-      }
-      if (dateOfBirth === null) {
-        setDateOfBirth(new Date());
-      }
-    }
-  }
+  // async function handleProfile() {
+  //   if (isFormValid()) {
+  //     const petId = Date.now();
+  //     const uploadedPhotoURL = await upload(
+  //       photo,
+  //       currentUser,
+  //       setLoading,
+  //       petId
+  //     );
+  //     if (uploadedPhotoURL) {
+  //       setPhotoURL(uploadedPhotoURL);
+  //     }
+  //     if (dateOfBirth === null) {
+  //       setDateOfBirth(new Date());
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     if (currentUser && currentUser.photoURL) {
@@ -348,7 +347,7 @@ export function MyPets(): JSX.Element {
               className={classes.button}
               onClick={(e) => {
                 e.preventDefault();
-                handleProfile();
+                // handleProfile();
                 if (isFormValid()) {
                   logoTransform(logoPop);
                   addToList({
