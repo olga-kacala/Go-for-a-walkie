@@ -140,6 +140,7 @@ export function MyPets(): JSX.Element {
     }
     return { years, months };
   }
+ 
 
   function isFormValid(): boolean {
     return (
@@ -250,10 +251,10 @@ export function MyPets(): JSX.Element {
                 />
               </div>
               <div className={classes.dataContainer}>
-                <span className={classes.title}>name: </span>{" "}
+                <span className={classes.title}>name: </span>
                 <span className={classes.child}>{pet.name}</span>
                 <div>
-                  <span className={classes.title}>age: </span>{" "}
+                  <span className={classes.title}>age: </span>
                   <span className={classes.child}>
                     {typeof pet.dateOfBirth === "string"
                       ? "Unknown"
@@ -262,6 +263,16 @@ export function MyPets(): JSX.Element {
                         } months`}
                   </span>
                 </div>
+
+                <div>
+  <span className={classes.title}>Date of Birth: </span>
+  <span className={classes.child}>
+    {pet.dateOfBirth instanceof Date
+      ? pet.dateOfBirth.toLocaleDateString()
+      : "Unknown"}
+  </span>
+</div>
+
                 <div>
                   <span className={classes.title}>breed: </span>{" "}
                   <span className={classes.child}>{pet.breed}</span>
