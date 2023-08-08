@@ -55,7 +55,8 @@ export function MyPets(): JSX.Element {
         ...product,
         id: petId,
         name: petName?.toUpperCase() ?? "",
-        dateOfBirth: dateOfBirth || null,
+        // dateOfBirth: dateOfBirth || null,
+        dateOfBirth: dateOfBirth || new Date(),
       };
       const uploadedPhotoURL = await upload(
         photo,
