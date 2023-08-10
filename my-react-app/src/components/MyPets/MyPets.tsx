@@ -201,24 +201,6 @@ export function MyPets(): JSX.Element {
     }
   }
 
-  // async function handleProfile() {
-  //   if (isFormValid()) {
-  //     const petId = Date.now();
-  //     const uploadedPhotoURL = await upload(
-  //       photo,
-  //       currentUser,
-  //       setLoading,
-  //       petId
-  //     );
-  //     if (uploadedPhotoURL) {
-  //       setPhotoURL(uploadedPhotoURL);
-  //     }
-  //     if (dateOfBirth === null) {
-  //       setDateOfBirth(new Date());
-  //     }
-  //   }
-  // }
-
   useEffect(() => {
     if (currentUser && currentUser.photoURL) {
       setPhotoURL(currentUser.photoURL);
@@ -359,7 +341,6 @@ export function MyPets(): JSX.Element {
               className={classes.button}
               onClick={(e) => {
                 e.preventDefault();
-                // handleProfile();
                 if (isFormValid()) {
                   logoTransform(logoPop);
                   addToList({
