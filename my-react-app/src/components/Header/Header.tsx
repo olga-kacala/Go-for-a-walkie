@@ -33,6 +33,9 @@ export function Header(): JSX.Element {
         {isLogged ? (
           <nav className={classes.nav}>
             <span>Hello, {username && username.split("@")[0]}!</span>
+            <Link className={bumpClasses} to="/Maps">
+              Maps
+            </Link>
             <Link className={bumpClasses} to="/MyPets">
               My Pets
             </Link>

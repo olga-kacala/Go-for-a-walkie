@@ -11,6 +11,7 @@ import { getFirestore } from "firebase/firestore";
 import { firebaseConfig } from "./firebase";
 import { MyPets } from "./components/MyPets/MyPets";
 import { Logout } from "./components/Logout/Logout";
+import { Maps } from "./components/Maps/Maps";
 
 const firebaseApp = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(firebaseApp);
@@ -27,6 +28,7 @@ function App() {
         <Route path="/Register" element={<Register />} />
         <Route path="/MyPets" element={<MyPets />} />
         <Route path="/Logout" element={<Logout />} />
+        <Route path="/Maps" element={<Maps />} />
       </Routes>
       <Footer />
     </div>
