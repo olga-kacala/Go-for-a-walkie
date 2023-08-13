@@ -6,7 +6,10 @@ export const Maps = () => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY || "",
   });
-  const center = useMemo(() => ({ lat: 50.65696776753784, lng: 17.9230121375674 }), []);
+  const center = useMemo(
+    () => ({ lat: 50.65696776753784, lng: 17.9230121375674 }),
+    []
+  );
 
   return (
     <div className={classes.Map}>
@@ -18,9 +21,10 @@ export const Maps = () => {
           center={center}
           zoom={10}
         >
-        <Marker position={{ lat: 50.65696776753784, lng: 17.9230121375674 }} icon=
-        {"http://maps.google.com/mapfiles/ms/micons/hiker.png"}
-        />
+          <Marker
+            position={{ lat: 50.65696776753784, lng: 17.9230121375674 }}
+            icon={"http://maps.google.com/mapfiles/ms/micons/hiker.png"}
+          />
         </GoogleMap>
       )}
     </div>
