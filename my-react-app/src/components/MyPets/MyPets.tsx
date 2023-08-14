@@ -47,7 +47,7 @@ export function MyPets(): JSX.Element {
   const [photo, setPhoto] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const currentUser = useAuth();
-  
+
   const addToList = async (product: Pet): Promise<void> => {
     try {
       const petId = Date.now();
@@ -141,7 +141,6 @@ export function MyPets(): JSX.Element {
     }
     return { years, months };
   }
- 
 
   function isFormValid(): boolean {
     return (
@@ -248,13 +247,13 @@ export function MyPets(): JSX.Element {
                 </div>
 
                 <div>
-  <span className={classes.title}>Date of Birth: </span>
-  <span className={classes.child}>
-    {pet.dateOfBirth instanceof Date
-      ? pet.dateOfBirth.toLocaleDateString()
-      : "Unknown"}
-  </span>
-</div>
+                  <span className={classes.title}>Date of Birth: </span>
+                  <span className={classes.child}>
+                    {pet.dateOfBirth instanceof Date
+                      ? pet.dateOfBirth.toLocaleDateString()
+                      : "Unknown"}
+                  </span>
+                </div>
 
                 <div>
                   <span className={classes.title}>breed: </span>{" "}
