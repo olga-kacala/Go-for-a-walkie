@@ -55,7 +55,6 @@ export function MyPets(): JSX.Element {
         ...product,
         id: petId,
         name: petName?.toUpperCase() ?? "",
-        // dateOfBirth: dateOfBirth || null,
         dateOfBirth: dateOfBirth || new Date(),
       };
       const uploadedPhotoURL = await upload(
@@ -95,6 +94,7 @@ export function MyPets(): JSX.Element {
           const data = docSnap.data();
           setmyAnimalsList(data.animals);
           setResultMyPets("Your pet list:");
+
           const petWithDateOfBirth = data.animals.find(
             (pet: Pet) => pet.dateOfBirth instanceof Date
           );
@@ -105,12 +105,14 @@ export function MyPets(): JSX.Element {
           setUsername("");
           setmyAnimalsList([]);
         }
+
       } else {
         setUsername("");
         setmyAnimalsList([]);
       }
     });
-  }, [setmyAnimalsList, setUsername, setIsLogged, setDateOfBirth, animals]);
+  },  [setmyAnimalsList, setUsername, setIsLogged, setDateOfBirth, animals]);
+
 
   useEffect(() => {
     if (myAnimalsList.length === 0) {
@@ -221,6 +223,7 @@ export function MyPets(): JSX.Element {
         <div className={classes.PetList}>
           <h2>{resultMyPets}</h2>
           {myAnimalsList.map((pet) => (
+            
             <div
               className={pet.sex === "female" ? classes.female : classes.male}
               key={pet.id}
@@ -339,6 +342,7 @@ export function MyPets(): JSX.Element {
               disabled={loading}
               className={classes.button}
               onClick={(e) => {
+                console.log("click");
                 e.preventDefault();
                 if (isFormValid()) {
                   logoTransform(logoPop);
