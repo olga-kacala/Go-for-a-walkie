@@ -1,96 +1,94 @@
 .Pets {
-    margin: 0 auto;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    padding-bottom: 124px;
-  }
-  
-  .myPetsInput input, 
-  .myPetsInput select,
-  #date,
-  input:focus {
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 124px;
+}
+
+.myPetsInput input,
+.myPetsInput select,
+#date,
+input:focus {
   background-color: rgb(232, 240, 254);
-      width: 30vw;
-      height: 60px;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: none;
-      color:gray ;
-  }
-  
-  .button {
-    display: flex;
-    background-color: #ff5500;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 30px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-family: "Dosis", sans-serif;
-    border: none;
-    font-size: inherit;
-    letter-spacing: 2px;
-    cursor: pointer;
-    
-  }
+  width: 30vw;
+  height: 60px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: none;
+  color: gray;
+}
 
-  .PetList {
-    width: 35vw;
-    font-size: large;
-    display: flex;
-    flex-direction: column;
-    margin-right: 60px;
-  }
+.button {
+  display: flex;
+  background-color: #ff5500;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 30px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-family: "Dosis", sans-serif;
+  border: none;
+  font-size: inherit;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
 
-  .InputContainer {
-    width: 35vw;
-  }
- 
-  .dataContainer {
-    display: flex;
-    flex-direction: column;
-  }
+.PetList {
+  width: 35vw;
+  font-size: large;
+  display: flex;
+  flex-direction: column;
+  margin-right: 60px;
+}
 
-  .delete {
-    background-color: #333;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 30px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-family: "Dosis", sans-serif;
-    border: none;
-    font-size: inherit;
-    letter-spacing: 2px;
-    cursor: pointer;
-  }
+.InputContainer {
+  width: 35vw;
+}
 
-  .child {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    font-size: 30px;
-    margin-bottom: 5px;
-  }
+.dataContainer {
+  display: flex;
+  flex-direction: column;
+}
 
-  .profilePic {
-    width: 150px;
-    border-radius: 50%;
-    margin: 5px;
-  }
+.delete {
+  background-color: #333;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 30px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-family: "Dosis", sans-serif;
+  border: none;
+  font-size: inherit;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
 
-  .female 
-  {
-    background-color: rgb(255,110,159,0.5);
-    border: 10px solid #333 ;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
+.child {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-size: 30px;
+  margin-bottom: 5px;
+}
 
-  .male {
-    background-color: rgba(122, 146, 254, 0.5);
-    border: 10px solid #333 ;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
+.profilePic {
+  width: 150px;
+  border-radius: 50%;
+  margin: 5px;
+}
+
+.female {
+  background-color: rgb(255, 110, 159, 0.5);
+  border: 10px solid #333;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.male {
+  background-color: rgba(122, 146, 254, 0.5);
+  border: 10px solid #333;
+  padding: 10px;
+  margin-bottom: 10px;
+}

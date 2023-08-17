@@ -105,14 +105,12 @@ export function MyPets(): JSX.Element {
           setUsername("");
           setmyAnimalsList([]);
         }
-
       } else {
         setUsername("");
         setmyAnimalsList([]);
       }
     });
-  },  [setmyAnimalsList, setUsername, setIsLogged, setDateOfBirth, animals]);
-
+  }, [setmyAnimalsList, setUsername, setIsLogged, setDateOfBirth, animals]);
 
   useEffect(() => {
     if (myAnimalsList.length === 0) {
@@ -223,7 +221,6 @@ export function MyPets(): JSX.Element {
         <div className={classes.PetList}>
           <h2>{resultMyPets}</h2>
           {myAnimalsList.map((pet) => (
-            
             <div
               className={pet.sex === "female" ? classes.female : classes.male}
               key={pet.id}
