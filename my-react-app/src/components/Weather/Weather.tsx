@@ -14,32 +14,43 @@ type WeatherData = {
 export function Weather (): JSX.Element {
 
 const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
-const city = 'New York'; 
-const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
 const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
 
 
-useEffect(()=> {
-    fetch(apiUrl)
-  .then(response => response.json())
-  .then(data => {
-    setWeatherData(data);
-    })
-  .catch(error => {
-   console.log(error);
-  });
-},[]);
-    return (
-        <div className={classes.weatherContainer}>
+useEffect(() => {
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
+
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          setWeatherData(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    (error) => {
+      console.log("Error getting location:", error);
+    }
+  );
+}, [apiKey]);
+
+return (
+  <div className={classes.weatherContainer}>
       {weatherData ? (
-        <div>
-          <h2>Weather in {weatherData.name}</h2>
-          <p>Temperature: {weatherData.main?.temp} K</p>
-          <p>Weather: {weatherData.weather?.[0]?.description}</p>
+        <div className={classes.weatherInfo}>
+          <p>{weatherData.name}:</p>
+          <p>{(weatherData.main?.temp - 273.15).toFixed(1)}°C </p>
+          <p>{weatherData.weather?.[0]?.description}</p>
         </div>
       ) : (
         <p>Loading weather data...</p>
       )}
     </div>
-    )
-} 
+);
+}

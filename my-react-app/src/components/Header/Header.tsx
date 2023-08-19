@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { AppContext } from "../Providers/Providers";
 import { signOut } from "firebase/auth";
 import { firebaseAuth } from "../../App";
+import { Weather } from "../Weather/Weather";
 
 export function Header(): JSX.Element {
   const { isLogged, setIsLogged, username, logoPop } =
@@ -32,6 +33,7 @@ export function Header(): JSX.Element {
 
         {isLogged ? (
           <nav className={classes.nav}>
+            <Weather/>
             <span>Hello, {username && username.split("@")[0]}!</span>
             <Link className={bumpClasses} to="/Maps">
               Maps

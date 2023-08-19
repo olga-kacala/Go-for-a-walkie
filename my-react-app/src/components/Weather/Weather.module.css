@@ -1,0 +1,17 @@
+.weatherContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    padding: 0;
+  }
+  
+  .weatherInfo {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .weatherInfo >p {
+    padding: 0px 25px;
+    letter-spacing: normal;
+    font-weight: normal;
+  }
