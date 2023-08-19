@@ -33,8 +33,8 @@ To get started with the app, follow these steps:
 
 ### Installation
 
-1. Clone this repository to your local machine using: git@github.com:olga-kacala/Go-for-a-walkie.git
-2. Navigate to the app's directory: cd my-pets-app
+1. Clone this repository to your local machine using: git clone <git@github.com:olga-kacala/Go-for-a-walkie.git>
+2. Navigate to the app's directory: cd my-react-app
 3. Install the required dependencies: npm install
 
 ### Usage

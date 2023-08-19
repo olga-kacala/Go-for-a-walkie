@@ -36,6 +36,9 @@ export function Header(): JSX.Element {
             <Link className={bumpClasses} to="/Maps">
               Maps
             </Link>
+            <Link className={bumpClasses} to="/Weather">
+              Weather
+            </Link>
             <Link className={bumpClasses} to="/MyPets">
               My Pets
             </Link>
