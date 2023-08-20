@@ -339,7 +339,6 @@ export function MyPets(): JSX.Element {
               disabled={loading}
               className={classes.button}
               onClick={(e) => {
-                console.log("click");
                 e.preventDefault();
                 if (isFormValid()) {
                   logoTransform(logoPop);

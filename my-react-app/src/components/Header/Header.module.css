@@ -4,7 +4,7 @@ header {
   background-color: #333;
   color: #fff;
   text-align: center;
-  padding: 20px;
+  padding-bottom: 20px;
   height: auto;
 }
 
@@ -21,7 +21,6 @@ p {
 
 .nav {
   text-align: end;
-  margin-top: 10px;
   font-weight: 700;
 }
 
