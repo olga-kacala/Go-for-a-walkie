@@ -45,7 +45,7 @@ return (
       {weatherData ? (
         <div className={classes.weatherInfo}>
           <p>{weatherData.name}:</p>
-          <p>{(weatherData.main?.temp - 273.15).toFixed(1)}°C </p>
+          <p>{(weatherData.main?.temp - 273.15).toFixed(0)}°C </p>
           <p>{weatherData.weather?.[0]?.description}</p>
         </div>
       ) : (

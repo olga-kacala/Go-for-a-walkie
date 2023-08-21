@@ -8,6 +8,13 @@
   height: auto;
 }
 
+.helloUser {
+  background: linear-gradient(346deg, rgba(255, 110, 159, 1) 5%, rgba(238, 249, 250, 1) 24%, rgba(122, 146, 254, 1) 93%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 
 h1,
 p {
@@ -32,4 +39,11 @@ p {
 .bump {
   color: #ff5500;
 }
+
+.flexContainer {
+  display: flex;
+  align-items: center; 
+  justify-content: space-evenly; 
+}
+
 

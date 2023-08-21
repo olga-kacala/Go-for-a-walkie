@@ -32,10 +32,10 @@ export function Header(): JSX.Element {
         <p>Find a Dog Walking Buddy </p>
 
         {isLogged ? (
-          <nav className={classes.nav}>
+          <nav className={`${classes.nav} ${classes.flexContainer}`}>
             <Weather/>
-            <span>Hello, {username && username.split("@")[0]}!</span>
-            <Link className={bumpClasses} to="/Maps">
+            <span className={classes.helloUser}>Hello, {username && username.split("@")[0]}!</span>
+            <Link className={classes.link} to="/Maps">
               Maps
             </Link>
             <Link className={bumpClasses} to="/MyPets">
@@ -46,7 +46,7 @@ export function Header(): JSX.Element {
             </Link>
           </nav>
         ) : (
-          <nav className={classes.nav}>
+          <nav className={`${classes.nav} ${classes.flexContainer}`}>
             <Link className={classes.link} to="/Login">
               Log in
             </Link>
