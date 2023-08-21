@@ -1,4 +1,4 @@
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import { GoogleMap, Marker, useLoadScript, Circle } from "@react-google-maps/api";
 import { useState, useEffect } from "react";
 import classes from "./Maps.module.css";
 
@@ -36,10 +36,23 @@ export const Maps = () => {
           zoom={10}
         >
           {userLocation && (
-            <Marker
-              position={userLocation}
-              icon={"http://maps.google.com/mapfiles/ms/micons/hiker.png"}
-            />
+           <>
+           <Marker
+             position={userLocation}
+             icon={"http://maps.google.com/mapfiles/ms/micons/hiker.png"}
+           />
+           <Circle
+             center={userLocation}
+             radius={500} 
+             options={{
+               strokeColor: "rgba(255, 110, 159, 1",
+               strokeOpacity: 0.8,
+               strokeWeight: 10,
+               fillColor: "rgba(122, 146, 254, 1)",
+               fillOpacity: 0.35,
+             }}
+           />
+         </>
           )}
         </GoogleMap>
       )}
