@@ -2,9 +2,21 @@ section {
   display: flex;
 }
 
-.content {
+.contentLogIn {
   flex: 1;
   height: 74vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #333;
+background: rgb(255,110,159);
+background: linear-gradient(346deg, rgba(255,110,159,1) 5%, rgba(238,249,250,1) 24%, rgba(122,146,254,1) 93%);
+}
+
+.contentLogOut {
+  flex: 1;
+  height: 78vh;
   display: flex;
   justify-content: center;
   align-items: center;

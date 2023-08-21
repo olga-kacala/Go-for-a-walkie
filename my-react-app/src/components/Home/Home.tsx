@@ -1,7 +1,11 @@
 import classes from "./Home.module.css";
 import { Link } from "react-router-dom";
+import { AppContext } from "../Providers/Providers";
+import { useContext } from "react";
 
 export function Home() {
+  const {isLogged} = useContext(AppContext);
+  
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "hidden") {
       document.title = "Walkie - come back to me!";
@@ -12,7 +16,7 @@ export function Home() {
   return (
     <div>
       <section>
-        <div className={classes.content}>
+        <div className={isLogged ? classes.contentLogIn : classes.contentLogOut}>
           <div className={classes.text}>
             <h2>Connect with fellow dog owners for dog walking adventures!</h2>
             <p>
