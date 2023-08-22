@@ -294,6 +294,8 @@ export function MyPets(): JSX.Element {
               id="date"
               selected={dateOfBirth}
               placeholderText="Date of Birth"
+              showYearDropdown
+              dateFormat="d MMMM yyyy"
               onChange={(date) => setDateOfBirth(date as Date)}
               value={dateOfBirth ? dateOfBirth.toLocaleDateString() : ""}
             />
