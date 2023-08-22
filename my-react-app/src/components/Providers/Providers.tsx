@@ -1,5 +1,5 @@
 import React, { createContext, useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import { getStorage, ref, deleteObject } from "firebase/storage";
 
@@ -7,7 +7,7 @@ export type Pet = {
   owner: string | null;
   id: number;
   name: string;
-  dateOfBirth: Date | null;
+  dateOfBirth: Timestamp | null; 
   breed: string;
   sex: string;
   temper: string;
@@ -75,7 +75,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
       const storage = getStorage();
       const imageRef = ref(storage, `${petId}.png`);
       await deleteObject(imageRef);
-  
+
       setmyAnimalsList(newArr);
     } catch (error) {
       console.log(error);
