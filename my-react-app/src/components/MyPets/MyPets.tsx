@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
+import { Timestamp } from "firebase/firestore";
 
 export type MyPetsProps = {
   upload: (
@@ -55,7 +56,8 @@ export function MyPets(): JSX.Element {
         ...product,
         id: petId,
         name: petName?.toUpperCase() ?? "",
-        dateOfBirth: dateOfBirth || new Date(),
+        // dateOfBirth: dateOfBirth || new Date(),
+        dateOfBirth: dateOfBirth ? Timestamp.fromDate(dateOfBirth) : null,
       };
       const uploadedPhotoURL = await upload(
         photo,
@@ -82,35 +84,84 @@ export function MyPets(): JSX.Element {
     }
   };
 
-  useEffect((): void => {
-    onAuthStateChanged(firebaseAuth, async (user) => {
-      if (user) {
-        const userEmail = user.email;
-        setUsername(userEmail);
-        setIsLogged(true);
-        const docRef = doc(firebaseDb, "MyPets", `${user.email}`);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setmyAnimalsList(data.animals);
-          setResultMyPets("Your pet list:");
+//   useEffect((): void => {
+//     onAuthStateChanged(firebaseAuth, async (user) => {
+//       if (user) {
+//         const userEmail = user.email;
+//         setUsername(userEmail);
+//         setIsLogged(true);
+//         const docRef = doc(firebaseDb, "MyPets", `${user.email}`);
+//         const docSnap = await getDoc(docRef);
+//         if (docSnap.exists()) {
+//           const data = docSnap.data();
+//           setmyAnimalsList(data.animals);
+//           setResultMyPets("Your pet list:");
 
-          const petWithDateOfBirth = data.animals.find(
-            (pet: Pet) => pet.dateOfBirth instanceof Date
-          );
-          if (petWithDateOfBirth) {
-            setDateOfBirth(petWithDateOfBirth.dateOfBirth);
-          }
-        } else {
-          setUsername("");
-          setmyAnimalsList([]);
+//         //   const petWithDateOfBirth = data.animals.find(
+//         //     (pet: Pet) => pet.dateOfBirth instanceof Date
+//         //   );
+//         //   if (petWithDateOfBirth) {
+//         //     setDateOfBirth(petWithDateOfBirth.dateOfBirth);
+//         //   }
+//         // } else {
+//         //   setUsername("");
+//         //   setmyAnimalsList([]);
+
+//         const dateOfBirthValue = data.animals[0]?.dateOfBirth; // Use the index that fits your data structure
+//   if (dateOfBirthValue) {
+//     setDateOfBirth(new Date(dateOfBirthValue));
+//   }
+// }
+//       } else {
+//         setUsername("");
+//         setmyAnimalsList([]);
+//       }
+//     });
+//   }, [setmyAnimalsList, setUsername, setIsLogged, setDateOfBirth, animals]);
+
+useEffect(() => {
+  onAuthStateChanged(firebaseAuth, async (user) => {
+    if (user) {
+      const userEmail = user.email;
+      setUsername(userEmail);
+      setIsLogged(true);
+      const docRef = doc(firebaseDb, "MyPets", `${user.email}`);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setmyAnimalsList(data.animals);
+        setResultMyPets("Your pet list:");
+
+        const petWithDateOfBirth = data.animals.find(
+          (pet: Pet) => pet.dateOfBirth instanceof Timestamp
+        );
+
+        if (petWithDateOfBirth) {
+          const dateOfBirthValue = petWithDateOfBirth.dateOfBirth.toDate();
+          setDateOfBirth(dateOfBirthValue);
         }
+
       } else {
         setUsername("");
         setmyAnimalsList([]);
       }
-    });
-  }, [setmyAnimalsList, setUsername, setIsLogged, setDateOfBirth, animals]);
+    } else {
+      setUsername("");
+      setmyAnimalsList([]);
+    }
+  });
+}, [setUsername, setIsLogged, setmyAnimalsList]);
+
+// // Move the code to set dateOfBirth state here
+// useEffect(() => {
+//   const petWithDateOfBirth = myAnimalsList.find(
+//     (pet: Pet) => pet.dateOfBirth instanceof Date
+//   );
+//   if (petWithDateOfBirth) {
+//     setDateOfBirth(petWithDateOfBirth.dateOfBirth);
+//   }
+// }, [myAnimalsList]);
+
 
   useEffect(() => {
     if (myAnimalsList.length === 0) {
@@ -236,24 +287,26 @@ export function MyPets(): JSX.Element {
                 <span className={classes.title}>name: </span>
                 <span className={classes.child}>{pet.name}</span>
                 <div>
-                  <span className={classes.title}>age: </span>
-                  <span className={classes.child}>
-                    {typeof pet.dateOfBirth === "string"
-                      ? "Unknown"
-                      : `${calculateAge(pet.dateOfBirth).years} years ${
-                          calculateAge(pet.dateOfBirth).months
-                        } months`}
-                  </span>
-                </div>
+  <span className={classes.title}>age: </span>
+  <span className={classes.child}>
+    {pet.dateOfBirth instanceof Timestamp
+      ? `${calculateAge(pet.dateOfBirth.toDate()).years} years ${calculateAge(
+          pet.dateOfBirth.toDate()
+        ).months} months`
+      : "Unknown"}
+  </span>
+</div>
+
 
                 <div>
-                  <span className={classes.title}>Date of Birth: </span>
-                  <span className={classes.child}>
-                    {pet.dateOfBirth instanceof Date
-                      ? pet.dateOfBirth.toLocaleDateString()
-                      : "Unknown"}
-                  </span>
-                </div>
+  <span className={classes.title}>Date of Birth: </span>
+  <span className={classes.child}>
+    {pet.dateOfBirth instanceof Timestamp
+      ? pet.dateOfBirth.toDate().toLocaleDateString()
+      : "Unknown"}
+  </span>
+</div>
+
 
                 <div>
                   <span className={classes.title}>breed: </span>{" "}
