@@ -1,0 +1,1 @@
+Welcome to Walkie! This app aims to bring pet owners together, allowing them to connect and arrange walks for their pets. Whether you're looking for a playmate for your furry friend or want to join others on a stroll, this app has you covered.
