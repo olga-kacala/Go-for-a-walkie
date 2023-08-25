@@ -8,6 +8,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
 import { Timestamp } from "firebase/firestore";
+import { startOfWeek, endOfWeek, isWithinInterval, format, differenceInWeeks, differenceInCalendarDays,} from "date-fns";
 
 export type MyPetsProps = {
   upload: (
@@ -20,7 +21,6 @@ export type MyPetsProps = {
 
 export function MyPets(): JSX.Element {
   const {
-    animals,
     username,
     setUsername,
     myAnimalsList,
@@ -47,6 +47,7 @@ export function MyPets(): JSX.Element {
   } = useContext(AppContext);
   const [photo, setPhoto] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [birthdayPopup, setBirthdayPopup] = useState<string | null>(null);
   const currentUser = useAuth();
 
   const addToList = async (product: Pet): Promise<void> => {
@@ -58,9 +59,6 @@ export function MyPets(): JSX.Element {
         name: petName?.toUpperCase() ?? "",
         dateOfBirth: dateOfBirth ? Timestamp.fromDate(dateOfBirth) : null,
       };
-      
- 
-
       const uploadedPhotoURL = await upload(
         photo,
         currentUser,
@@ -220,11 +218,56 @@ export function MyPets(): JSX.Element {
     }
   }
 
+  useEffect(() => {
+    const today = new Date();
+    const currentWeekStart = startOfWeek(today);
+    const currentWeekEnd = endOfWeek(today);
+  
+    const petWithBirthdayThisWeek = myAnimalsList.find((pet: Pet) => {
+     
+      if (pet.dateOfBirth instanceof Timestamp) {
+        const petBirthday = pet.dateOfBirth.toDate();
+  
+        const isBirthdayThisWeek = isWithinInterval(petBirthday, {
+          start: currentWeekStart,
+          end: currentWeekEnd,
+        });
+  
+        const isBirthdayToday =
+          petBirthday.getDate() === today.getDate() &&
+          petBirthday.getMonth() === today.getMonth();
+  
+        return isBirthdayThisWeek && !isBirthdayToday;
+        
+      }
+      return false;
+    });
+  
+    if (petWithBirthdayThisWeek && petWithBirthdayThisWeek.dateOfBirth instanceof Timestamp) {
+      const formattedBirthday = format(
+        petWithBirthdayThisWeek.dateOfBirth.toDate(),
+        "MMMM d"
+      );
+      setBirthdayPopup(
+        `🎉 It's ${petWithBirthdayThisWeek.name}'s birthday on ${formattedBirthday}! 🎂`
+      );
+    } else {
+      setBirthdayPopup(  `🎉 It's not a birthday`);
+      console.log(petWithBirthdayThisWeek)
+    }
+  }, [myAnimalsList]);
+  
+
   return (
     <div>
       <div className={classes.Pets}>
         <div className={classes.PetList}>
           <h2>{resultMyPets}</h2>
+          
+      {birthdayPopup && (
+        <div>{birthdayPopup}</div>
+      )}
+    
           {myAnimalsList.map((pet) => (
             <div
               className={pet.sex === "female" ? classes.female : classes.male}

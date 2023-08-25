@@ -62,7 +62,8 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   const [selectedSex, setSelectedSex] = useState<string>("");
   const [selectedTemper, setSelectedTemper] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(new Date());
+  // const [dateOfBirth, setDateOfBirth] = useState<Date | null>(new Date());
+  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
   const [logoPop, setLogoPop] = useState<boolean>(false);
   const [photoURL, setPhotoURL] = useState<string | null>(null);
 
