@@ -58,6 +58,9 @@ export function MyPets(): JSX.Element {
         name: petName?.toUpperCase() ?? "",
         dateOfBirth: dateOfBirth ? Timestamp.fromDate(dateOfBirth) : null,
       };
+      
+ 
+
       const uploadedPhotoURL = await upload(
         photo,
         currentUser,
