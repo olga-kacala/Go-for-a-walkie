@@ -37,7 +37,7 @@ export type AppContextState = {
   error: string | null;
   setError: (param: string) => void;
   dateOfBirth: Date | null;
-  setDateOfBirth: (param: Date) => void;
+  setDateOfBirth: (param: Date | null) => void;
   logoPop: boolean;
   setLogoPop: (param: boolean) => void;
   logoTransform: (param: boolean) => void;

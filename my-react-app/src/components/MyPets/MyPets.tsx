@@ -236,16 +236,10 @@ export function MyPets(): JSX.Element {
           start: currentWeekStart,
           end: currentWeekEnd,
         });
-
-        const isBirthdayToday =
-          petBirthday.getDate() === today.getDate() &&
-          petBirthday.getMonth() === today.getMonth();
-
-        return isBirthdayThisWeek && !isBirthdayToday;
+        return isBirthdayThisWeek;
       }
       return false;
     });
-
     if (
       petWithBirthdayThisWeek &&
       petWithBirthdayThisWeek.dateOfBirth instanceof Timestamp
@@ -258,7 +252,7 @@ export function MyPets(): JSX.Element {
         `🎉 It's ${petWithBirthdayThisWeek.name}'s birthday on ${formattedBirthday}! 🎂`
       );
     } else {
-      setBirthdayPopup(`🎉 It's not a birthday`);
+      setBirthdayPopup(`It's not a birthday`);
       console.log(petWithBirthdayThisWeek);
     }
   }, [myAnimalsList]);
