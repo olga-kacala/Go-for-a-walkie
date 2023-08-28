@@ -1,4 +1,4 @@
-import { GoogleMap, Marker, useLoadScript, Circle } from "@react-google-maps/api";
+import { GoogleMap, Marker, useLoadScript, Polyline } from "@react-google-maps/api";
 import { useState, useEffect } from "react";
 import classes from "./Maps.module.css";
 
@@ -8,6 +8,9 @@ export const Maps = () => {
   });
 
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+const [markers, setMarkers] = useState<{ lat: number; lng: number }[]>([]);
+
+
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -25,6 +28,10 @@ export const Maps = () => {
     }
   }, []);
 
+  const handleMapClick = (event: google.maps.MapMouseEvent) => {
+    setMarkers((prevMarkers) => [...prevMarkers, { lat: event.latLng.lat(), lng: event.latLng.lng() }]);
+  };
+
   return (
     <div className={classes.Map}>
       {!isLoaded ? (
@@ -34,25 +41,25 @@ export const Maps = () => {
           mapContainerClassName={classes.mapContainer}
           center={userLocation || { lat: 50.65696776753784, lng: 17.9230121375674 }}
           zoom={10}
+          onClick={handleMapClick}
         >
           {userLocation && (
-           <>
-           <Marker
-             position={userLocation}
-             icon={"http://maps.google.com/mapfiles/ms/micons/hiker.png"}
-           />
-           <Circle
-             center={userLocation}
-             radius={500} 
-             options={{
-               strokeColor: "rgba(255, 110, 159, 1",
-               strokeOpacity: 0.8,
-               strokeWeight: 10,
-               fillColor: "rgba(122, 146, 254, 1)",
-               fillOpacity: 0.35,
-             }}
-           />
-         </>
+            <>
+              <Marker position={userLocation} icon="http://maps.google.com/mapfiles/ms/micons/hiker.png" />
+              {markers.map((marker, index) => (
+                <Marker key={index} position={marker} />
+              ))}
+              {markers.length >= 2 && (
+                <Polyline
+                  path={markers}
+                  options={{
+                    strokeColor: "#FF5733",
+                    strokeOpacity: 1,
+                    strokeWeight: 3,
+                  }}
+                />
+              )}
+            </>
           )}
         </GoogleMap>
       )}
