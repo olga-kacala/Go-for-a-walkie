@@ -29,8 +29,13 @@ const [markers, setMarkers] = useState<{ lat: number; lng: number }[]>([]);
   }, []);
 
   const handleMapClick = (event: google.maps.MapMouseEvent) => {
-    setMarkers((prevMarkers) => [...prevMarkers, { lat: event.latLng.lat(), lng: event.latLng.lng() }]);
+    if (event.latLng) {
+      const { lat, lng } = event.latLng.toJSON();
+      setMarkers((prevMarkers) => [...prevMarkers, { lat, lng }]);
+    }
   };
+  
+  
 
   return (
     <div className={classes.Map}>
