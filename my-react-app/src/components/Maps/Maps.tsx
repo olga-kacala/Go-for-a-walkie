@@ -260,7 +260,7 @@ export const Maps = () => {
                 />
               )}
               {totalDistance > 0 && (
-                <div>
+                <div className={classes.distance}>
                   Total Distance: {totalDistance.toFixed(2)} km
                 </div>
               )}

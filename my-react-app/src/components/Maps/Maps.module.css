@@ -7,3 +7,12 @@
     height: 100%;
     width: 100%;
   }
+
+  .distance {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 8px;
+    border-radius: 4px;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+  }
