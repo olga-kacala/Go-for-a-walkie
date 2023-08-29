@@ -16,6 +16,10 @@ export const Maps = () => {
     lat: number;
     lng: number;
   } | null>(null);
+  const [startingMarker, setStartingMarker] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
   const [markers, setMarkers] = useState<
     { lat: number; lng: number; id: number }[]
   >([]);
@@ -26,6 +30,10 @@ export const Maps = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          setStartingMarker({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
@@ -47,9 +55,9 @@ export const Maps = () => {
     }
   };
 
-  const handleMarkerClick = (markerID: number) => {
+  const handleMarkerClick = (markerId: number) => {
     setMarkers((prevMarkers) =>
-      prevMarkers.filter((marker) => marker.id !== markerID)
+      prevMarkers.filter((marker) => marker.id !== markerId)
     );
   };
 
@@ -66,20 +74,23 @@ export const Maps = () => {
           zoom={10}
           onClick={handleMapClick}
         >
-          {userLocation && (
+          {userLocation && startingMarker && (
             <>
-              <Marker
-                position={userLocation}
-                icon="http://maps.google.com/mapfiles/ms/micons/hiker.png"
-              />
               {markers.map((marker) => (
-                <Marker key={marker.id} position={{lat:marker.lat, lng:marker.lng}} onClick={()=>handleMarkerClick(marker.id)} />
+                <Marker
+                  key={marker.id}
+                  position={{ lat: marker.lat, lng: marker.lng }}
+                  onClick={() => handleMarkerClick(marker.id)}
+                />
               ))}
               {markers.length >= 2 && (
                 <Polyline
-                  path={markers}
+                  path={markers.map((marker) => ({
+                    lat: marker.lat,
+                    lng: marker.lng,
+                  }))}
                   options={{
-                    strokeColor: "#FF5733",
+                    strokeColor: "rgba(122,146,254,1)",
                     strokeOpacity: 1,
                     strokeWeight: 3,
                   }}

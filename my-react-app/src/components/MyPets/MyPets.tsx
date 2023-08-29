@@ -223,39 +223,39 @@ export function MyPets(): JSX.Element {
     }
   }
 
-  useEffect(() => {
-    const today = new Date();
-    const currentWeekStart = startOfWeek(today);
-    const currentWeekEnd = endOfWeek(today);
+  // useEffect(() => {
+  //   const today = new Date();
+  //   const currentWeekStart = startOfWeek(today);
+  //   const currentWeekEnd = endOfWeek(today);
 
-    const petWithBirthdayThisWeek = myAnimalsList.find((pet: Pet) => {
-      if (pet.dateOfBirth instanceof Timestamp) {
-        const petBirthday = pet.dateOfBirth.toDate();
+  //   const petWithBirthdayThisWeek = myAnimalsList.find((pet: Pet) => {
+  //     if (pet.dateOfBirth instanceof Timestamp) {
+  //       const petBirthday = pet.dateOfBirth.toDate();
 
-        const isBirthdayThisWeek = isWithinInterval(petBirthday, {
-          start: currentWeekStart,
-          end: currentWeekEnd,
-        });
-        return isBirthdayThisWeek;
-      }
-      return false;
-    });
-    if (
-      petWithBirthdayThisWeek &&
-      petWithBirthdayThisWeek.dateOfBirth instanceof Timestamp
-    ) {
-      const formattedBirthday = format(
-        petWithBirthdayThisWeek.dateOfBirth.toDate(),
-        "MMMM d"
-      );
-      setBirthdayPopup(
-        `🎉 It's ${petWithBirthdayThisWeek.name}'s birthday on ${formattedBirthday}! 🎂`
-      );
-    } else {
-      setBirthdayPopup(`It's not a birthday`);
-      console.log(petWithBirthdayThisWeek);
-    }
-  }, [myAnimalsList]);
+  //       const isBirthdayThisWeek = isWithinInterval(petBirthday, {
+  //         start: currentWeekStart,
+  //         end: currentWeekEnd,
+  //       });
+  //       return isBirthdayThisWeek;
+  //     }
+  //     return false;
+  //   });
+  //   if (
+  //     petWithBirthdayThisWeek &&
+  //     petWithBirthdayThisWeek.dateOfBirth instanceof Timestamp
+  //   ) {
+  //     const formattedBirthday = format(
+  //       petWithBirthdayThisWeek.dateOfBirth.toDate(),
+  //       "MMMM d"
+  //     );
+  //     setBirthdayPopup(
+  //       `🎉 It's ${petWithBirthdayThisWeek.name}'s birthday on ${formattedBirthday}! 🎂`
+  //     );
+  //   } else {
+  //     setBirthdayPopup(`It's not a birthday`);
+  //     console.log(petWithBirthdayThisWeek);
+  //   }
+  // }, [myAnimalsList]);
 
   return (
     <div>
@@ -263,7 +263,7 @@ export function MyPets(): JSX.Element {
         <div className={classes.PetList}>
           <h2>{resultMyPets}</h2>
 
-          {birthdayPopup && <div>{birthdayPopup}</div>}
+          {/* {birthdayPopup && <div>{birthdayPopup}</div>} */}
 
           {myAnimalsList.map((pet) => (
             <div
@@ -292,14 +292,14 @@ export function MyPets(): JSX.Element {
                       : "Unknown"}
                   </span>
                 </div>
-                <div>
+                {/* <div>
                   <span className={classes.title}>Date of Birth: </span>
                   <span className={classes.child}>
                     {pet.dateOfBirth instanceof Timestamp
                       ? pet.dateOfBirth.toDate().toLocaleDateString()
                       : "Unknown"}
                   </span>
-                </div>
+                </div> */}
                 <div>
                   <span className={classes.title}>breed: </span>{" "}
                   <span className={classes.child}>{pet.breed}</span>
