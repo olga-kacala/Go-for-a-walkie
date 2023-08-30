@@ -13,6 +13,21 @@
     padding: 8px;
     border-radius: 4px;
     position: absolute;
-    bottom: 20px;
-    left: 20px;
+    top: 100px;
+    left: 12px;
+  }
+
+  .button {
+    display: flex;
+    background-color: #ff5500;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-family: "Dosis", sans-serif;
+    border: none;
+    font-size: inherit;
+    letter-spacing: 2px;
+    cursor: pointer;
   }
