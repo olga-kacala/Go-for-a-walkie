@@ -170,21 +170,23 @@ export const Maps = () => {
                 <div className={classes.distance}>
                   <p>Walking Distance: {totalDistance.toFixed(2)} km</p>
                   {selectedPetId !== null && (
-  <div>
-    {myAnimalsList.map((pet) => {
-      if (pet.id === selectedPetId) {
-        return (
-          <div key={pet.id}>
-            <p>Pet: {pet.name}</p>
-          </div>
-        );
-      }
-      return null;
-    })}
-  </div>
-)}
+                    <div>
+                      {myAnimalsList.map((pet) => {
+                        if (pet.id === selectedPetId) {
+                          return (
+                            <div key={pet.id}>
+                              <p>Pet: {pet.name}</p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })}
+                    </div>
+                  )}
                   <select
-                    value={selectedPetId !== null ? setSelectedPetId.toString() : ""}
+                    value={
+                      selectedPetId !== null ? setSelectedPetId.toString() : ""
+                    }
                     onChange={(e) => {
                       const selectedId = parseInt(e.target.value);
                       setSelectedPetId(selectedId);
@@ -197,7 +199,7 @@ export const Maps = () => {
                       </option>
                     ))}
                   </select>
-                  
+
                   <button className={classes.button}>Go!</button>
                 </div>
               )}
