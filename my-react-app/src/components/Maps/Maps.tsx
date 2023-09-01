@@ -13,7 +13,7 @@ export const Maps = () => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY || "",
   });
 
-  const {myAnimalsList} = useContext(AppContext);
+  const { myAnimalsList } = useContext(AppContext);
 
   const [userLocation, setUserLocation] = useState<{
     lat: number;
@@ -28,10 +28,7 @@ export const Maps = () => {
   >([]);
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const markerIdCounter = useRef(0);
-  const [selectedPetId, setSelectedPetId] = useState<number[]>([]); 
-
-  
-
+  const [selectedPetId, setSelectedPetId] = useState<number>();
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -70,7 +67,12 @@ export const Maps = () => {
     setTotalDistance(distance);
   }, [markers]);
 
-  const calculateDistance = (lat1: number, lng1:number, lat2: number, lng2: number) => {
+  const calculateDistance = (
+    lat1: number,
+    lng1: number,
+    lat2: number,
+    lng2: number
+  ) => {
     const earthRadius = 6371; // Radius of the Earth in kilometers
 
     // Convert latitude and longitude from degrees to radians
@@ -109,7 +111,7 @@ export const Maps = () => {
         currMarker.lat,
         currMarker.lng
       );
-      }
+    }
     setTotalDistance(distance);
   }, [markers]);
 
@@ -166,37 +168,37 @@ export const Maps = () => {
               )}
               {totalDistance > 0 && (
                 <div className={classes.distance}>
-                  <h3>Your Walk</h3>
-                  <p>Total Distance: {totalDistance.toFixed(2)} km</p>
-                  
-                  <select
-  value={selectedPetId ?? ""}
-  onChange={(e) => {
-    const selectedId = parseInt(e.target.value);
-    setSelectedPetId([selectedId]); ;
-  }}
->
-  <option value="">Select a pet</option>
-  {myAnimalsList.map((pet) => (
-    <option key={pet.id} value={pet.id}>
-      {pet.name}
-    </option>
-    
-  ))}
-</select>
-{selectedPetId.map((id: number) => {
-  const selectedPet = myAnimalsList.find(pet => pet.id === id);
-  if (selectedPet) {
-    return (
-      <div key={selectedPet.id}>
-        <p>Pet: {selectedPet.name}</p>
-      </div>
-    );
-  } else {
-    return null; // Handle the case where the selected pet is not found
+                  <p>Walking Distance: {totalDistance.toFixed(2)} km</p>
+                  {selectedPetId !== null && (
+  <div>
+    {myAnimalsList.map((pet) => {
+      if (pet.id === selectedPetId) {
+        return (
+          <div key={pet.id}>
+            <p>Pet: {pet.name}</p>
+          </div>
+        );
       }
+      return null;
     })}
-    <button className={classes.button}>Go!</button>
+  </div>
+)}
+                  <select
+                    value={selectedPetId !== null ? setSelectedPetId.toString() : ""}
+                    onChange={(e) => {
+                      const selectedId = parseInt(e.target.value);
+                      setSelectedPetId(selectedId);
+                    }}
+                  >
+                    <option value="">Select a pet</option>
+                    {myAnimalsList.map((pet) => (
+                      <option key={pet.id} value={pet.id}>
+                        {pet.name}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  <button className={classes.button}>Go!</button>
                 </div>
               )}
             </>
