@@ -14,6 +14,11 @@ export function Login(): JSX.Element {
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
   const [isinputError, setIsInputError] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
 
   const signIn = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -30,6 +35,7 @@ export function Login(): JSX.Element {
       }, 3000);
     }
   };
+  
 
   return (
     <div className={classes.login}>
@@ -54,7 +60,7 @@ export function Login(): JSX.Element {
           <input
             name="password"
             id="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             placeholder="Password"
             required
@@ -63,6 +69,13 @@ export function Login(): JSX.Element {
               setIsInputError(false);
             }}
           />
+          <button
+              type="button"
+              className={classes.passwordToggle}
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? "Hide psw" : "Show psw"}
+            </button>
           <p>{error}</p>
           <button className={classes.button} onClick={signIn}>
             Go

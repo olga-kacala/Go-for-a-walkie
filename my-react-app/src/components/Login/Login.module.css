@@ -33,3 +33,17 @@
   cursor: pointer;
 }
 
+.passwordToggle {
+  background-color: #333;
+  color: #fff;
+  text-decoration: none;
+  
+  border-radius: 5px;
+  
+  font-family: "Dosis", sans-serif;
+  border: none;
+  font-size: inherit;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
