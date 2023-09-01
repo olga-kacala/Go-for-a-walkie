@@ -1,28 +1,38 @@
 .login {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  form input {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .button {
-    display: inline-block;
-    background-color: #ff5500;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 30px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-family: "Dosis", sans-serif;
-    border: none;
-    font-size: inherit;
-    letter-spacing: 2px;
-    cursor: pointer;
-  }
-  
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+form input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.button {
+  display: inline-block;
+  background-color: #ff5500;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 30px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-family: "Dosis", sans-serif;
+  border: none;
+  font-size: inherit;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.passwordToggle {
+  background-color: #333;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-family: "Dosis", sans-serif;
+  border: none;
+  font-size: inherit;
+  letter-spacing: 2px;
+  cursor: pointer;
+}

@@ -35,7 +35,6 @@ export function Login(): JSX.Element {
       }, 3000);
     }
   };
-  
 
   return (
     <div className={classes.login}>
@@ -70,12 +69,12 @@ export function Login(): JSX.Element {
             }}
           />
           <button
-              type="button"
-              className={classes.passwordToggle}
-              onClick={togglePasswordVisibility}
-            >
-              {showPassword ? "Hide psw" : "Show psw"}
-            </button>
+            type="button"
+            className={classes.passwordToggle}
+            onClick={togglePasswordVisibility}
+          >
+            {showPassword ? "Hide psw" : "Show psw"}
+          </button>
           <p>{error}</p>
           <button className={classes.button} onClick={signIn}>
             Go

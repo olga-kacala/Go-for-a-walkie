@@ -13,6 +13,7 @@ export function Register(): JSX.Element {
   const [repeatPassword, setRepeatPassword] = useState<string>("");
   const [isUsernameError, setIsUsernameError] = useState<boolean>(false);
   const [isPasswordError, setIsPasswordError] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
@@ -51,6 +52,10 @@ export function Register(): JSX.Element {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
   return (
     <div>
       <div className={classes.login}>
@@ -69,7 +74,7 @@ export function Register(): JSX.Element {
           />
           <input
             name="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             placeholder="Password"
             required
@@ -89,6 +94,13 @@ export function Register(): JSX.Element {
               setIsPasswordError(false);
             }}
           />
+          <button
+            type="button"
+            className={classes.passwordToggle}
+            onClick={togglePasswordVisibility}
+          >
+            {showPassword ? "Hide psw" : "Show psw"}
+          </button>
           <p>{error}</p>
           <button className={classes.button} onClick={handleSubmit}>
             Register

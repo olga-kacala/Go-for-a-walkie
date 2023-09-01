@@ -8,12 +8,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
 import { Timestamp } from "firebase/firestore";
-import {
-  startOfWeek,
-  endOfWeek,
-  isWithinInterval,
-  format,
-} from "date-fns";
+import { startOfWeek, endOfWeek, isWithinInterval, format } from "date-fns";
 
 export type MyPetsProps = {
   upload: (
