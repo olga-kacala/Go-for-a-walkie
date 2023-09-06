@@ -8,7 +8,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
 import { Timestamp } from "firebase/firestore";
-import { startOfWeek, endOfWeek, isWithinInterval, format } from "date-fns";
 
 export type MyPetsProps = {
   upload: (
@@ -47,7 +46,6 @@ export function MyPets(): JSX.Element {
   } = useContext(AppContext);
   const [photo, setPhoto] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [birthdayPopup, setBirthdayPopup] = useState<string | null>(null);
   const currentUser = useAuth();
 
   const addToList = async (product: Pet): Promise<void> => {
@@ -218,48 +216,11 @@ export function MyPets(): JSX.Element {
     }
   }
 
-  // useEffect(() => {
-  //   const today = new Date();
-  //   const currentWeekStart = startOfWeek(today);
-  //   const currentWeekEnd = endOfWeek(today);
-
-  //   const petWithBirthdayThisWeek = myAnimalsList.find((pet: Pet) => {
-  //     if (pet.dateOfBirth instanceof Timestamp) {
-  //       const petBirthday = pet.dateOfBirth.toDate();
-
-  //       const isBirthdayThisWeek = isWithinInterval(petBirthday, {
-  //         start: currentWeekStart,
-  //         end: currentWeekEnd,
-  //       });
-  //       return isBirthdayThisWeek;
-  //     }
-  //     return false;
-  //   });
-  //   if (
-  //     petWithBirthdayThisWeek &&
-  //     petWithBirthdayThisWeek.dateOfBirth instanceof Timestamp
-  //   ) {
-  //     const formattedBirthday = format(
-  //       petWithBirthdayThisWeek.dateOfBirth.toDate(),
-  //       "MMMM d"
-  //     );
-  //     setBirthdayPopup(
-  //       `🎉 It's ${petWithBirthdayThisWeek.name}'s birthday on ${formattedBirthday}! 🎂`
-  //     );
-  //   } else {
-  //     setBirthdayPopup(`It's not a birthday`);
-  //     console.log(petWithBirthdayThisWeek);
-  //   }
-  // }, [myAnimalsList]);
-
   return (
     <div>
       <div className={classes.Pets}>
         <div className={classes.PetList}>
           <h2>{resultMyPets}</h2>
-
-          {/* {birthdayPopup && <div>{birthdayPopup}</div>} */}
-
           {myAnimalsList.map((pet) => (
             <div
               className={pet.sex === "female" ? classes.female : classes.male}
@@ -287,14 +248,14 @@ export function MyPets(): JSX.Element {
                       : "Unknown"}
                   </span>
                 </div>
-                {/* <div>
+                <div>
                   <span className={classes.title}>Date of Birth: </span>
                   <span className={classes.child}>
                     {pet.dateOfBirth instanceof Timestamp
                       ? pet.dateOfBirth.toDate().toLocaleDateString()
                       : "Unknown"}
                   </span>
-                </div> */}
+                </div>
                 <div>
                   <span className={classes.title}>breed: </span>{" "}
                   <span className={classes.child}>{pet.breed}</span>
