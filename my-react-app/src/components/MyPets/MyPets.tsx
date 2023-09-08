@@ -249,7 +249,7 @@ export function MyPets(): JSX.Element {
                   </span>
                 </div>
                 <div>
-                  <span className={classes.title}>Date of Birth: </span>
+                  <span className={classes.title}>birthday: </span>
                   <span className={classes.child}>
                     {pet.dateOfBirth instanceof Timestamp
                       ? pet.dateOfBirth.toDate().toLocaleDateString()

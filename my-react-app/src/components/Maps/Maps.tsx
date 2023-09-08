@@ -28,7 +28,8 @@ export const Maps = () => {
   >([]);
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const markerIdCounter = useRef(0);
-  const [selectedPetId, setSelectedPetId] = useState<number>();
+  const [selectedPetNames, setSelectedPetNames] = useState<string[]>([]);
+  const [addedPets, setAddedPets] = useState<string[]>([]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -115,7 +116,23 @@ export const Maps = () => {
     setTotalDistance(distance);
   }, [markers]);
 
+  // const handleMapClick = (event: google.maps.MapMouseEvent) => {
+  //   if (selectedPetNames.length > 0) {
+  //     setAddedPets((prevPets) => [...prevPets, ...selectedPetNames]);
+  //     setSelectedPetNames([]); // Clear the selected pet names after adding them
+  //   }
+  //   if (event.latLng) {
+  //     const { lat, lng } = event.latLng.toJSON();
+  //     setMarkers((prevMarkers) => [
+  //       ...prevMarkers,
+  //       { lat, lng, id: markerIdCounter.current++ },
+  //     ]);
+  //   }
+  // };
+
   const handleMapClick = (event: google.maps.MapMouseEvent) => {
+  
+ 
     if (event.latLng) {
       const { lat, lng } = event.latLng.toJSON();
       setMarkers((prevMarkers) => [
@@ -124,6 +141,14 @@ export const Maps = () => {
       ]);
     }
   };
+
+  const handlePetClick =()=> {
+    if (selectedPetNames.length > 0) {
+      setAddedPets((prevPets) => [...prevPets, ...selectedPetNames]);
+      setSelectedPetNames([]); // Clear the selected pet names after adding them
+    }
+  }
+  
 
   const handleMarkerClick = (markerId: number) => {
     setMarkers((prevMarkers) =>
@@ -169,38 +194,40 @@ export const Maps = () => {
               {totalDistance > 0 && (
                 <div className={classes.distance}>
                   <p>Walking Distance: {totalDistance.toFixed(2)} km</p>
-                  {selectedPetId !== null && (
+                  {selectedPetNames !== null && (
                     <div>
-                      {myAnimalsList.map((pet) => {
-                        if (pet.id === selectedPetId) {
-                          return (
-                            <div key={pet.id}>
-                              <p>Pet: {pet.name}</p>
-                            </div>
-                          );
-                        }
-                        return null;
-                      })}
+                      {addedPets.map((petName) => (
+                        <div key={petName}>
+                          <p>Pet: {petName}</p>
+                        </div>
+                      ))}
                     </div>
                   )}
                   <select
-                    value={
-                      selectedPetId !== null ? setSelectedPetId.toString() : ""
-                    }
+                    multiple
+                    value={selectedPetNames}
                     onChange={(e) => {
-                      const selectedId = parseInt(e.target.value);
-                      setSelectedPetId(selectedId);
+                      const selectedNames = Array.from(
+                        e.target.selectedOptions,
+                        (option) => option.value
+                      );
+                      setSelectedPetNames(selectedNames);
                     }}
                   >
                     <option value="">Select a pet</option>
                     {myAnimalsList.map((pet) => (
-                      <option key={pet.id} value={pet.id}>
+                      <option key={pet.id} value={pet.name}>
                         {pet.name}
                       </option>
                     ))}
                   </select>
 
-                  <button className={classes.button}>Go!</button>
+                  <button
+                    className={classes.button}
+                    onClick={handlePetClick}
+                  >
+                    Add Pet
+                  </button>
                 </div>
               )}
             </>
