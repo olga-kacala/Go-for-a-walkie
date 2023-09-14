@@ -116,20 +116,6 @@ export const Maps = () => {
     setTotalDistance(distance);
   }, [markers]);
 
-  // const handleMapClick = (event: google.maps.MapMouseEvent) => {
-  //   if (selectedPetNames.length > 0) {
-  //     setAddedPets((prevPets) => [...prevPets, ...selectedPetNames]);
-  //     setSelectedPetNames([]); // Clear the selected pet names after adding them
-  //   }
-  //   if (event.latLng) {
-  //     const { lat, lng } = event.latLng.toJSON();
-  //     setMarkers((prevMarkers) => [
-  //       ...prevMarkers,
-  //       { lat, lng, id: markerIdCounter.current++ },
-  //     ]);
-  //   }
-  // };
-
   const handleMapClick = (event: google.maps.MapMouseEvent) => {
   
  
@@ -145,7 +131,7 @@ export const Maps = () => {
   const handlePetClick =()=> {
     if (selectedPetNames.length > 0) {
       setAddedPets((prevPets) => [...prevPets, ...selectedPetNames]);
-      setSelectedPetNames([]); // Clear the selected pet names after adding them
+      setSelectedPetNames([]); 
     }
   }
   

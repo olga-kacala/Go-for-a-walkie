@@ -10,6 +10,7 @@ export function Header(): JSX.Element {
   const { isLogged, setIsLogged, username, logoPop } =
     useContext(AppContext);
   const navigate = useNavigate();
+  console.log("name:"+username)
 
   const handleLogout = async (): Promise<void> => {
     try {
