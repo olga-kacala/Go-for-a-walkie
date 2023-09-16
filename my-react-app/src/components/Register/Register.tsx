@@ -64,6 +64,7 @@ export function Register(): JSX.Element {
           <input
             name="login"
             type="email"
+            id="email"
             value={username}
             placeholder="Email"
             required
@@ -74,6 +75,7 @@ export function Register(): JSX.Element {
           />
           <input
             name="password"
+            id="password"
             type={showPassword ? "text" : "password"}
             value={password}
             placeholder="Password"

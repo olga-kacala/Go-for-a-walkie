@@ -55,7 +55,7 @@ export function MyPets(): JSX.Element {
         ...product,
         id: petId,
         name: petName?.toUpperCase() ?? "",
-        dateOfBirth: dateOfBirth ? Timestamp.fromDate(dateOfBirth) : null,
+        dateOfBirth: dateOfBirth
       };
       const uploadedPhotoURL = await upload(
         photo,
@@ -103,7 +103,7 @@ export function MyPets(): JSX.Element {
             setDateOfBirth(dateOfBirthValue);
           }
         } else {
-          setUsername("");
+          // setUsername("");
           setmyAnimalsList([]);
         }
       } else {

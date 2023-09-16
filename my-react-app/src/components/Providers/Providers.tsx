@@ -7,7 +7,8 @@ export type Pet = {
   owner: string | null;
   id: number;
   name: string;
-  dateOfBirth: any | null; 
+  dateOfBirth: any | null;
+  // dateOfBirth: Date | null; 
   breed: string;
   sex: string;
   temper: string;
