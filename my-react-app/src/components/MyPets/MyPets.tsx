@@ -55,8 +55,9 @@ export function MyPets(): JSX.Element {
         ...product,
         id: petId,
         name: petName?.toUpperCase() ?? "",
-        dateOfBirth: dateOfBirth
+        dateOfBirth: dateOfBirth,
       };
+      console.log(dateOfBirth)
       const uploadedPhotoURL = await upload(
         photo,
         currentUser,
@@ -121,15 +122,19 @@ export function MyPets(): JSX.Element {
     }
   }, [myAnimalsList]);
 
-  function calculateAge(dateOfBirth: Date | null): {
+  function calculateAge(dateOfBirth: Date | Timestamp | null): {
     years: number;
     months: number;
   } {
     if (!dateOfBirth) {
       return { years: 0, months: 0 };
     }
+
+    const birthDate =
+      dateOfBirth instanceof Timestamp ? dateOfBirth.toDate() : dateOfBirth;
+
     const today = new Date();
-    const birthDate = new Date(dateOfBirth);
+    // const birthDate = new Date(dateOfBirth);
     let years = today.getFullYear() - birthDate.getFullYear();
     let months = today.getMonth() - birthDate.getMonth();
     if (
@@ -355,6 +360,7 @@ export function MyPets(): JSX.Element {
                     temper: selectedTemper ?? "",
                     photoURL: photoURL ?? "Img/profilePic.png",
                   });
+                  
                 }
               }}
             >

@@ -1,5 +1,5 @@
 import React, { createContext, useState } from "react";
-import { doc, setDoc} from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import { getStorage, ref, deleteObject } from "firebase/storage";
 
@@ -8,7 +8,6 @@ export type Pet = {
   id: number;
   name: string;
   dateOfBirth: any | null;
-  // dateOfBirth: Date | null; 
   breed: string;
   sex: string;
   temper: string;
@@ -63,8 +62,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   const [selectedSex, setSelectedSex] = useState<string>("");
   const [selectedTemper, setSelectedTemper] = useState<string>("");
   const [error, setError] = useState<string>("");
-  // const [dateOfBirth, setDateOfBirth] = useState<Date | null>(new Date());
-  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
+  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(new Date());
   const [logoPop, setLogoPop] = useState<boolean>(false);
   const [photoURL, setPhotoURL] = useState<string | null>(null);
 

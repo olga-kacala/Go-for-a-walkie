@@ -117,8 +117,6 @@ export const Maps = () => {
   }, [markers]);
 
   const handleMapClick = (event: google.maps.MapMouseEvent) => {
-  
- 
     if (event.latLng) {
       const { lat, lng } = event.latLng.toJSON();
       setMarkers((prevMarkers) => [
@@ -128,13 +126,12 @@ export const Maps = () => {
     }
   };
 
-  const handlePetClick =()=> {
+  const handlePetClick = () => {
     if (selectedPetNames.length > 0) {
       setAddedPets((prevPets) => [...prevPets, ...selectedPetNames]);
-      setSelectedPetNames([]); 
+      setSelectedPetNames([]);
     }
-  }
-  
+  };
 
   const handleMarkerClick = (markerId: number) => {
     setMarkers((prevMarkers) =>
@@ -207,13 +204,10 @@ export const Maps = () => {
                       </option>
                     ))}
                   </select>
-
-                  <button
-                    className={classes.button}
-                    onClick={handlePetClick}
-                  >
+                  <button className={classes.button} onClick={handlePetClick}>
                     Add Pet
                   </button>
+                  <button className={classes.button}>Share</button>
                 </div>
               )}
             </>
