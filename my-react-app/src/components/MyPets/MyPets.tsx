@@ -46,6 +46,7 @@ export function MyPets(): JSX.Element {
   } = useContext(AppContext);
   const [photo, setPhoto] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [BDToday, setBDToday] = useState(false);
   const currentUser = useAuth();
 
   const addToList = async (product: Pet): Promise<void> => {
@@ -57,7 +58,6 @@ export function MyPets(): JSX.Element {
         name: petName?.toUpperCase() ?? "",
         dateOfBirth: dateOfBirth,
       };
-      console.log(dateOfBirth)
       const uploadedPhotoURL = await upload(
         photo,
         currentUser,
@@ -104,7 +104,6 @@ export function MyPets(): JSX.Element {
             setDateOfBirth(dateOfBirthValue);
           }
         } else {
-          // setUsername("");
           setmyAnimalsList([]);
         }
       } else {
@@ -121,6 +120,32 @@ export function MyPets(): JSX.Element {
       setResultMyPets("Your pet list");
     }
   }, [myAnimalsList]);
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const currentDay = currentDate.getDate();
+    const currentMonth = currentDate.getMonth(); // Months are 0-based (0 = January)
+
+    // Check if any pet has a birthday with the same day and month as today
+    const hasBirthdayToday = myAnimalsList.some((pet) => {
+      if (pet.dateOfBirth) {
+        // Handle different date formats (Timestamp or Date)
+        const petDateOfBirth =
+          pet.dateOfBirth instanceof Timestamp
+            ? pet.dateOfBirth.toDate()
+            : new Date(pet.dateOfBirth);
+
+        const petDay = petDateOfBirth.getDate();
+        const petMonth = petDateOfBirth.getMonth();
+
+        return petDay === currentDay && petMonth === currentMonth;
+      }
+      return false;
+    });
+
+    setBDToday(hasBirthdayToday);
+  }, [myAnimalsList]);
+
 
   function calculateAge(dateOfBirth: Date | Timestamp | null): {
     years: number;
@@ -225,6 +250,17 @@ export function MyPets(): JSX.Element {
     <div>
       <div className={classes.Pets}>
         <div className={classes.PetList}>
+        {BDToday ? (
+        <div>
+          {/* Render this div when there are pets with a birthday today */}
+          <p>Today is a special day for your pets!</p>
+        </div>
+      ) : (
+        <div>
+          {/* Render this div when there are no pets with a birthday today */}
+          <p>No birthdays today.</p>
+        </div>
+      )}
           <h2>{resultMyPets}</h2>
           {myAnimalsList.map((pet) => (
             <div
