@@ -16,15 +16,10 @@
   margin: 0px;
 }
 
-.BirthdayContainer >a {
+.BirthdayContainer > a {
   text-decoration: none;
   color: white;
 }
-
-/* .BirthdayContainer a h2 {
-  margin: 5px;
-  color: red;
-} */
 
 .BirthdayText {
   margin: 5px;

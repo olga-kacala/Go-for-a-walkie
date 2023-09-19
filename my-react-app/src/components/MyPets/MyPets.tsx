@@ -121,26 +121,44 @@ export function MyPets(): JSX.Element {
     }
   }, [myAnimalsList]);
 
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+  const currentMonth = currentDate.getMonth();
+  const petWithBirthday = myAnimalsList.find((pet) => {
+    if (pet.dateOfBirth) {
+      const petDateOfBirth =
+        pet.dateOfBirth instanceof Timestamp
+          ? pet.dateOfBirth.toDate()
+          : new Date(pet.dateOfBirth);
+      const petDay = petDateOfBirth.getDate();
+      const petMonth = petDateOfBirth.getMonth();
+      return petDay === currentDay && petMonth === currentMonth;
+    }
+    return false;
+  });
+
   useEffect(() => {
-    const currentDate = new Date();
-    const currentDay = currentDate.getDate();
-    const currentMonth = currentDate.getMonth();
-
-    const hasBirthdayToday = myAnimalsList.some((pet) => {
-      if (pet.dateOfBirth) {
-        const petDateOfBirth =
-          pet.dateOfBirth instanceof Timestamp
-            ? pet.dateOfBirth.toDate()
-            : new Date(pet.dateOfBirth);
-        const petDay = petDateOfBirth.getDate();
-        const petMonth = petDateOfBirth.getMonth();
-        return petDay === currentDay && petMonth === currentMonth;
-      }
-      return false;
-    });
-
-    setBDToday(hasBirthdayToday);
+    
+    // const petWithBirthday = myAnimalsList.find((pet) => {
+    //   if (pet.dateOfBirth) {
+    //     const petDateOfBirth =
+    //       pet.dateOfBirth instanceof Timestamp
+    //         ? pet.dateOfBirth.toDate()
+    //         : new Date(pet.dateOfBirth);
+    //     const petDay = petDateOfBirth.getDate();
+    //     const petMonth = petDateOfBirth.getMonth();
+    //     return petDay === currentDay && petMonth === currentMonth;
+    //   }
+    //   return false;
+    // });
+    if (petWithBirthday) {
+      setBDToday(true);
+    } else {
+      setBDToday(false);
+    }
   }, [myAnimalsList]);
+
+  
 
   function calculateAge(dateOfBirth: Date | Timestamp | null): {
     years: number;
@@ -241,18 +259,22 @@ export function MyPets(): JSX.Element {
   return (
     <div>
       {BDToday ? (
-  <div className={classes.BirthdayContainer}>
-    <h2 className={classes.BirthdayText}>🎉🎉Today is birthday!🎉🎉🎂</h2>
-    <a href="https://www.amazon.com/Dog-Birthday-Gifts/s?k=Dog+Birthday+Gifts" target="_blank"><h2 className={classes.BirthdayText}>Lets get purrfect bd present 🎁🦴</h2></a>
-  </div>
-) : (
-  <div></div>
-)}
-
+        <div className={classes.BirthdayContainer}>
+          <h2 className={classes.BirthdayText}>🎉🎉Today is {petWithBirthday?.name}'s birthday!🎉🎉🎂</h2>
+          <a
+            href="https://www.amazon.com/Dog-Birthday-Gifts/s?k=Dog+Birthday+Gifts"
+            target="_blank"
+          >
+            <h2 className={classes.BirthdayText}>
+              Lets get purrfect bd present 🎁🦴
+            </h2>
+          </a>
+        </div>
+      ) : (
+        <div></div>
+      )}
       <div className={classes.Pets}>
-      
         <div className={classes.PetList}>
-          
           <h2>{resultMyPets}</h2>
           {myAnimalsList.map((pet) => (
             <div
