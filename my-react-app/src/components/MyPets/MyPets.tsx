@@ -124,20 +124,16 @@ export function MyPets(): JSX.Element {
   useEffect(() => {
     const currentDate = new Date();
     const currentDay = currentDate.getDate();
-    const currentMonth = currentDate.getMonth(); // Months are 0-based (0 = January)
+    const currentMonth = currentDate.getMonth();
 
-    // Check if any pet has a birthday with the same day and month as today
     const hasBirthdayToday = myAnimalsList.some((pet) => {
       if (pet.dateOfBirth) {
-        // Handle different date formats (Timestamp or Date)
         const petDateOfBirth =
           pet.dateOfBirth instanceof Timestamp
             ? pet.dateOfBirth.toDate()
             : new Date(pet.dateOfBirth);
-
         const petDay = petDateOfBirth.getDate();
         const petMonth = petDateOfBirth.getMonth();
-
         return petDay === currentDay && petMonth === currentMonth;
       }
       return false;
@@ -146,7 +142,6 @@ export function MyPets(): JSX.Element {
     setBDToday(hasBirthdayToday);
   }, [myAnimalsList]);
 
-
   function calculateAge(dateOfBirth: Date | Timestamp | null): {
     years: number;
     months: number;
@@ -154,12 +149,9 @@ export function MyPets(): JSX.Element {
     if (!dateOfBirth) {
       return { years: 0, months: 0 };
     }
-
     const birthDate =
       dateOfBirth instanceof Timestamp ? dateOfBirth.toDate() : dateOfBirth;
-
     const today = new Date();
-    // const birthDate = new Date(dateOfBirth);
     let years = today.getFullYear() - birthDate.getFullYear();
     let months = today.getMonth() - birthDate.getMonth();
     if (
@@ -248,19 +240,19 @@ export function MyPets(): JSX.Element {
 
   return (
     <div>
+      {BDToday ? (
+  <div className={classes.BirthdayContainer}>
+    <h2 className={classes.BirthdayText}>🎉🎉Today is birthday!🎉🎉🎂</h2>
+    <a href="https://www.amazon.com/Dog-Birthday-Gifts/s?k=Dog+Birthday+Gifts" target="_blank"><h2 className={classes.BirthdayText}>Lets get purrfect bd present 🎁🦴</h2></a>
+  </div>
+) : (
+  <div></div>
+)}
+
       <div className={classes.Pets}>
+      
         <div className={classes.PetList}>
-        {BDToday ? (
-        <div>
-          {/* Render this div when there are pets with a birthday today */}
-          <p>Today is a special day for your pets!</p>
-        </div>
-      ) : (
-        <div>
-          {/* Render this div when there are no pets with a birthday today */}
-          <p>No birthdays today.</p>
-        </div>
-      )}
+          
           <h2>{resultMyPets}</h2>
           {myAnimalsList.map((pet) => (
             <div
@@ -396,7 +388,6 @@ export function MyPets(): JSX.Element {
                     temper: selectedTemper ?? "",
                     photoURL: photoURL ?? "Img/profilePic.png",
                   });
-                  
                 }
               }}
             >
