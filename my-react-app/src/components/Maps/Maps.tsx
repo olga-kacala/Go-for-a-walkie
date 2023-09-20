@@ -128,7 +128,9 @@ export const Maps = () => {
 
   const handlePetClick = () => {
     if (selectedPetNames.length > 0) {
-      const uniqeSelectedPetNames = selectedPetNames.filter((petName)=>!addedPets.includes(petName));
+      const uniqeSelectedPetNames = selectedPetNames.filter(
+        (petName) => !addedPets.includes(petName)
+      );
       setAddedPets((prevPets) => [...prevPets, ...uniqeSelectedPetNames]);
       setSelectedPetNames([]);
     }
@@ -138,6 +140,13 @@ export const Maps = () => {
     setMarkers((prevMarkers) =>
       prevMarkers.filter((marker) => marker.id !== markerId)
     );
+  };
+
+  const handleDelete = (petName: string) => {
+    const updatedAddedPets = addedPets.filter((name) => 
+      name !== petName
+    );
+    setAddedPets(updatedAddedPets);
   };
 
   return (
@@ -183,6 +192,12 @@ export const Maps = () => {
                       {addedPets.map((petName) => (
                         <div key={petName}>
                           <p>Pet: {petName}</p>
+                          <button
+                            className={classes.button}
+                            onClick={()=>{handleDelete(petName)}}
+                          >
+                            X
+                          </button>
                         </div>
                       ))}
                     </div>
