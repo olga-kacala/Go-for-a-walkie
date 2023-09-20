@@ -128,7 +128,8 @@ export const Maps = () => {
 
   const handlePetClick = () => {
     if (selectedPetNames.length > 0) {
-      setAddedPets((prevPets) => [...prevPets, ...selectedPetNames]);
+      const uniqeSelectedPetNames = selectedPetNames.filter((petName)=>!addedPets.includes(petName));
+      setAddedPets((prevPets) => [...prevPets, ...uniqeSelectedPetNames]);
       setSelectedPetNames([]);
     }
   };
