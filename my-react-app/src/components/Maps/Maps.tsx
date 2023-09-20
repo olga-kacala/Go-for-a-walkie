@@ -208,6 +208,7 @@ export const Maps = () => {
                     Add Pet
                   </button>
                   <button className={classes.button}>Share</button>
+                  <button className={classes.button}>Save</button>
                 </div>
               )}
             </>
