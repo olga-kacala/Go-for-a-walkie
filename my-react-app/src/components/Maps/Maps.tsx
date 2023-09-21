@@ -7,15 +7,20 @@ import {
 import { useState, useEffect, useRef, useContext } from "react";
 import classes from "./Maps.module.css";
 import { AppContext } from "../Providers/Providers";
-import { getDoc, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { firebaseDb } from "../../App";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
+import "react-datepicker/dist/react-datepicker.css";
 
 export const Maps = () => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY || "",
   });
 
-  const { myAnimalsList, username } = useContext(AppContext);
+  const { myAnimalsList, username, dateOfWalk, setDateOfWalk } =
+    useContext(AppContext);
 
   const [userLocation, setUserLocation] = useState<{
     lat: number;
@@ -145,31 +150,34 @@ export const Maps = () => {
   };
 
   const handleDelete = (petName: string) => {
-    const updatedAddedPets = addedPets.filter((name) => 
-      name !== petName
-    );
+    const updatedAddedPets = addedPets.filter((name) => name !== petName);
     setAddedPets(updatedAddedPets);
   };
 
   const handleSaveWalk = async () => {
     if (userLocation && startingMarker && markers.length > 0) {
-      const walkData ={
+      const walkData = {
         userLocation,
         startingMarker,
         markers,
         totalDistance,
-        addedPets
+        addedPets,
       };
       try {
-        const docRef = doc(firebaseDb, "Walks", username);
+        const docRef = doc(firebaseDb, "Walks", `${username}`);
         await setDoc(docRef, walkData);
-        console.log("Walk saved")
-      }
-      catch (error) {
-        console.log(error)
+        console.log("Walk saved");
+      } catch (error) {
+        console.log(error);
       }
     }
-  }
+  };
+
+  const [selectedTime, setSelectedTime] = useState(null);
+
+  const handleTimeChange = (time) => {
+    setSelectedTime(time);
+  };
 
   return (
     <div className={classes.Map}>
@@ -209,6 +217,26 @@ export const Maps = () => {
               {totalDistance > 0 && (
                 <div className={classes.distance}>
                   <p>Walking Distance: {totalDistance.toFixed(2)} km</p>
+                  <p>Date:</p>
+                  <DatePicker
+              id="date"
+              selected={dateOfWalk}
+              placeholderText="Date"
+              showYearDropdown
+              dateFormat="d MMMM yyyy"
+              onChange={(date) => setDateOfWalk(date as Date)}
+              value={dateOfWalk ? dateOfWalk.toLocaleDateString() : ""}
+            />
+                  <DatePicker
+                    selected={selectedTime}
+                    onChange={handleTimeChange}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={15}
+                    dateFormat="h:mm aa"
+                    timeCaption="Time"
+                  />
+                  
                   {selectedPetNames !== null && (
                     <div>
                       {addedPets.map((petName) => (
@@ -216,7 +244,9 @@ export const Maps = () => {
                           <p>Pet: {petName}</p>
                           <button
                             className={classes.button}
-                            onClick={()=>{handleDelete(petName)}}
+                            onClick={() => {
+                              handleDelete(petName);
+                            }}
                           >
                             X
                           </button>
@@ -246,7 +276,9 @@ export const Maps = () => {
                     Add Pet
                   </button>
                   <button className={classes.button}>Share</button>
-                  <button className={classes.button} onClick={handleSaveWalk}>Save</button>
+                  <button className={classes.button} onClick={handleSaveWalk}>
+                    Save
+                  </button>
                 </div>
               )}
             </>

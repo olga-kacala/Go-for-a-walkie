@@ -43,6 +43,8 @@ export type AppContextState = {
   logoTransform: (param: boolean) => void;
   photoURL: string | null;
   setPhotoURL: (param: string | null) => void;
+  dateOfWalk: Date | null;
+  setDateOfWalk: (param: Date | null) => void;
 };
 
 type AppProviderProps = {
@@ -65,6 +67,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
   const [logoPop, setLogoPop] = useState<boolean>(false);
   const [photoURL, setPhotoURL] = useState<string | null>(null);
+  const [dateOfWalk, setDateOfWalk] = useState<Date | null>(null);
 
   const removeFromList = async (petId: number): Promise<void> => {
     const newArr = myAnimalsList.filter((obj) => obj.id !== petId);
@@ -120,6 +123,8 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
         logoTransform,
         photoURL,
         setPhotoURL,
+        dateOfWalk,
+        setDateOfWalk
       }}
     >
       {children}
