@@ -7,13 +7,15 @@ import {
 import { useState, useEffect, useRef, useContext } from "react";
 import classes from "./Maps.module.css";
 import { AppContext } from "../Providers/Providers";
+import { getDoc, doc, setDoc } from "firebase/firestore";
+import { firebaseDb } from "../../App";
 
 export const Maps = () => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY || "",
   });
 
-  const { myAnimalsList } = useContext(AppContext);
+  const { myAnimalsList, username } = useContext(AppContext);
 
   const [userLocation, setUserLocation] = useState<{
     lat: number;
@@ -149,6 +151,26 @@ export const Maps = () => {
     setAddedPets(updatedAddedPets);
   };
 
+  const handleSaveWalk = async () => {
+    if (userLocation && startingMarker && markers.length > 0) {
+      const walkData ={
+        userLocation,
+        startingMarker,
+        markers,
+        totalDistance,
+        addedPets
+      };
+      try {
+        const docRef = doc(firebaseDb, "Walks", username);
+        await setDoc(docRef, walkData);
+        console.log("Walk saved")
+      }
+      catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
   return (
     <div className={classes.Map}>
       {!isLoaded ? (
@@ -224,7 +246,7 @@ export const Maps = () => {
                     Add Pet
                   </button>
                   <button className={classes.button}>Share</button>
-                  <button className={classes.button}>Save</button>
+                  <button className={classes.button} onClick={handleSaveWalk}>Save</button>
                 </div>
               )}
             </>
