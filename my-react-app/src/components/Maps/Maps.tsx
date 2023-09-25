@@ -11,7 +11,6 @@ import { doc, setDoc } from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 
 export const Maps = () => {
@@ -162,6 +161,8 @@ export const Maps = () => {
         markers,
         totalDistance,
         addedPets,
+        dateOfWalk,
+        selectedTime,
       };
       try {
         const docRef = doc(firebaseDb, "Walks", `${username}`);
@@ -173,9 +174,9 @@ export const Maps = () => {
     }
   };
 
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(new Date());
 
-  const handleTimeChange = (time) => {
+  const handleTimeChange = (time: Date ) => {
     setSelectedTime(time);
   };
 
@@ -219,14 +220,14 @@ export const Maps = () => {
                   <p>Walking Distance: {totalDistance.toFixed(2)} km</p>
                   <p>Date:</p>
                   <DatePicker
-              id="date"
-              selected={dateOfWalk}
-              placeholderText="Date"
-              showYearDropdown
-              dateFormat="d MMMM yyyy"
-              onChange={(date) => setDateOfWalk(date as Date)}
-              value={dateOfWalk ? dateOfWalk.toLocaleDateString() : ""}
-            />
+                    id="date"
+                    selected={dateOfWalk}
+                    placeholderText="Date"
+                    showYearDropdown
+                    dateFormat="d MMMM yyyy"
+                    onChange={(date) => setDateOfWalk(date as Date)}
+                    value={dateOfWalk ? dateOfWalk.toLocaleDateString() : ""}
+                  />
                   <DatePicker
                     selected={selectedTime}
                     onChange={handleTimeChange}
@@ -236,7 +237,7 @@ export const Maps = () => {
                     dateFormat="h:mm aa"
                     timeCaption="Time"
                   />
-                  
+
                   {selectedPetNames !== null && (
                     <div>
                       {addedPets.map((petName) => (
