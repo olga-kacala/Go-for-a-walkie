@@ -4,14 +4,25 @@ import {
   useLoadScript,
   Polyline,
 } from "@react-google-maps/api";
-import { useState, useEffect, useRef, useContext } from "react";
+import React from "react";
+import { useState, useEffect, useRef, useContext} from "react";
 import classes from "./Maps.module.css";
 import { AppContext } from "../Providers/Providers";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, getDocs, setDoc, collection } from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker.css";
+import firebase from "firebase/app";
+import "firebase/firestore";
+
+
+export type WalkData = {
+id: string;
+markers: number;
+lat: number;
+lng: number;
+}
 
 export const Maps = () => {
   const { isLoaded } = useLoadScript({
@@ -36,6 +47,8 @@ export const Maps = () => {
   const markerIdCounter = useRef(0);
   const [selectedPetNames, setSelectedPetNames] = useState<string[]>([]);
   const [addedPets, setAddedPets] = useState<string[]>([]);
+  const [selectedTime, setSelectedTime] = useState(new Date());
+  const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -167,18 +180,37 @@ export const Maps = () => {
       try {
         const docRef = doc(firebaseDb, "Walks", `${username}`);
         await setDoc(docRef, walkData);
-        console.log("Walk saved");
       } catch (error) {
         console.log(error);
       }
     }
   };
 
-  const [selectedTime, setSelectedTime] = useState(new Date());
-
-  const handleTimeChange = (time: Date ) => {
+  const handleTimeChange = (time: Date) => {
     setSelectedTime(time);
   };
+
+  useEffect(()=> {
+const fetchPublicWalks = async ()=>{
+  try {
+    // const docRef = doc(firebaseDb, "Walks", `${username}`);
+    const walksCollectionRef = collection(firebaseDb, "Walks",`${username}` );
+    const walksData = await getDocs(walksCollectionRef);
+    
+walksData.forEach((doc: QueryDocumentSnapshot<WalkData>) => {
+  walks.push(doc.data());
+});
+
+
+
+setPublicWalks(walks)
+  }  
+  catch (error){
+    console.log("Error fetching public walks",error)
+  }
+};
+fetchPublicWalks();
+  }, []);
 
   return (
     <div className={classes.Map}>
@@ -284,6 +316,38 @@ export const Maps = () => {
               )}
             </>
           )}
+
+{publicWalks.map((walk) => (
+            // Render markers and polylines for each saved walk
+            <React.Fragment key={walk.id}>
+              {/* Render markers */}
+              {walk.markers.map((marker: WalkData) => (
+
+                <Marker
+                  position={{ lat: marker.lat, lng: marker.lng }}
+                  key={marker.id}
+                />
+              ))}
+              {/* Render polyline */}
+              {walk.markers.length >= 2 && (
+                <Polyline
+                  path={walk.markers.map((marker: WalkData) => ({
+                    lat: marker.lat,
+                    lng: marker.lng,
+                  }))}
+                  options={{
+                    strokeColor: "rgba(122,146,254,1)",
+                    strokeOpacity: 1,
+                    strokeWeight: 3,
+                  }}
+                />
+              )}
+            </React.Fragment>
+          ))}
+
+
+
+
         </GoogleMap>
       )}
     </div>
