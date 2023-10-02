@@ -15,6 +15,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker.css";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { QueryDocumentSnapshot } from "firebase/firestore";
+
 
 
 export type WalkData = {
@@ -191,14 +193,17 @@ export const Maps = () => {
   };
 
   useEffect(()=> {
+    const walks: WalkData[] = [];
 const fetchPublicWalks = async ()=>{
   try {
     // const docRef = doc(firebaseDb, "Walks", `${username}`);
     const walksCollectionRef = collection(firebaseDb, "Walks",`${username}` );
     const walksData = await getDocs(walksCollectionRef);
     
-walksData.forEach((doc: QueryDocumentSnapshot<WalkData>) => {
-  walks.push(doc.data());
+walksData.forEach((doc: QueryDocumentSnapshot<WalkData> | undefined) => {
+  if (doc) {
+  walks.push(doc.data() as WalkData);
+  }
 });
 
 
@@ -321,7 +326,7 @@ fetchPublicWalks();
             // Render markers and polylines for each saved walk
             <React.Fragment key={walk.id}>
               {/* Render markers */}
-              {walk.markers.map((marker: WalkData) => (
+              {Array.isArray(walk.markers) && walk.markers.map((marker: WalkData) => (
 
                 <Marker
                   position={{ lat: marker.lat, lng: marker.lng }}
@@ -329,7 +334,7 @@ fetchPublicWalks();
                 />
               ))}
               {/* Render polyline */}
-              {walk.markers.length >= 2 && (
+              {Array.isArray(walk.markers) && walk.markers.length >= 2 && (
                 <Polyline
                   path={walk.markers.map((marker: WalkData) => ({
                     lat: marker.lat,
