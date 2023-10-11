@@ -293,6 +293,7 @@ export const Maps = () => {
                       );
                       setSelectedPetNames(selectedNames);
                     }}
+                    onDoubleClick={handlePetClick}
                   >
                     <option value="">Select a pet</option>
                     {myAnimalsList.map((pet) => (
@@ -301,18 +302,14 @@ export const Maps = () => {
                       </option>
                     ))}
                   </select>
-                  <button className={classes.button} onClick={handlePetClick}>
-                    Add Pet
-                  </button>
-                  <button className={classes.button}>Share</button>
                   <button className={classes.button} onClick={handleSaveWalk}>
                     Save
                   </button>
+                  <button className={classes.button}><img className={classes.share} title="Share" alt="share logo" src={"../../Img/share.png"}/></button>
                 </div>
               )}
             </>
           )}
-
           {publicWalks.map((walk) => (
             // Render markers and polylines for each saved walk
             <React.Fragment key={walk.id}>
