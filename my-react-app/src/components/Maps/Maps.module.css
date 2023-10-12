@@ -1,37 +1,37 @@
 .Map {
-    height: 76vh;
-    width: 100vw;
-  }
-  
-  .mapContainer {
-    height: 100%;
-    width: 100%;
-  }
+  height: 76vh;
+  width: 100vw;
+}
 
-  .distance {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 8px;
-    border-radius: 4px;
-    position: absolute;
-    top: 100px;
-    left: 12px;
-  }
+.mapContainer {
+  height: 100%;
+  width: 100%;
+}
 
-  .button {
-    display: flex;
-    background-color: #ff5500;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 30px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-family: "Dosis", sans-serif;
-    border: none;
-    font-size: inherit;
-    letter-spacing: 2px;
-    cursor: pointer;
-  }
+.distance {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 8px;
+  border-radius: 4px;
+  position: absolute;
+  top: 100px;
+  left: 12px;
+}
 
-  .share {
-    height: 20px;
-  }
+.button {
+  display: flex;
+  background-color: #ff5500;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 30px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-family: "Dosis", sans-serif;
+  border: none;
+  font-size: inherit;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
+.share {
+  height: 20px;
+}

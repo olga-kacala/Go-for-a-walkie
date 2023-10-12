@@ -21,6 +21,9 @@ export type WalkData = {
   markers: number;
   lat: number;
   lng: number;
+  dateOfWalk: Date; // Add this property
+  totalDistance: number; // Add this property
+  addedPets: string[];
 };
 
 export const Maps = () => {
@@ -333,8 +336,31 @@ export const Maps = () => {
                     strokeOpacity: 1,
                     strokeWeight: 3,
                   }}
+                  key={walk.id}
                 />
               )}
+
+               {/* Render a simple table for walk information without header cells */}
+    <table>
+      <tbody> 
+      <tr>
+  <td>Date of Walk</td>
+  <td>
+    {walk.dateOfWalk instanceof Date
+      ? walk.dateOfWalk.toLocaleDateString()
+      : "Invalid Date"}
+  </td>
+</tr>
+        <tr>
+          <td>Total Distance (km)</td>
+          <td>{walk.totalDistance.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td>Added Pets</td>
+          <td>{walk.addedPets.join(", ")}</td>
+        </tr>
+      </tbody>
+    </table>
             </React.Fragment>
           ))}
         </GoogleMap>
