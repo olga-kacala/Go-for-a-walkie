@@ -182,6 +182,7 @@ export const Maps = () => {
       try {
         const docRef = doc(firebaseDb, "Walks", `${username}`);
         await setDoc(docRef, walkData);
+        console.log("Saved")
       } catch (error) {
         console.log(error);
       }
@@ -315,13 +316,13 @@ export const Maps = () => {
           )}
           {publicWalks.map((walk) => (
             // Render markers and polylines for each saved walk
-            <React.Fragment key={walk.id}>
+            <React.Fragment key={`walk-${walk.id}`}>
               {/* Render markers */}
               {Array.isArray(walk.markers) &&
                 walk.markers.map((marker: WalkData) => (
                   <Marker
                     position={{ lat: marker.lat, lng: marker.lng }}
-                    key={marker.id}
+                    key={`walk-${walk.id}-marker-${marker.id}`} 
                   />
                 ))}
               {/* Render polyline */}
@@ -336,7 +337,7 @@ export const Maps = () => {
                     strokeOpacity: 1,
                     strokeWeight: 3,
                   }}
-                  key={walk.id}
+                  key={`polyline-${walk.id}`}
                 />
               )}
 
