@@ -8,7 +8,7 @@ import React from "react";
 import { useState, useEffect, useRef, useContext } from "react";
 import classes from "./Maps.module.css";
 import { AppContext } from "../Providers/Providers";
-import { doc, getDocs, setDoc, collection } from "firebase/firestore";
+import { doc, getDocs, addDoc, collection } from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -17,12 +17,12 @@ import "firebase/firestore";
 import { QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 
 export type WalkData = {
-  id: string;
-  markers: number;
+  id: number;
+  markers: { lat: number; lng: number; id: number }[];
   lat: number;
   lng: number;
-  dateOfWalk: Date; // Add this property
-  totalDistance: number; // Add this property
+  dateOfWalk: Date | null;
+  totalDistance: number;
   addedPets: string[];
 };
 
@@ -170,25 +170,31 @@ export const Maps = () => {
 
   const handleSaveWalk = async () => {
     if (userLocation && startingMarker && markers.length > 0) {
-      const walkData = {
-        userLocation,
-        startingMarker,
-        markers,
+      const walkData: WalkData = {
+        id: Date.now(), 
+        markers: markers, 
+        lat: userLocation.lat,
+        lng: userLocation.lng,
+        dateOfWalk: dateOfWalk || null, 
         totalDistance,
         addedPets,
-        dateOfWalk,
-        selectedTime,
       };
       try {
         const docRef = doc(firebaseDb, "Walks", `${username}`);
-        await setDoc(docRef, walkData);
-        console.log("Saved")
+        const colRef = collection(docRef, "walkies");
+        await addDoc(colRef, walkData);
+        console.log("Saved");
+        setStartingMarker(null);
+        setMarkers([]);
+        setTotalDistance(0);
+        setAddedPets([]);
+        setDateOfWalk(null);
+        setSelectedTime(new Date());
       } catch (error) {
         console.log(error);
       }
     }
   };
-
   const handleTimeChange = (time: Date) => {
     setSelectedTime(time);
   };
@@ -309,7 +315,14 @@ export const Maps = () => {
                   <button className={classes.button} onClick={handleSaveWalk}>
                     Save
                   </button>
-                  <button className={classes.button}><img className={classes.share} title="Share" alt="share logo" src={"../../Img/share.png"}/></button>
+                  <button className={classes.button}>
+                    <img
+                      className={classes.share}
+                      title="Share"
+                      alt="share logo"
+                      src={"../../Img/share.png"}
+                    />
+                  </button>
                 </div>
               )}
             </>
@@ -319,49 +332,57 @@ export const Maps = () => {
             <React.Fragment key={`walk-${walk.id}`}>
               {/* Render markers */}
               {Array.isArray(walk.markers) &&
-                walk.markers.map((marker: WalkData) => (
+                walk.markers.map((marker) => (
                   <Marker
                     position={{ lat: marker.lat, lng: marker.lng }}
-                    key={`walk-${walk.id}-marker-${marker.id}`} 
+                    key={`walk-${walk.id}-marker-${marker.id}`}
                   />
                 ))}
               {/* Render polyline */}
               {Array.isArray(walk.markers) && walk.markers.length >= 2 && (
                 <Polyline
-                  path={walk.markers.map((marker: WalkData) => ({
+                  path={walk.markers.map((marker) => ({
                     lat: marker.lat,
                     lng: marker.lng,
                   }))}
+                  key={`walk-${walk.id}-polyline`} // Ensure uniqueness
                   options={{
                     strokeColor: "rgba(122,146,254,1)",
                     strokeOpacity: 1,
                     strokeWeight: 3,
                   }}
-                  key={`polyline-${walk.id}`}
                 />
               )}
 
-               {/* Render a simple table for walk information without header cells */}
-    <table>
-      <tbody> 
-      <tr>
-  <td>Date of Walk</td>
-  <td>
-    {walk.dateOfWalk instanceof Date
-      ? walk.dateOfWalk.toLocaleDateString()
-      : "Invalid Date"}
-  </td>
-</tr>
-        <tr>
-          <td>Total Distance (km)</td>
-          <td>{walk.totalDistance.toFixed(2)}</td>
-        </tr>
-        <tr>
-          <td>Added Pets</td>
-          <td>{walk.addedPets.join(", ")}</td>
-        </tr>
-      </tbody>
-    </table>
+              {/* Render a simple table for walk information without header cells */}
+              <table>
+                <tbody>
+                  <tr>
+                    <td>Date of Walk</td>
+                    <td>
+                      {walk.dateOfWalk instanceof Date
+                        ? walk.dateOfWalk.toLocaleDateString()
+                        : "Invalid Date"}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Total Distance (km)</td>
+                    <td>
+                      {walk.totalDistance !== undefined
+                        ? walk.totalDistance.toFixed(2)
+                        : "N/A"}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Added Pets</td>
+                    <td>
+                      {walk.addedPets !== undefined
+                        ? walk.addedPets.join(", ")
+                        : "N/A"}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </React.Fragment>
           ))}
         </GoogleMap>
