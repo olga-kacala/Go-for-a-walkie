@@ -200,16 +200,20 @@ export const Maps = () => {
   };
 
   useEffect(() => {
-    const walks: WalkData[] = [];
+   
     const fetchPublicWalks = async () => {
+      const walks: WalkData[] = [];
       try {
         const docRef = collection(firebaseDb, "Walks");
         const walksData = await getDocs(docRef);
+
         walksData.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
-          if (doc) {
-            walks.push(doc.data() as WalkData);
+          if (doc.exists()) {
+            const walk = doc.data() as WalkData;
+            walks.push(walk);
           }
         });
+        console.log("Fetched walks:", walks); 
         setPublicWalks(walks);
       } catch (error) {
         console.log("Error fetching public walks", error);

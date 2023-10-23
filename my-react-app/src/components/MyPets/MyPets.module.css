@@ -26,17 +26,20 @@
   text-decoration: none;
 }
 
-.myPetsInput input,
-.myPetsInput select,
+select,
+input,
+
 #date,
 input:focus {
+  font-family: "Dosis", sans-serif;
   background-color: rgb(232, 240, 254);
   width: 30vw;
   height: 60px;
   padding: 10px;
   margin-bottom: 10px;
   border: none;
-  color: gray;
+  color: rgb(74, 73, 73);
+  font-weight: bolder;
 }
 
 .button {
@@ -111,10 +114,4 @@ input:focus {
   border: 10px solid #333;
   padding: 10px;
   margin-bottom: 10px;
-}
-
-select {
-  font-family: "Dosis", sans-serif;
-  border: none;
-  width: 100%;
 }
