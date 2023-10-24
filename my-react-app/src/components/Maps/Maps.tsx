@@ -200,12 +200,12 @@ export const Maps = () => {
   };
 
   useEffect(() => {
-   
     const fetchPublicWalks = async () => {
       const walks: WalkData[] = [];
       try {
-        const docRef = collection(firebaseDb, "Walks");
-        const walksData = await getDocs(docRef);
+        const docRef = doc(firebaseDb, "Walks", `${username}`);
+        const colRef = collection(docRef, "walkies");
+ const walksData = await getDocs(colRef);
 
         walksData.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
           if (doc.exists()) {
@@ -213,7 +213,6 @@ export const Maps = () => {
             walks.push(walk);
           }
         });
-        console.log("Fetched walks:", walks); 
         setPublicWalks(walks);
       } catch (error) {
         console.log("Error fetching public walks", error);
@@ -358,7 +357,7 @@ export const Maps = () => {
                 />
               )}
 
-              {/* Render a simple table for walk information without header cells */}
+              {/* Render a simple table for walk information */}
               <table>
                 <tbody>
                   <tr>
@@ -387,6 +386,7 @@ export const Maps = () => {
                   </tr>
                 </tbody>
               </table>
+            
             </React.Fragment>
           ))}
         </GoogleMap>
