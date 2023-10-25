@@ -322,8 +322,9 @@ export function MyPets(): JSX.Element {
         </div>
         <div className={classes.InputContainer}>
           <h2>Add your new pet</h2>
-          <form className={classes.myPetsInput}>
+          <form>
             <input
+            className={classes.selectContainer}
               name="pet name"
               type="string"
               value={petName ?? ""}
@@ -334,7 +335,7 @@ export function MyPets(): JSX.Element {
               }}
             />
             <DatePicker
-              id="date"
+              className={classes.selectContainer}
               selected={dateOfBirth}
               placeholderText="Date of Birth"
               showYearDropdown
@@ -343,6 +344,7 @@ export function MyPets(): JSX.Element {
               value={dateOfBirth ? dateOfBirth.toLocaleDateString() : ""}
             />
             <input
+            className={classes.selectContainer}
               name="breed"
               type="string"
               value={breed ?? ""}
@@ -353,6 +355,7 @@ export function MyPets(): JSX.Element {
               }}
             />
             <select
+            className={classes.selectContainer}
               value={selectedSex ?? ""}
               onChange={(e) => {
                 setSelectedSex(e.target.value);
@@ -363,6 +366,7 @@ export function MyPets(): JSX.Element {
               <option value="male">Male&#9794;</option>
             </select>
             <select
+            className={classes.selectContainer}
               value={selectedTemper ?? ""}
               onChange={(e) => {
                 setSelectedTemper(e.target.value);
@@ -379,7 +383,7 @@ export function MyPets(): JSX.Element {
                 &#x1F419; Octopus - shy and secretive behavior
               </option>
             </select>
-            <input type="file" onChange={handleChange} />
+            <input className={classes.selectContainer} type="file" onChange={handleChange} />
             <button
               disabled={loading}
               className={classes.button}

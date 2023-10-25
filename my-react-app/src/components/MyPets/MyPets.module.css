@@ -26,11 +26,8 @@
   text-decoration: none;
 }
 
-select,
-input,
-
-#date,
-input:focus {
+.selectContainer
+  {
   font-family: "Dosis", sans-serif;
   background-color: rgb(232, 240, 254);
   width: 30vw;
