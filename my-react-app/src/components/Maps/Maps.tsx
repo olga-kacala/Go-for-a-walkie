@@ -171,11 +171,11 @@ export const Maps = () => {
   const handleSaveWalk = async () => {
     if (userLocation && startingMarker && markers.length > 0) {
       const walkData: WalkData = {
-        id: Date.now(), 
-        markers: markers, 
+        id: Date.now(),
+        markers: markers,
         lat: userLocation.lat,
         lng: userLocation.lng,
-        dateOfWalk: dateOfWalk || null, 
+        dateOfWalk: dateOfWalk || null,
         totalDistance,
         addedPets,
       };
@@ -205,7 +205,7 @@ export const Maps = () => {
       try {
         const docRef = doc(firebaseDb, "Walks", `${username}`);
         const colRef = collection(docRef, "walkies");
- const walksData = await getDocs(colRef);
+        const walksData = await getDocs(colRef);
 
         walksData.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
           if (doc.exists()) {
@@ -259,9 +259,9 @@ export const Maps = () => {
               {totalDistance > 0 && (
                 <div className={classes.distance}>
                   <p>Walking Distance: {totalDistance.toFixed(2)} km</p>
-                  <p>Date:</p>
+                  <p>Pick:</p>
                   <DatePicker
-                    id="date"
+                    className={classes.walksContainer}
                     selected={dateOfWalk}
                     placeholderText="Date"
                     showYearDropdown
@@ -270,6 +270,7 @@ export const Maps = () => {
                     value={dateOfWalk ? dateOfWalk.toLocaleDateString() : ""}
                   />
                   <DatePicker
+                    className={classes.walksContainer}
                     selected={selectedTime}
                     onChange={handleTimeChange}
                     showTimeSelect
@@ -282,10 +283,10 @@ export const Maps = () => {
                   {selectedPetNames !== null && (
                     <div>
                       {addedPets.map((petName) => (
-                        <div key={petName}>
-                          <p>Pet: {petName}</p>
+                        <div key={petName} className={classes.petContainer}>
+                          <p className={classes.walksContainer}>{petName}</p>
                           <button
-                            className={classes.button}
+                            className={classes.buttonX}
                             onClick={() => {
                               handleDelete(petName);
                             }}
@@ -297,6 +298,7 @@ export const Maps = () => {
                     </div>
                   )}
                   <select
+                    className={classes.walksContainer}
                     multiple
                     value={selectedPetNames}
                     onChange={(e) => {
@@ -315,17 +317,22 @@ export const Maps = () => {
                       </option>
                     ))}
                   </select>
-                  <button className={classes.button} onClick={handleSaveWalk}>
-                    Save
-                  </button>
-                  <button className={classes.button}>
-                    <img
-                      className={classes.share}
-                      title="Share"
-                      alt="share logo"
-                      src={"../../Img/share.png"}
-                    />
-                  </button>
+                  <div className={classes.saveContainer}>
+                    <button
+                      className={classes.buttonSave}
+                      onClick={handleSaveWalk}
+                    >
+                      Save
+                    </button>
+                    <button className={classes.share}>
+                      <img
+                        className={classes.shareLogo}
+                        title="Share"
+                        alt="share logo"
+                        src={"../../Img/share.png"}
+                      />
+                    </button>
+                  </div>
                 </div>
               )}
             </>
@@ -386,7 +393,6 @@ export const Maps = () => {
                   </tr>
                 </tbody>
               </table>
-            
             </React.Fragment>
           ))}
         </GoogleMap>
