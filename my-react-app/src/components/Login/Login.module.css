@@ -8,6 +8,10 @@
   justify-content: center;
 }
 
+.loginPic {
+  height: 57vh;
+}
+
 .PolaBackgr {
   width: 30%;
 }

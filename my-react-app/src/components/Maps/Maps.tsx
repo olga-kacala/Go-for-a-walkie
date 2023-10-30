@@ -51,6 +51,7 @@ export const Maps = () => {
   const [addedPets, setAddedPets] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
+  const [savedWalks, setSavedWalk] = useState<boolean>(false);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -85,7 +86,7 @@ export const Maps = () => {
         currMarker.lng
       );
     }
-
+    setSavedWalk(false);
     setTotalDistance(distance);
   }, [markers]);
 
@@ -184,6 +185,7 @@ export const Maps = () => {
         const colRef = collection(docRef, "walkies");
         await addDoc(colRef, walkData);
         console.log("Saved");
+        setSavedWalk(true);
         setStartingMarker(null);
         setMarkers([]);
         setTotalDistance(0);
@@ -234,6 +236,8 @@ export const Maps = () => {
           zoom={10}
           onClick={handleMapClick}
         >
+         
+
           {userLocation && startingMarker && (
             <>
               {markers.map((marker) => (
@@ -263,6 +267,7 @@ export const Maps = () => {
                   <DatePicker
                     className={classes.walksContainer}
                     selected={dateOfWalk}
+               
                     placeholderText="Date"
                     showYearDropdown
                     dateFormat="d MMMM yyyy"
@@ -272,6 +277,7 @@ export const Maps = () => {
                   <DatePicker
                     className={classes.walksContainer}
                     selected={selectedTime}
+                    
                     onChange={handleTimeChange}
                     showTimeSelect
                     showTimeSelectOnly
@@ -335,66 +341,67 @@ export const Maps = () => {
                   </div>
                 </div>
               )}
+console.log(publicWalks);
+              {publicWalks.map((walk) => (
+                // Render markers and polylines for each saved walk
+                <React.Fragment key={`walk-${walk.id}`}>
+                  {/* Render markers */}
+                  {Array.isArray(walk.markers) &&
+                    walk.markers.map((marker) => (
+                      <Marker
+                        position={{ lat: marker.lat, lng: marker.lng }}
+                        key={`walk-${walk.id}-marker-${marker.id}`}
+                      />
+                    ))}
+                  {/* Render polyline */}
+                  {Array.isArray(walk.markers) && walk.markers.length >= 2 && (
+                    <Polyline
+                      path={walk.markers.map((marker) => ({
+                        lat: marker.lat,
+                        lng: marker.lng,
+                      }))}
+                      key={`walk-${walk.id}-polyline`} // Ensure uniqueness
+                      options={{
+                        strokeColor: "rgba(122,146,254,1)",
+                        strokeOpacity: 1,
+                        strokeWeight: 3,
+                      }}
+                    />
+                  )}
+
+                  {/* Render a simple table for walk information */}
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>Date of Walk</td>
+                        <td>
+                          {walk.dateOfWalk instanceof Date
+                            ? walk.dateOfWalk.toLocaleDateString()
+                            : "Invalid Date"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Total Distance (km)</td>
+                        <td>
+                          {walk.totalDistance !== undefined
+                            ? walk.totalDistance.toFixed(2)
+                            : "N/A"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Added Pets</td>
+                        <td>
+                          {walk.addedPets !== undefined
+                            ? walk.addedPets.join(", ")
+                            : "N/A"}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </React.Fragment>
+              ))}
             </>
           )}
-          {publicWalks.map((walk) => (
-            // Render markers and polylines for each saved walk
-            <React.Fragment key={`walk-${walk.id}`}>
-              {/* Render markers */}
-              {Array.isArray(walk.markers) &&
-                walk.markers.map((marker) => (
-                  <Marker
-                    position={{ lat: marker.lat, lng: marker.lng }}
-                    key={`walk-${walk.id}-marker-${marker.id}`}
-                  />
-                ))}
-              {/* Render polyline */}
-              {Array.isArray(walk.markers) && walk.markers.length >= 2 && (
-                <Polyline
-                  path={walk.markers.map((marker) => ({
-                    lat: marker.lat,
-                    lng: marker.lng,
-                  }))}
-                  key={`walk-${walk.id}-polyline`} // Ensure uniqueness
-                  options={{
-                    strokeColor: "rgba(122,146,254,1)",
-                    strokeOpacity: 1,
-                    strokeWeight: 3,
-                  }}
-                />
-              )}
-
-              {/* Render a simple table for walk information */}
-              <table>
-                <tbody>
-                  <tr>
-                    <td>Date of Walk</td>
-                    <td>
-                      {walk.dateOfWalk instanceof Date
-                        ? walk.dateOfWalk.toLocaleDateString()
-                        : "Invalid Date"}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Total Distance (km)</td>
-                    <td>
-                      {walk.totalDistance !== undefined
-                        ? walk.totalDistance.toFixed(2)
-                        : "N/A"}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Added Pets</td>
-                    <td>
-                      {walk.addedPets !== undefined
-                        ? walk.addedPets.join(", ")
-                        : "N/A"}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </React.Fragment>
-          ))}
         </GoogleMap>
       )}
     </div>
