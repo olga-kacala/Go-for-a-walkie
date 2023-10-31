@@ -8,7 +8,7 @@ import React from "react";
 import { useState, useEffect, useRef, useContext } from "react";
 import classes from "./Maps.module.css";
 import { AppContext } from "../Providers/Providers";
-import { doc, getDocs, addDoc, collection } from "firebase/firestore";
+import { doc, getDocs, addDoc, collection, query, where, getDoc} from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -31,7 +31,7 @@ export const Maps = () => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY || "",
   });
 
-  const { myAnimalsList, username, dateOfWalk, setDateOfWalk } =
+  const { myAnimalsList, username, dateOfWalk, setDateOfWalk, photoURL } =
     useContext(AppContext);
 
   const [userLocation, setUserLocation] = useState<{
@@ -51,7 +51,9 @@ export const Maps = () => {
   const [addedPets, setAddedPets] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
-  const [savedWalks, setSavedWalk] = useState<boolean>(false);
+  const [selectedPetPicURLs, setSelectedPetPicURLs] = useState<string[]>([]);
+  const [currentMarkerType, setCurrentMarkerType] = useState<string>("green");
+
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -86,7 +88,6 @@ export const Maps = () => {
         currMarker.lng
       );
     }
-    setSavedWalk(false);
     setTotalDistance(distance);
   }, [markers]);
 
@@ -148,7 +149,7 @@ export const Maps = () => {
     }
   };
 
-  const handlePetClick = () => {
+  const handlePetClick = async () => {
     if (selectedPetNames.length > 0) {
       const uniqeSelectedPetNames = selectedPetNames.filter(
         (petName) => !addedPets.includes(petName)
@@ -185,13 +186,14 @@ export const Maps = () => {
         const colRef = collection(docRef, "walkies");
         await addDoc(colRef, walkData);
         console.log("Saved");
-        setSavedWalk(true);
         setStartingMarker(null);
         setMarkers([]);
         setTotalDistance(0);
         setAddedPets([]);
         setDateOfWalk(null);
         setSelectedTime(new Date());
+        setCurrentMarkerType('pet');
+        console.log(selectedPetPicURLs[0]);
       } catch (error) {
         console.log(error);
       }
@@ -223,6 +225,29 @@ export const Maps = () => {
     fetchPublicWalks();
   }, []);
 
+
+  const fetchPetPictureURL = async (petName) => {
+    try {
+      // Replace 'YourCollection' and 'petNameField' with your actual collection and field names
+      const petQuery = query(collection(firebaseDb, "MyPets"), where("name", "==", petName));
+      const querySnapshot = await getDocs(petQuery);
+  
+      if (!querySnapshot.empty) {
+        const petDoc = querySnapshot.docs[0];
+        const petData = petDoc.data();
+        return petData.photoURL; // Assuming 'photoURL' is the field that holds the pet picture URL
+      } else {
+        // Pet with the specified name not found
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching pet picture URL:", error);
+      return null;
+    }
+  };
+  
+
+
   return (
     <div className={classes.Map}>
       {!isLoaded ? (
@@ -240,10 +265,26 @@ export const Maps = () => {
 
           {userLocation && startingMarker && (
             <>
+
               {markers.map((marker) => (
                 <Marker
                   key={marker.id}
                   position={{ lat: marker.lat, lng: marker.lng }}
+                  // icon={{
+                  //   url: marker.id === 0
+                  //     ? 'http://maps.google.com/mapfiles/ms/icons/green-dot.png' // URL for green marker
+                  //     : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' // URL for red markers
+                  // }}
+
+
+                  icon={{
+                    url:
+                      currentMarkerType === "green"
+                        ? "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                        : selectedPetPicURLs[0], // Use selected pet's picture URL here
+                    scaledSize: new window.google.maps.Size(40, 40),
+                  }}
+                  
                   onClick={() => handleMarkerClick(marker.id)}
                 />
               ))}
