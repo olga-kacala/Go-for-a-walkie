@@ -43,8 +43,8 @@ export const Maps = () => {
     lng: number;
   } | null>(null);
   const [markers, setMarkers] = useState<
-    { lat: number; lng: number; id: number }[]
-  >([]);
+  { lat: number; lng: number; id: number; iconURL: string }[]>([]);
+
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const markerIdCounter = useRef(0);
   const [selectedPetNames, setSelectedPetNames] = useState<string[]>([]);
@@ -144,7 +144,7 @@ export const Maps = () => {
       const { lat, lng } = event.latLng.toJSON();
       setMarkers((prevMarkers) => [
         ...prevMarkers,
-        { lat, lng, id: markerIdCounter.current++ },
+        { lat, lng, id: markerIdCounter.current++ , iconURL: "/Img/Polka.png" },
       ]);
     }
   };
@@ -159,11 +159,23 @@ export const Maps = () => {
     }
   };
 
+  // const handleMarkerClick = (markerId: number) => {
+  //   setMarkers((prevMarkers) =>
+  //     prevMarkers.filter((marker) => marker.id !== markerId)
+  //   );
+  // };
+
   const handleMarkerClick = (markerId: number) => {
     setMarkers((prevMarkers) =>
-      prevMarkers.filter((marker) => marker.id !== markerId)
+      prevMarkers.map((marker) =>
+        marker.id === markerId
+          ? { ...marker, iconURL: selectedPetPicURLs[prevMarkers.indexOf(marker)] }
+          : marker
+      )
     );
   };
+  
+
 
   const handleDelete = (petName: string) => {
     const updatedAddedPets = addedPets.filter((name) => name !== petName);
@@ -172,19 +184,29 @@ export const Maps = () => {
 
   const handleSaveWalk = async () => {
     if (userLocation && startingMarker && markers.length > 0) {
+
+      const petPicURLs = await Promise.all(addedPets.map(fetchPetPictureURL));
+
+// Update the icon URL for the markers
+const updatedMarkers = markers.map((marker, index) => ({
+  ...marker,
+  iconURL: petPicURLs[index] || "/Img/Polka.png",
+}));
+
       const walkData: WalkData = {
         id: Date.now(),
-        markers: markers,
+        markers: updatedMarkers,
         lat: userLocation.lat,
         lng: userLocation.lng,
         dateOfWalk: dateOfWalk || null,
         totalDistance,
         addedPets,
       };
+      
       try {
         const docRef = doc(firebaseDb, "Walks", `${username}`);
         const colRef = collection(docRef, "walkies");
-        await addDoc(colRef, walkData);
+        await addDoc(colRef, { ...walkData, markers: updatedMarkers });
         console.log("Saved");
         setStartingMarker(null);
         setMarkers([]);
@@ -193,7 +215,7 @@ export const Maps = () => {
         setDateOfWalk(null);
         setSelectedTime(new Date());
         setCurrentMarkerType('pet');
-        console.log(selectedPetPicURLs[0]);
+        console.log(petPicURLs[0]);
       } catch (error) {
         console.log(error);
       }
@@ -226,18 +248,18 @@ export const Maps = () => {
   }, []);
 
 
-  const fetchPetPictureURL = async (petName) => {
+  const fetchPetPictureURL = async (petName:string) => {
     try {
-      // Replace 'YourCollection' and 'petNameField' with your actual collection and field names
+      
       const petQuery = query(collection(firebaseDb, "MyPets"), where("name", "==", petName));
       const querySnapshot = await getDocs(petQuery);
   
       if (!querySnapshot.empty) {
         const petDoc = querySnapshot.docs[0];
         const petData = petDoc.data();
-        return petData.photoURL; // Assuming 'photoURL' is the field that holds the pet picture URL
+        return petData.photoURL; 
       } else {
-        // Pet with the specified name not found
+        
         return null;
       }
     } catch (error) {
@@ -278,12 +300,11 @@ export const Maps = () => {
 
 
                   icon={{
-                    url:
-                      currentMarkerType === "green"
-                        ? "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-                        : selectedPetPicURLs[0], // Use selected pet's picture URL here
-                    scaledSize: new window.google.maps.Size(40, 40),
-                  }}
+      url:
+        marker.iconURL ||
+        "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+      scaledSize: new window.google.maps.Size(40, 40),
+    }}
                   
                   onClick={() => handleMarkerClick(marker.id)}
                 />
@@ -367,7 +388,9 @@ export const Maps = () => {
                   <div className={classes.saveContainer}>
                     <button
                       className={classes.buttonSave}
-                      onClick={handleSaveWalk}
+                      onClick={()=>{
+                        handleSaveWalk();
+                    }}
                     >
                       Save
                     </button>
