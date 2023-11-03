@@ -54,7 +54,9 @@ type AppProviderProps = {
 export const AppContext = createContext<AppContextState>({} as AppContextState);
 
 export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
-  const [animals, setPets] = useState([]);
+  // const [animals, setPets] = useState([]);
+  const [animals, setPets] = useState<Pet[]>([]);
+
   const [isLogged, setIsLogged] = useState(false);
   const [username, setUsername] = useState<string | null>("");
   const [resultMyPets, setResultMyPets] = useState("");

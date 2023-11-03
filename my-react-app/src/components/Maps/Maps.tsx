@@ -152,7 +152,7 @@ export const Maps = () => {
       const { lat, lng } = event.latLng.toJSON();
       setMarkers((prevMarkers) => [
         ...prevMarkers,
-        { lat, lng, id: markerIdCounter.current++, iconURL: "/Img/Polka.png" },
+        { lat, lng, id: markerIdCounter.current++, iconURL: "http://maps.google.com/mapfiles/ms/icons/green-dot.png" },
       ]);
     }
   };
@@ -253,7 +253,7 @@ export const Maps = () => {
       }
     };
     fetchPublicWalks();
-  }, []);
+  }, [username]);
 
   const fetchPetPictureURL = async (petName: string) => {
     try {

@@ -72,7 +72,7 @@ export function MyPets(): JSX.Element {
       });
       setmyAnimalsList([...myAnimalsList, newProduct]);
       setPetName("");
-      setDateOfBirth(new Date());
+      setDateOfBirth(null);
       setBreed("");
       setSelectedSex("");
       setSelectedTemper("");
@@ -88,12 +88,14 @@ export function MyPets(): JSX.Element {
         const userEmail = user.email;
         setUsername(userEmail);
         setIsLogged(true);
+        setDateOfBirth(null);
         const docRef = doc(firebaseDb, "MyPets", `${user.email}`);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
           setmyAnimalsList(data.animals);
           setResultMyPets("Your pet list:");
+          setDateOfBirth(null);
 
           const petWithDateOfBirth = data.animals.find(
             (pet: Pet) => pet.dateOfBirth instanceof Timestamp
@@ -102,13 +104,16 @@ export function MyPets(): JSX.Element {
           if (petWithDateOfBirth) {
             const dateOfBirthValue = petWithDateOfBirth.dateOfBirth.toDate();
             setDateOfBirth(dateOfBirthValue);
+            setDateOfBirth(null);
           }
         } else {
           setmyAnimalsList([]);
+          setDateOfBirth(null);
         }
       } else {
         setUsername("");
         setmyAnimalsList([]);
+        setDateOfBirth(null);
       }
     });
   }, [setUsername, setIsLogged, setmyAnimalsList]);
@@ -155,6 +160,12 @@ export function MyPets(): JSX.Element {
     const birthDate =
       dateOfBirth instanceof Timestamp ? dateOfBirth.toDate() : dateOfBirth;
     const today = new Date();
+
+  if (today < birthDate) {
+    // Handle future birthdate
+    return { years: -1, months: -1 };
+  }
+
     let years = today.getFullYear() - birthDate.getFullYear();
     let months = today.getMonth() - birthDate.getMonth();
     if (
@@ -165,6 +176,12 @@ export function MyPets(): JSX.Element {
       years--;
       months += 12;
     }
+
+    if (months >= 12) {
+      years++;
+      months = months - 12;
+    }
+
     return { years, months };
   }
 
