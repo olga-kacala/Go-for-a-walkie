@@ -50,6 +50,7 @@ export function MyPets(): JSX.Element {
   const currentUser = useAuth();
 
   const addToList = async (product: Pet): Promise<void> => {
+    console.log(dateOfBirth)
     try {
       const petId = Date.now();
       const newProduct = {
