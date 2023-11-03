@@ -8,7 +8,15 @@ import React from "react";
 import { useState, useEffect, useRef, useContext } from "react";
 import classes from "./Maps.module.css";
 import { AppContext } from "../Providers/Providers";
-import { doc, getDocs, addDoc, collection, query, where, getDoc} from "firebase/firestore";
+import {
+  doc,
+  getDocs,
+  addDoc,
+  collection,
+  query,
+  where,
+  getDoc,
+} from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -43,7 +51,8 @@ export const Maps = () => {
     lng: number;
   } | null>(null);
   const [markers, setMarkers] = useState<
-  { lat: number; lng: number; id: number; iconURL: string }[]>([]);
+    { lat: number; lng: number; id: number; iconURL: string }[]
+  >([]);
 
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const markerIdCounter = useRef(0);
@@ -53,7 +62,6 @@ export const Maps = () => {
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
   const [selectedPetPicURLs, setSelectedPetPicURLs] = useState<string[]>([]);
   const [currentMarkerType, setCurrentMarkerType] = useState<string>("green");
-
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -144,7 +152,7 @@ export const Maps = () => {
       const { lat, lng } = event.latLng.toJSON();
       setMarkers((prevMarkers) => [
         ...prevMarkers,
-        { lat, lng, id: markerIdCounter.current++ , iconURL: "/Img/Polka.png" },
+        { lat, lng, id: markerIdCounter.current++, iconURL: "/Img/Polka.png" },
       ]);
     }
   };
@@ -169,13 +177,14 @@ export const Maps = () => {
     setMarkers((prevMarkers) =>
       prevMarkers.map((marker) =>
         marker.id === markerId
-          ? { ...marker, iconURL: selectedPetPicURLs[prevMarkers.indexOf(marker)] }
+          ? {
+              ...marker,
+              iconURL: selectedPetPicURLs[prevMarkers.indexOf(marker)],
+            }
           : marker
       )
     );
   };
-  
-
 
   const handleDelete = (petName: string) => {
     const updatedAddedPets = addedPets.filter((name) => name !== petName);
@@ -184,14 +193,13 @@ export const Maps = () => {
 
   const handleSaveWalk = async () => {
     if (userLocation && startingMarker && markers.length > 0) {
-
       const petPicURLs = await Promise.all(addedPets.map(fetchPetPictureURL));
 
-// Update the icon URL for the markers
-const updatedMarkers = markers.map((marker, index) => ({
-  ...marker,
-  iconURL: petPicURLs[index] || "/Img/Polka.png",
-}));
+      // Update the icon URL for the markers
+      const updatedMarkers = markers.map((marker, index) => ({
+        ...marker,
+        iconURL: petPicURLs[index] || "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+      }));
 
       const walkData: WalkData = {
         id: Date.now(),
@@ -202,7 +210,7 @@ const updatedMarkers = markers.map((marker, index) => ({
         totalDistance,
         addedPets,
       };
-      
+
       try {
         const docRef = doc(firebaseDb, "Walks", `${username}`);
         const colRef = collection(docRef, "walkies");
@@ -214,7 +222,7 @@ const updatedMarkers = markers.map((marker, index) => ({
         setAddedPets([]);
         setDateOfWalk(null);
         setSelectedTime(new Date());
-        setCurrentMarkerType('pet');
+        setCurrentMarkerType("pet");
         console.log(petPicURLs[0]);
       } catch (error) {
         console.log(error);
@@ -247,19 +255,19 @@ const updatedMarkers = markers.map((marker, index) => ({
     fetchPublicWalks();
   }, []);
 
-
-  const fetchPetPictureURL = async (petName:string) => {
+  const fetchPetPictureURL = async (petName: string) => {
     try {
-      
-      const petQuery = query(collection(firebaseDb, "MyPets"), where("name", "==", petName));
+      const petQuery = query(
+        collection(firebaseDb, "MyPets"),
+        where("name", "==", petName)
+      );
       const querySnapshot = await getDocs(petQuery);
-  
+
       if (!querySnapshot.empty) {
         const petDoc = querySnapshot.docs[0];
         const petData = petDoc.data();
-        return petData.photoURL; 
+        return petData.photoURL;
       } else {
-        
         return null;
       }
     } catch (error) {
@@ -267,8 +275,6 @@ const updatedMarkers = markers.map((marker, index) => ({
       return null;
     }
   };
-  
-
 
   return (
     <div className={classes.Map}>
@@ -283,11 +289,8 @@ const updatedMarkers = markers.map((marker, index) => ({
           zoom={10}
           onClick={handleMapClick}
         >
-         
-
           {userLocation && startingMarker && (
             <>
-
               {markers.map((marker) => (
                 <Marker
                   key={marker.id}
@@ -298,14 +301,12 @@ const updatedMarkers = markers.map((marker, index) => ({
                   //     : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' // URL for red markers
                   // }}
 
-
                   icon={{
-      url:
-        marker.iconURL ||
-        "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
-      scaledSize: new window.google.maps.Size(40, 40),
-    }}
-                  
+                    url:
+                      marker.iconURL ||
+                      "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+                    scaledSize: new window.google.maps.Size(40, 40),
+                  }}
                   onClick={() => handleMarkerClick(marker.id)}
                 />
               ))}
@@ -329,7 +330,6 @@ const updatedMarkers = markers.map((marker, index) => ({
                   <DatePicker
                     className={classes.walksContainer}
                     selected={dateOfWalk}
-               
                     placeholderText="Date"
                     showYearDropdown
                     dateFormat="d MMMM yyyy"
@@ -339,7 +339,6 @@ const updatedMarkers = markers.map((marker, index) => ({
                   <DatePicker
                     className={classes.walksContainer}
                     selected={selectedTime}
-                    
                     onChange={handleTimeChange}
                     showTimeSelect
                     showTimeSelectOnly
@@ -388,9 +387,9 @@ const updatedMarkers = markers.map((marker, index) => ({
                   <div className={classes.saveContainer}>
                     <button
                       className={classes.buttonSave}
-                      onClick={()=>{
+                      onClick={() => {
                         handleSaveWalk();
-                    }}
+                      }}
                     >
                       Save
                     </button>
@@ -405,7 +404,7 @@ const updatedMarkers = markers.map((marker, index) => ({
                   </div>
                 </div>
               )}
-console.log(publicWalks);
+              console.log(publicWalks);
               {publicWalks.map((walk) => (
                 // Render markers and polylines for each saved walk
                 <React.Fragment key={`walk-${walk.id}`}>
