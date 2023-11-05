@@ -50,7 +50,7 @@ export function MyPets(): JSX.Element {
   const currentUser = useAuth();
 
   const addToList = async (product: Pet): Promise<void> => {
-    console.log(dateOfBirth)
+    console.log(dateOfBirth);
     try {
       const petId = Date.now();
       const newProduct = {
@@ -162,10 +162,10 @@ export function MyPets(): JSX.Element {
       dateOfBirth instanceof Timestamp ? dateOfBirth.toDate() : dateOfBirth;
     const today = new Date();
 
-  if (today < birthDate) {
-    // Handle future birthdate
-    return { years: -1, months: -1 };
-  }
+    if (today < birthDate) {
+      // Handle future birthdate
+      return { years: -1, months: -1 };
+    }
 
     let years = today.getFullYear() - birthDate.getFullYear();
     let months = today.getMonth() - birthDate.getMonth();
@@ -342,7 +342,7 @@ export function MyPets(): JSX.Element {
           <h2>Add your new pet</h2>
           <form>
             <input
-            className={classes.selectContainer}
+              className={classes.selectContainer}
               name="pet name"
               type="string"
               value={petName ?? ""}
@@ -362,7 +362,7 @@ export function MyPets(): JSX.Element {
               value={dateOfBirth ? dateOfBirth.toLocaleDateString() : ""}
             />
             <input
-            className={classes.selectContainer}
+              className={classes.selectContainer}
               name="breed"
               type="string"
               value={breed ?? ""}
@@ -373,7 +373,7 @@ export function MyPets(): JSX.Element {
               }}
             />
             <select
-            className={classes.selectContainer}
+              className={classes.selectContainer}
               value={selectedSex ?? ""}
               onChange={(e) => {
                 setSelectedSex(e.target.value);
@@ -384,7 +384,7 @@ export function MyPets(): JSX.Element {
               <option value="male">Male&#9794;</option>
             </select>
             <select
-            className={classes.selectContainer}
+              className={classes.selectContainer}
               value={selectedTemper ?? ""}
               onChange={(e) => {
                 setSelectedTemper(e.target.value);
@@ -401,7 +401,11 @@ export function MyPets(): JSX.Element {
                 &#x1F419; Octopus - shy and secretive behavior
               </option>
             </select>
-            <input className={classes.selectContainer} type="file" onChange={handleChange} />
+            <input
+              className={classes.selectContainer}
+              type="file"
+              onChange={handleChange}
+            />
             <button
               disabled={loading}
               className={classes.button}

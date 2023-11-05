@@ -152,7 +152,12 @@ export const Maps = () => {
       const { lat, lng } = event.latLng.toJSON();
       setMarkers((prevMarkers) => [
         ...prevMarkers,
-        { lat, lng, id: markerIdCounter.current++, iconURL: "http://maps.google.com/mapfiles/ms/icons/green-dot.png" },
+        {
+          lat,
+          lng,
+          id: markerIdCounter.current++,
+          iconURL: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+        },
       ]);
     }
   };
@@ -198,7 +203,9 @@ export const Maps = () => {
       // Update the icon URL for the markers
       const updatedMarkers = markers.map((marker, index) => ({
         ...marker,
-        iconURL: petPicURLs[index] || "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+        iconURL:
+          petPicURLs[index] ||
+          "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
       }));
 
       const walkData: WalkData = {
