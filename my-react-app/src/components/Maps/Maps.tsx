@@ -172,12 +172,6 @@ export const Maps = () => {
     }
   };
 
-  // const handleMarkerClick = (markerId: number) => {
-  //   setMarkers((prevMarkers) =>
-  //     prevMarkers.filter((marker) => marker.id !== markerId)
-  //   );
-  // };
-
   const handleMarkerClick = (markerId: number) => {
     setMarkers((prevMarkers) =>
       prevMarkers.map((marker) =>
@@ -236,6 +230,7 @@ export const Maps = () => {
       }
     }
   };
+
   const handleTimeChange = (time: Date) => {
     setSelectedTime(time);
   };
