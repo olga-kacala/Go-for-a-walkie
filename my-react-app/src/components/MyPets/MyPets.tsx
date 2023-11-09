@@ -50,7 +50,6 @@ export function MyPets(): JSX.Element {
   const currentUser = useAuth();
 
   const addToList = async (product: Pet): Promise<void> => {
-    console.log(dateOfBirth);
     try {
       const petId = Date.now();
       const newProduct = {
@@ -83,6 +82,7 @@ export function MyPets(): JSX.Element {
       console.log(error);
     }
   };
+
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, async (user) => {
       if (user) {
@@ -117,7 +117,13 @@ export function MyPets(): JSX.Element {
         setDateOfBirth(null);
       }
     });
-  }, [setUsername, setIsLogged, setmyAnimalsList]);
+  }, [
+    setUsername,
+    setIsLogged,
+    setmyAnimalsList,
+    setDateOfBirth,
+    setResultMyPets,
+  ]);
 
   useEffect(() => {
     if (myAnimalsList.length === 0) {
@@ -125,7 +131,7 @@ export function MyPets(): JSX.Element {
     } else {
       setResultMyPets("Your pet list");
     }
-  }, [myAnimalsList]);
+  }, [myAnimalsList, setResultMyPets]);
 
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
@@ -149,7 +155,7 @@ export function MyPets(): JSX.Element {
     } else {
       setBDToday(false);
     }
-  }, [myAnimalsList]);
+  }, [myAnimalsList, petWithBirthday]);
 
   function calculateAge(dateOfBirth: Date | Timestamp | null): {
     years: number;
@@ -248,7 +254,7 @@ export function MyPets(): JSX.Element {
     if (currentUser && currentUser.photoURL) {
       setPhotoURL(currentUser.photoURL);
     }
-  }, [currentUser]);
+  }, [currentUser, setPhotoURL]);
 
   function handleDelete(pet: Pet) {
     const confirmDelete = window.confirm(
@@ -269,6 +275,7 @@ export function MyPets(): JSX.Element {
           <a
             href="https://www.amazon.com/Dog-Birthday-Gifts/s?k=Dog+Birthday+Gifts"
             target="_blank"
+            rel="noreferrer"
           >
             <h2 className={classes.BirthdayText}>
               Lets get purrfect bd present 🎁🦴
@@ -294,7 +301,7 @@ export function MyPets(): JSX.Element {
                 />
               </div>
               <div className={classes.dataContainer}>
-                <span className={classes.title}>name: </span>
+                <span className={classes.title}>name: </span>{" "}
                 <span className={classes.child}>{pet.name}</span>
                 <div>
                   <span className={classes.title}>age: </span>
