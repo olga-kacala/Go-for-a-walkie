@@ -11,21 +11,20 @@ import { AppContext } from "../Providers/Providers";
 import {
   doc,
   getDocs,
-  addDoc,
   collection,
   query,
   where,
-  getDoc,
+  setDoc,
 } from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "firebase/firestore";
-import { QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 
 export type WalkData = {
   id: number;
+  username: string;
   markers: { lat: number; lng: number; id: number }[];
   lat: number;
   lng: number;
@@ -190,6 +189,10 @@ export const Maps = () => {
     setAddedPets(updatedAddedPets);
   };
 
+  const handleTimeChange = (time: Date) => {
+    setSelectedTime(time);
+  };
+
   const handleSaveWalk = async () => {
     if (userLocation && startingMarker && markers.length > 0) {
       const petPicURLs = await Promise.all(addedPets.map(fetchPetPictureURL));
@@ -204,6 +207,7 @@ export const Maps = () => {
 
       const walkData: WalkData = {
         id: Date.now(),
+        username: `${username}`,
         markers: updatedMarkers,
         lat: userLocation.lat,
         lng: userLocation.lng,
@@ -213,10 +217,11 @@ export const Maps = () => {
       };
 
       try {
-        const docRef = doc(firebaseDb, "Walks", `${username}`);
-        const colRef = collection(docRef, "walkies");
-        await addDoc(colRef, { ...walkData, markers: updatedMarkers });
-        console.log("Saved");
+        const walksCollectionRef = collection(firebaseDb, "Public Walks");
+        const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
+
+        await setDoc(walkDocRef, { ...walkData, markers: updatedMarkers });
+
         setStartingMarker(null);
         setMarkers([]);
         setTotalDistance(0);
@@ -226,36 +231,31 @@ export const Maps = () => {
         setCurrentMarkerType("pet");
         console.log(petPicURLs[0]);
       } catch (error) {
-        console.log(error);
+        console.log("Error saving walk:", error);
       }
     }
-  };
-
-  const handleTimeChange = (time: Date) => {
-    setSelectedTime(time);
   };
 
   useEffect(() => {
     const fetchPublicWalks = async () => {
       const walks: WalkData[] = [];
       try {
-        const docRef = doc(firebaseDb, "Walks", `${username}`);
-        const colRef = collection(docRef, "walkies");
-        const walksData = await getDocs(colRef);
+        const walksCollectionRef = collection(firebaseDb, "Public Walks");
+        const walksSnapshot = await getDocs(walksCollectionRef);
 
-        walksData.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
-          if (doc.exists()) {
-            const walk = doc.data() as WalkData;
-            walks.push(walk);
-          }
+        walksSnapshot.forEach((walkDoc) => {
+          const walkData = walkDoc.data() as WalkData;
+          walks.push(walkData);
         });
+
         setPublicWalks(walks);
       } catch (error) {
         console.log("Error fetching public walks", error);
       }
     };
+
     fetchPublicWalks();
-  }, [username]);
+  }, []);
 
   const fetchPetPictureURL = async (petName: string) => {
     try {
@@ -297,12 +297,6 @@ export const Maps = () => {
                 <Marker
                   key={marker.id}
                   position={{ lat: marker.lat, lng: marker.lng }}
-                  // icon={{
-                  //   url: marker.id === 0
-                  //     ? 'http://maps.google.com/mapfiles/ms/icons/green-dot.png' // URL for green marker
-                  //     : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' // URL for red markers
-                  // }}
-
                   icon={{
                     url:
                       marker.iconURL ||
@@ -321,7 +315,7 @@ export const Maps = () => {
                   options={{
                     strokeColor: "rgba(122,146,254,1)",
                     strokeOpacity: 1,
-                    strokeWeight: 3,
+                    strokeWeight: 5,
                   }}
                 />
               )}
@@ -406,7 +400,7 @@ export const Maps = () => {
                   </div>
                 </div>
               )}
-              console.log(publicWalks);
+
               {publicWalks.map((walk) => (
                 // Render markers and polylines for each saved walk
                 <React.Fragment key={`walk-${walk.id}`}>
@@ -416,6 +410,13 @@ export const Maps = () => {
                       <Marker
                         position={{ lat: marker.lat, lng: marker.lng }}
                         key={`walk-${walk.id}-marker-${marker.id}`}
+                        icon={{
+                          url:
+                            walk.username === username
+                              ? "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                              : "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+                          scaledSize: new window.google.maps.Size(40, 40),
+                        }}
                       />
                     ))}
                   {/* Render polyline */}
@@ -427,7 +428,8 @@ export const Maps = () => {
                       }))}
                       key={`walk-${walk.id}-polyline`} // Ensure uniqueness
                       options={{
-                        strokeColor: "rgba(122,146,254,1)",
+                        strokeColor:
+                          walk.username === username ? "rgba(122,146,254,1)" : "red",
                         strokeOpacity: 1,
                         strokeWeight: 3,
                       }}
