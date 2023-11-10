@@ -38,7 +38,7 @@ export const Maps = () => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY || "",
   });
 
-  const { myAnimalsList, username, dateOfWalk, setDateOfWalk, photoURL } =
+  const { myAnimalsList, username, dateOfWalk, setDateOfWalk } =
     useContext(AppContext);
 
   const [userLocation, setUserLocation] = useState<{
@@ -60,7 +60,7 @@ export const Maps = () => {
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
   const [selectedPetPicURLs, setSelectedPetPicURLs] = useState<string[]>([]);
-  const [currentMarkerType, setCurrentMarkerType] = useState<string>("green");
+  // const [currentMarkerType, setCurrentMarkerType] = useState<string>("green");
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -228,8 +228,7 @@ export const Maps = () => {
         setAddedPets([]);
         setDateOfWalk(null);
         setSelectedTime(new Date());
-        setCurrentMarkerType("pet");
-        console.log(petPicURLs[0]);
+        
       } catch (error) {
         console.log("Error saving walk:", error);
       }
@@ -253,7 +252,6 @@ export const Maps = () => {
         console.log("Error fetching public walks", error);
       }
     };
-
     fetchPublicWalks();
   }, []);
 
@@ -299,8 +297,8 @@ export const Maps = () => {
                   position={{ lat: marker.lat, lng: marker.lng }}
                   icon={{
                     url:
-                      marker.iconURL ||
-                      "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+                    
+                      "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
                     scaledSize: new window.google.maps.Size(40, 40),
                   }}
                   onClick={() => handleMarkerClick(marker.id)}
@@ -401,8 +399,9 @@ export const Maps = () => {
                 </div>
               )}
 
+{/* RENDERING SAVED WALKS ON MAP */}
+
               {publicWalks.map((walk) => (
-                // Render markers and polylines for each saved walk
                 <React.Fragment key={`walk-${walk.id}`}>
                   {/* Render markers */}
                   {Array.isArray(walk.markers) &&
@@ -413,7 +412,7 @@ export const Maps = () => {
                         icon={{
                           url:
                             walk.username === username
-                              ? "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                              ? "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                               : "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
                           scaledSize: new window.google.maps.Size(40, 40),
                         }}
@@ -429,7 +428,9 @@ export const Maps = () => {
                       key={`walk-${walk.id}-polyline`} // Ensure uniqueness
                       options={{
                         strokeColor:
-                          walk.username === username ? "rgba(122,146,254,1)" : "red",
+                          walk.username === username
+                            ? "rgba(122,146,254,1)"
+                            : "red",
                         strokeOpacity: 1,
                         strokeWeight: 3,
                       }}
