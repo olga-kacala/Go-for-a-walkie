@@ -60,7 +60,7 @@ export const Maps = () => {
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
   const [selectedPetPicURLs, setSelectedPetPicURLs] = useState<string[]>([]);
-  // const [currentMarkerType, setCurrentMarkerType] = useState<string>("green");
+
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -235,6 +235,9 @@ export const Maps = () => {
     }
   };
 
+
+
+  
   useEffect(() => {
     const fetchPublicWalks = async () => {
       const walks: WalkData[] = [];
@@ -437,35 +440,6 @@ export const Maps = () => {
                     />
                   )}
 
-                  {/* Render a simple table for walk information */}
-                  <table>
-                    <tbody>
-                      <tr>
-                        <td>Date of Walk</td>
-                        <td>
-                          {walk.dateOfWalk instanceof Date
-                            ? walk.dateOfWalk.toLocaleDateString()
-                            : "Invalid Date"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Total Distance (km)</td>
-                        <td>
-                          {walk.totalDistance !== undefined
-                            ? walk.totalDistance.toFixed(2)
-                            : "N/A"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Added Pets</td>
-                        <td>
-                          {walk.addedPets !== undefined
-                            ? walk.addedPets.join(", ")
-                            : "N/A"}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
                 </React.Fragment>
               ))}
             </>
