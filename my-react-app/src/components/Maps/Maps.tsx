@@ -21,6 +21,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "firebase/firestore";
+import { InfoWindow } from "@react-google-maps/api";
 
 export type WalkData = {
   id: number;
@@ -60,6 +61,8 @@ export const Maps = () => {
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
   const [selectedPetPicURLs, setSelectedPetPicURLs] = useState<string[]>([]);
+  const [clickedMarker, setClickedMarker] = useState<Marker | null>(null);
+
 
 
   useEffect(() => {
@@ -195,13 +198,13 @@ export const Maps = () => {
 
   const handleSaveWalk = async () => {
     if (userLocation && startingMarker && markers.length > 0) {
-      const petPicURLs = await Promise.all(addedPets.map(fetchPetPictureURL));
+      // const petPicURLs = await Promise.all(addedPets.map(fetchPetPictureURL));
 
       // Update the icon URL for the markers
-      const updatedMarkers = markers.map((marker, index) => ({
+      const updatedMarkers = markers.map((marker) => ({
         ...marker,
         iconURL:
-          petPicURLs[index] ||
+          
           "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
       }));
 
@@ -258,26 +261,17 @@ export const Maps = () => {
     fetchPublicWalks();
   }, []);
 
-  const fetchPetPictureURL = async (petName: string) => {
-    try {
-      const petQuery = query(
-        collection(firebaseDb, "MyPets"),
-        where("name", "==", petName)
-      );
-      const querySnapshot = await getDocs(petQuery);
+  
 
-      if (!querySnapshot.empty) {
-        const petDoc = querySnapshot.docs[0];
-        const petData = petDoc.data();
-        return petData.photoURL;
-      } else {
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching pet picture URL:", error);
-      return null;
-    }
+  const createMarkerContent = (walkUsername: string) => {
+    return `
+      <div>
+        <p>Username from: ${walkUsername}</p>
+      </div>
+    `;
   };
+  
+  
 
   return (
     <div className={classes.Map}>
@@ -407,7 +401,8 @@ export const Maps = () => {
               {publicWalks.map((walk) => (
                 <React.Fragment key={`walk-${walk.id}`}>
                   {/* Render markers */}
-                  {Array.isArray(walk.markers) &&
+
+                  {/* {Array.isArray(walk.markers) &&
                     walk.markers.map((marker) => (
                       <Marker
                         position={{ lat: marker.lat, lng: marker.lng }}
@@ -420,7 +415,35 @@ export const Maps = () => {
                           scaledSize: new window.google.maps.Size(40, 40),
                         }}
                       />
-                    ))}
+                    ))} */}
+
+
+{Array.isArray(walk.markers) &&
+  walk.markers.map((marker) => (
+    <Marker
+      position={{ lat: marker.lat, lng: marker.lng }}
+      key={`walk-${walk.id}-marker-${marker.id}`}
+      icon={{
+        url:
+          walk.username === username
+            ? "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+            : "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+        scaledSize: new window.google.maps.Size(40, 40),
+      }}
+      onClick={() => setClickedMarker(marker)}
+    />
+  ))}
+ {clickedMarker && (
+      <InfoWindow
+        position={{ lat: clickedMarker.lat, lng: clickedMarker.lng }}
+        onCloseClick={() => setClickedMarker(null)}
+      >
+        <div dangerouslySetInnerHTML={{ __html: createMarkerContent(walk.username) }} />
+      </InfoWindow>
+    )}
+
+
+
                   {/* Render polyline */}
                   {Array.isArray(walk.markers) && walk.markers.length >= 2 && (
                     <Polyline
