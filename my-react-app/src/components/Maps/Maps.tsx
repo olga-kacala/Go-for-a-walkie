@@ -26,6 +26,7 @@ import { InfoWindow } from "@react-google-maps/api";
 export type WalkData = {
   id: number;
   username: string;
+  walkCreator: string;
   markers: { lat: number; lng: number; id: number }[];
   lat: number;
   lng: number;
@@ -61,9 +62,8 @@ export const Maps = () => {
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
   const [selectedPetPicURLs, setSelectedPetPicURLs] = useState<string[]>([]);
-  const [clickedMarker, setClickedMarker] = useState<Marker | null>(null);
-
-
+  const [clickedMarker, setClickedMarker] = useState<{ lat: number; lng: number } | null>(null);
+  const [selectedMarkerInfo, setSelectedMarkerInfo] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -174,18 +174,23 @@ export const Maps = () => {
     }
   };
 
-  const handleMarkerClick = (markerId: number) => {
-    setMarkers((prevMarkers) =>
-      prevMarkers.map((marker) =>
-        marker.id === markerId
-          ? {
-              ...marker,
-              iconURL: selectedPetPicURLs[prevMarkers.indexOf(marker)],
-            }
-          : marker
-      )
-    );
-  };
+
+const handleMarkerClick = (markerId: number) => {
+  setClickedMarker(markers.find((marker) => marker.id === markerId) || null);
+
+  setMarkers((prevMarkers) =>
+    prevMarkers.map((marker) =>
+      marker.id === markerId
+        ? {
+            ...marker,
+            iconURL: selectedPetPicURLs[prevMarkers.indexOf(marker)],
+          }
+        : marker
+    )
+  );
+};
+
+
 
   const handleDelete = (petName: string) => {
     const updatedAddedPets = addedPets.filter((name) => name !== petName);
@@ -198,19 +203,17 @@ export const Maps = () => {
 
   const handleSaveWalk = async () => {
     if (userLocation && startingMarker && markers.length > 0) {
-      // const petPicURLs = await Promise.all(addedPets.map(fetchPetPictureURL));
 
       // Update the icon URL for the markers
       const updatedMarkers = markers.map((marker) => ({
         ...marker,
-        iconURL:
-          
-          "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+       
       }));
 
       const walkData: WalkData = {
         id: Date.now(),
         username: `${username}`,
+        walkCreator: `${username}`,
         markers: updatedMarkers,
         lat: userLocation.lat,
         lng: userLocation.lng,
@@ -261,18 +264,16 @@ export const Maps = () => {
     fetchPublicWalks();
   }, []);
 
-  
 
-  const createMarkerContent = (walkUsername: string) => {
+  const createMarkerContent = (walkCreator: string) => {
+    console.log(walkCreator)
     return `
       <div>
-        <p>Username from: ${walkUsername}</p>
+        <p>Username from: ${walkCreator}</p>
       </div>
     `;
   };
   
-  
-
   return (
     <div className={classes.Map}>
       {!isLoaded ? (
@@ -400,24 +401,8 @@ export const Maps = () => {
 
               {publicWalks.map((walk) => (
                 <React.Fragment key={`walk-${walk.id}`}>
+
                   {/* Render markers */}
-
-                  {/* {Array.isArray(walk.markers) &&
-                    walk.markers.map((marker) => (
-                      <Marker
-                        position={{ lat: marker.lat, lng: marker.lng }}
-                        key={`walk-${walk.id}-marker-${marker.id}`}
-                        icon={{
-                          url:
-                            walk.username === username
-                              ? "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                              : "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-                          scaledSize: new window.google.maps.Size(40, 40),
-                        }}
-                      />
-                    ))} */}
-
-
 {Array.isArray(walk.markers) &&
   walk.markers.map((marker) => (
     <Marker
@@ -430,19 +415,19 @@ export const Maps = () => {
             : "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
         scaledSize: new window.google.maps.Size(40, 40),
       }}
-      onClick={() => setClickedMarker(marker)}
+      onClick={() => setClickedMarker({ lat: marker.lat, lng: marker.lng })}
+
     />
   ))}
- {clickedMarker && (
-      <InfoWindow
-        position={{ lat: clickedMarker.lat, lng: clickedMarker.lng }}
-        onCloseClick={() => setClickedMarker(null)}
-      >
-        <div dangerouslySetInnerHTML={{ __html: createMarkerContent(walk.username) }} />
-      </InfoWindow>
-    )}
 
-
+{clickedMarker && (
+  <InfoWindow
+    position={{ lat: clickedMarker.lat, lng: clickedMarker.lng }}
+    onCloseClick={() => setClickedMarker(null)}
+  >
+    <div dangerouslySetInnerHTML={{ __html: createMarkerContent(walk.walkCreator) }} />
+  </InfoWindow>
+)}
 
                   {/* Render polyline */}
                   {Array.isArray(walk.markers) && walk.markers.length >= 2 && (
