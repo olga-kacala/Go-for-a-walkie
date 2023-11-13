@@ -84,7 +84,7 @@ export function Login(): JSX.Element {
           {" "}
           Don't have an account?{" "}
           <Link className={classes.button} to="/Register">
-            Create an Walkie Account
+            Create Account
           </Link>
         </p>
       </div>
