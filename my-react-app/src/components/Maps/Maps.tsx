@@ -8,14 +8,7 @@ import React from "react";
 import { useState, useEffect, useRef, useContext } from "react";
 import classes from "./Maps.module.css";
 import { AppContext } from "../Providers/Providers";
-import {
-  doc,
-  getDocs,
-  collection,
-  query,
-  where,
-  setDoc,
-} from "firebase/firestore";
+import { doc, getDocs, collection, setDoc } from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -62,8 +55,14 @@ export const Maps = () => {
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
   const [selectedPetPicURLs, setSelectedPetPicURLs] = useState<string[]>([]);
-  const [clickedMarker, setClickedMarker] = useState<{ lat: number; lng: number } | null>(null);
-  const [selectedMarkerInfo, setSelectedMarkerInfo] = useState<{ lat: number; lng: number } | null>(null);
+  const [clickedMarker, setClickedMarker] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  // const [selectedMarkerInfo, setSelectedMarkerInfo] = useState<{
+  //   lat: number;
+  //   lng: number;
+  // } | null>(null);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -174,23 +173,20 @@ export const Maps = () => {
     }
   };
 
+  const handleMarkerClick = (markerId: number) => {
+    setClickedMarker(markers.find((marker) => marker.id === markerId) || null);
 
-const handleMarkerClick = (markerId: number) => {
-  setClickedMarker(markers.find((marker) => marker.id === markerId) || null);
-
-  setMarkers((prevMarkers) =>
-    prevMarkers.map((marker) =>
-      marker.id === markerId
-        ? {
-            ...marker,
-            iconURL: selectedPetPicURLs[prevMarkers.indexOf(marker)],
-          }
-        : marker
-    )
-  );
-};
-
-
+    setMarkers((prevMarkers) =>
+      prevMarkers.map((marker) =>
+        marker.id === markerId
+          ? {
+              ...marker,
+              iconURL: selectedPetPicURLs[prevMarkers.indexOf(marker)],
+            }
+          : marker
+      )
+    );
+  };
 
   const handleDelete = (petName: string) => {
     const updatedAddedPets = addedPets.filter((name) => name !== petName);
@@ -203,11 +199,9 @@ const handleMarkerClick = (markerId: number) => {
 
   const handleSaveWalk = async () => {
     if (userLocation && startingMarker && markers.length > 0) {
-
       // Update the icon URL for the markers
       const updatedMarkers = markers.map((marker) => ({
         ...marker,
-       
       }));
 
       const walkData: WalkData = {
@@ -234,16 +228,12 @@ const handleMarkerClick = (markerId: number) => {
         setAddedPets([]);
         setDateOfWalk(null);
         setSelectedTime(new Date());
-        
       } catch (error) {
         console.log("Error saving walk:", error);
       }
     }
   };
 
-
-
-  
   useEffect(() => {
     const fetchPublicWalks = async () => {
       const walks: WalkData[] = [];
@@ -264,16 +254,15 @@ const handleMarkerClick = (markerId: number) => {
     fetchPublicWalks();
   }, []);
 
-
   const createMarkerContent = (walkCreator: string) => {
-    console.log(walkCreator)
+    console.log(walkCreator);
     return `
       <div>
         <p>Username from: ${walkCreator}</p>
       </div>
     `;
   };
-  
+
   return (
     <div className={classes.Map}>
       {!isLoaded ? (
@@ -294,9 +283,7 @@ const handleMarkerClick = (markerId: number) => {
                   key={marker.id}
                   position={{ lat: marker.lat, lng: marker.lng }}
                   icon={{
-                    url:
-                    
-                      "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                    url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
                     scaledSize: new window.google.maps.Size(40, 40),
                   }}
                   onClick={() => handleMarkerClick(marker.id)}
@@ -397,37 +384,44 @@ const handleMarkerClick = (markerId: number) => {
                 </div>
               )}
 
-{/* RENDERING SAVED WALKS ON MAP */}
+              {/* RENDERING SAVED WALKS ON MAP */}
 
               {publicWalks.map((walk) => (
                 <React.Fragment key={`walk-${walk.id}`}>
-
                   {/* Render markers */}
-{Array.isArray(walk.markers) &&
-  walk.markers.map((marker) => (
-    <Marker
-      position={{ lat: marker.lat, lng: marker.lng }}
-      key={`walk-${walk.id}-marker-${marker.id}`}
-      icon={{
-        url:
-          walk.username === username
-            ? "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-            : "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-        scaledSize: new window.google.maps.Size(40, 40),
-      }}
-      onClick={() => setClickedMarker({ lat: marker.lat, lng: marker.lng })}
+                  {Array.isArray(walk.markers) &&
+                    walk.markers.map((marker) => (
+                      <Marker
+                        position={{ lat: marker.lat, lng: marker.lng }}
+                        key={`walk-${walk.id}-marker-${marker.id}`}
+                        icon={{
+                          url:
+                            walk.username === username
+                              ? "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                              : "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+                          scaledSize: new window.google.maps.Size(40, 40),
+                        }}
+                        onClick={() =>
+                          setClickedMarker({ lat: marker.lat, lng: marker.lng })
+                        }
+                      />
+                    ))}
 
-    />
-  ))}
-
-{clickedMarker && (
-  <InfoWindow
-    position={{ lat: clickedMarker.lat, lng: clickedMarker.lng }}
-    onCloseClick={() => setClickedMarker(null)}
-  >
-    <div dangerouslySetInnerHTML={{ __html: createMarkerContent(walk.walkCreator) }} />
-  </InfoWindow>
-)}
+                  {clickedMarker && (
+                    <InfoWindow
+                      position={{
+                        lat: clickedMarker.lat,
+                        lng: clickedMarker.lng,
+                      }}
+                      onCloseClick={() => setClickedMarker(null)}
+                    >
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: createMarkerContent(walk.walkCreator),
+                        }}
+                      />
+                    </InfoWindow>
+                  )}
 
                   {/* Render polyline */}
                   {Array.isArray(walk.markers) && walk.markers.length >= 2 && (
@@ -447,7 +441,6 @@ const handleMarkerClick = (markerId: number) => {
                       }}
                     />
                   )}
-
                 </React.Fragment>
               ))}
             </>

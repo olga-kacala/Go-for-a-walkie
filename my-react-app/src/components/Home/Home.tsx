@@ -28,6 +28,7 @@ export function Home() {
             <Link className={classes.button} to="/Login">
               Get Started {"\uD83D\uDC36"}
             </Link>
+            
           </div>
         </div>
       </section>
