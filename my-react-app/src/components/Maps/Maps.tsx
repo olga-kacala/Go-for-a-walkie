@@ -54,7 +54,6 @@ export const Maps = () => {
   const [addedPets, setAddedPets] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
-  const [selectedPetPicURLs, setSelectedPetPicURLs] = useState<string[]>([]);
   const [clickedMarker, setClickedMarker] = useState<{
     lat: number;
     lng: number;
@@ -63,6 +62,7 @@ export const Maps = () => {
   //   lat: number;
   //   lng: number;
   // } | null>(null);
+  const [selectedWalk, setSelectedWalk] = useState<WalkData | null>(null)
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -173,20 +173,21 @@ export const Maps = () => {
     }
   };
 
-  const handleMarkerClick = (markerId: number) => {
-    setClickedMarker(markers.find((marker) => marker.id === markerId) || null);
+  // const handleMarkerClick = (markerId: number) => {
+  //   setClickedMarker(markers.find((marker) => marker.id === markerId) || null);
 
-    setMarkers((prevMarkers) =>
-      prevMarkers.map((marker) =>
-        marker.id === markerId
-          ? {
-              ...marker,
-              iconURL: selectedPetPicURLs[prevMarkers.indexOf(marker)],
-            }
-          : marker
-      )
-    );
+  // const handleMarkerClick = (markerId: number, walk: WalkData) => {
+  //   setClickedMarker(markers.find((marker) => marker.id === markerId) || null);
+  //   setSelectedWalk(walk);
+  // };
+
+  const handleMarkerClick = (markerId: number, walk: WalkData) => {
+    console.log("Marker clicked:", markerId, walk);
+    setClickedMarker(markers.find((marker) => marker.id === markerId) || null);
+    setSelectedWalk(walk);
   };
+  
+  
 
   const handleDelete = (petName: string) => {
     const updatedAddedPets = addedPets.filter((name) => name !== petName);
@@ -254,14 +255,33 @@ export const Maps = () => {
     fetchPublicWalks();
   }, []);
 
-  const createMarkerContent = (walkCreator: string) => {
-    console.log(walkCreator);
-    return `
+
+  // const createMarkerContent = (walk: WalkData) => {
+  //   console.log(walk.walkCreator);
+  //   return (
+  //     <div>
+  //       <p>Username from: {walk.walkCreator}</p>
+  //     </div>
+  //   );
+  // };
+
+  const createMarkerContent = (walk: WalkData | null) => {
+    if (!walk) {
+      return null; 
+    }
+  
+    console.log('marker content',walk.walkCreator);
+  
+    return (
       <div>
-        <p>Username from: ${walkCreator}</p>
+        <p>Username from: {walk.walkCreator}</p>
       </div>
-    `;
+    );
   };
+  
+  
+  
+  
 
   return (
     <div className={classes.Map}>
@@ -286,7 +306,7 @@ export const Maps = () => {
                     url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
                     scaledSize: new window.google.maps.Size(40, 40),
                   }}
-                  onClick={() => handleMarkerClick(marker.id)}
+                  // onClick={() => handleMarkerClick(marker.id)}
                 />
               ))}
               {markers.length >= 2 && (
@@ -384,6 +404,7 @@ export const Maps = () => {
                 </div>
               )}
 
+
               {/* RENDERING SAVED WALKS ON MAP */}
 
               {publicWalks.map((walk) => (
@@ -401,26 +422,60 @@ export const Maps = () => {
                               : "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
                           scaledSize: new window.google.maps.Size(40, 40),
                         }}
-                        onClick={() =>
-                          setClickedMarker({ lat: marker.lat, lng: marker.lng })
-                        }
+                        
+                        // onClick={() =>
+                        //   setClickedMarker({ lat: marker.lat, lng: marker.lng })
+                        // }
+
+                        onClick={() => handleMarkerClick(marker.id, walk)}
+                        // onClick={() => console.log("Marker clicked:", marker.id, walk.walkCreator)}
                       />
                     ))}
 
                   {clickedMarker && (
-                    <InfoWindow
-                      position={{
-                        lat: clickedMarker.lat,
-                        lng: clickedMarker.lng,
-                      }}
-                      onCloseClick={() => setClickedMarker(null)}
-                    >
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: createMarkerContent(walk.walkCreator),
-                        }}
-                      />
-                    </InfoWindow>
+                    // <InfoWindow
+                    //   position={{
+                    //     lat: clickedMarker.lat,
+                    //     lng: clickedMarker.lng,
+                    //   }}
+                    //   onCloseClick={() => setClickedMarker(null)}
+                    // >
+                    //   <div
+                    //     dangerouslySetInnerHTML={{
+                    //       __html: createMarkerContent(walk.walkCreator),
+                    //     }}
+                    //   />
+                    // </InfoWindow>
+
+
+                      // <InfoWindow
+                      //   position={{
+                      //     lat: clickedMarker.lat,
+                      //     lng: clickedMarker.lng,
+                      //   }}
+                      //   onCloseClick={() => setClickedMarker(null)}
+                      // >
+                      //   <div>
+                      //     {selectedWalk && createMarkerContent(selectedWalk)}
+                      //   </div>
+                      // </InfoWindow>
+
+                      
+                      <InfoWindow
+  position={{
+    lat: clickedMarker.lat,
+    lng: clickedMarker.lng,
+  }}
+  onCloseClick={() => setClickedMarker(null)}
+>
+  <div>
+    {clickedMarker && (
+      <p>Marker clicked: {clickedMarker.lat}, {clickedMarker.lng}</p>
+    )}
+    {selectedWalk && createMarkerContent(selectedWalk)}
+  </div>
+</InfoWindow>
+
                   )}
 
                   {/* Render polyline */}
