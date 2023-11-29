@@ -12,9 +12,6 @@ import { doc, getDocs, collection, setDoc } from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "react-datepicker/dist/react-datepicker.css";
-import "firebase/firestore";
-import { InfoWindow } from "@react-google-maps/api";
 
 export type WalkData = {
   id: number;
@@ -58,11 +55,11 @@ export const Maps = () => {
     lat: number;
     lng: number;
   } | null>(null);
-  // const [selectedMarkerInfo, setSelectedMarkerInfo] = useState<{
-  //   lat: number;
-  //   lng: number;
-  // } | null>(null);
-  const [selectedWalk, setSelectedWalk] = useState<WalkData | null>(null)
+  const [clickedMarkerPosition, setClickedMarkerPosition] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -132,22 +129,6 @@ export const Maps = () => {
     return distance;
   };
 
-  useEffect(() => {
-    let distance = 0;
-
-    for (let i = 1; i < markers.length; i++) {
-      const prevMarker = markers[i - 1];
-      const currMarker = markers[i];
-      distance += calculateDistance(
-        prevMarker.lat,
-        prevMarker.lng,
-        currMarker.lat,
-        currMarker.lng
-      );
-    }
-    setTotalDistance(distance);
-  }, [markers]);
-
   const handleMapClick = (event: google.maps.MapMouseEvent) => {
     if (event.latLng) {
       const { lat, lng } = event.latLng.toJSON();
@@ -165,28 +146,23 @@ export const Maps = () => {
 
   const handlePetClick = async () => {
     if (selectedPetNames.length > 0) {
-      const uniqeSelectedPetNames = selectedPetNames.filter(
+      const uniqueSelectedPetNames = selectedPetNames.filter(
         (petName) => !addedPets.includes(petName)
       );
-      setAddedPets((prevPets) => [...prevPets, ...uniqeSelectedPetNames]);
+      setAddedPets((prevPets) => [...prevPets, ...uniqueSelectedPetNames]);
       setSelectedPetNames([]);
     }
   };
 
-  // const handleMarkerClick = (markerId: number) => {
-  //   setClickedMarker(markers.find((marker) => marker.id === markerId) || null);
-
-  // const handleMarkerClick = (markerId: number, walk: WalkData) => {
-  //   setClickedMarker(markers.find((marker) => marker.id === markerId) || null);
-  //   setSelectedWalk(walk);
-  // };
-
   const handleMarkerClick = (markerId: number, walk: WalkData) => {
-    console.log("Marker clicked:", markerId, walk);
+    console.log("User:", walk.walkCreator);
     setClickedMarker(markers.find((marker) => marker.id === markerId) || null);
-    setSelectedWalk(walk);
+    console.log("marker:", clickedMarker);
+    setClickedMarkerPosition({
+      lat: walk.lat, // Use the lat and lng from the walk data
+      lng: walk.lng,
+    });
   };
-  
   
 
   const handleDelete = (petName: string) => {
@@ -237,50 +213,19 @@ export const Maps = () => {
 
   useEffect(() => {
     const fetchPublicWalks = async () => {
-      const walks: WalkData[] = [];
       try {
         const walksCollectionRef = collection(firebaseDb, "Public Walks");
         const walksSnapshot = await getDocs(walksCollectionRef);
-
-        walksSnapshot.forEach((walkDoc) => {
-          const walkData = walkDoc.data() as WalkData;
-          walks.push(walkData);
-        });
-
+  
+        const walks = walksSnapshot.docs.map((walkDoc) => walkDoc.data() as WalkData);
         setPublicWalks(walks);
       } catch (error) {
         console.log("Error fetching public walks", error);
       }
     };
+  
     fetchPublicWalks();
   }, []);
-
-
-  // const createMarkerContent = (walk: WalkData) => {
-  //   console.log(walk.walkCreator);
-  //   return (
-  //     <div>
-  //       <p>Username from: {walk.walkCreator}</p>
-  //     </div>
-  //   );
-  // };
-
-  const createMarkerContent = (walk: WalkData | null) => {
-    if (!walk) {
-      return null; 
-    }
-  
-    console.log('marker content',walk.walkCreator);
-  
-    return (
-      <div>
-        <p>Username from: {walk.walkCreator}</p>
-      </div>
-    );
-  };
-  
-  
-  
   
 
   return (
@@ -306,7 +251,6 @@ export const Maps = () => {
                     url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
                     scaledSize: new window.google.maps.Size(40, 40),
                   }}
-                  // onClick={() => handleMarkerClick(marker.id)}
                 />
               ))}
               {markers.length >= 2 && (
@@ -404,12 +348,13 @@ export const Maps = () => {
                 </div>
               )}
 
-
               {/* RENDERING SAVED WALKS ON MAP */}
 
               {publicWalks.map((walk) => (
                 <React.Fragment key={`walk-${walk.id}`}>
+
                   {/* Render markers */}
+
                   {Array.isArray(walk.markers) &&
                     walk.markers.map((marker) => (
                       <Marker
@@ -422,70 +367,39 @@ export const Maps = () => {
                               : "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
                           scaledSize: new window.google.maps.Size(40, 40),
                         }}
-                        
-                        // onClick={() =>
-                        //   setClickedMarker({ lat: marker.lat, lng: marker.lng })
-                        // }
-
                         onClick={() => handleMarkerClick(marker.id, walk)}
-                        // onClick={() => console.log("Marker clicked:", marker.id, walk.walkCreator)}
                       />
                     ))}
 
-                  {clickedMarker && (
-                    // <InfoWindow
-                    //   position={{
-                    //     lat: clickedMarker.lat,
-                    //     lng: clickedMarker.lng,
-                    //   }}
-                    //   onCloseClick={() => setClickedMarker(null)}
-                    // >
-                    //   <div
-                    //     dangerouslySetInnerHTML={{
-                    //       __html: createMarkerContent(walk.walkCreator),
-                    //     }}
-                    //   />
-                    // </InfoWindow>
-
-
-                      // <InfoWindow
-                      //   position={{
-                      //     lat: clickedMarker.lat,
-                      //     lng: clickedMarker.lng,
-                      //   }}
-                      //   onCloseClick={() => setClickedMarker(null)}
-                      // >
-                      //   <div>
-                      //     {selectedWalk && createMarkerContent(selectedWalk)}
-                      //   </div>
-                      // </InfoWindow>
-
-                      
-                      <InfoWindow
-  position={{
-    lat: clickedMarker.lat,
-    lng: clickedMarker.lng,
-  }}
-  onCloseClick={() => setClickedMarker(null)}
->
-  <div>
-    {clickedMarker && (
-      <p>Marker clicked: {clickedMarker.lat}, {clickedMarker.lng}</p>
-    )}
-    {selectedWalk && createMarkerContent(selectedWalk)}
+{/* {clickedMarker && (
+  
+  <div className={classes.walkInfo}>
+    User: {walk.walkCreator}
   </div>
-</InfoWindow>
+)} */}
+{clickedMarkerPosition && (
+  <div
+    className={classes.walkInfo}
+    style={{
+      top: `${clickedMarkerPosition.lat}px`, // Set the top position dynamically
+      left: `${clickedMarkerPosition.lng}px`, // Set the left position dynamically
+    }}
+  >
+    User: {walk.walkCreator}
+  </div>
+)}
 
-                  )}
+
 
                   {/* Render polyline */}
+
                   {Array.isArray(walk.markers) && walk.markers.length >= 2 && (
                     <Polyline
                       path={walk.markers.map((marker) => ({
                         lat: marker.lat,
                         lng: marker.lng,
                       }))}
-                      key={`walk-${walk.id}-polyline`} // Ensure uniqueness
+                      key={`walk-${walk.id}-polyline`}
                       options={{
                         strokeColor:
                           walk.username === username
