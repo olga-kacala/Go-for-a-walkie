@@ -59,7 +59,6 @@ export const Maps = () => {
     lat: number;
     lng: number;
   } | null>(null);
-  
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -159,11 +158,16 @@ export const Maps = () => {
     setClickedMarker(markers.find((marker) => marker.id === markerId) || null);
     console.log("marker:", clickedMarker);
     setClickedMarkerPosition({
-      lat: walk.lat, // Use the lat and lng from the walk data
+      lat: walk.lat, 
       lng: walk.lng,
     });
   };
-  
+
+  // function to reset state when no marker is clicked
+const resetClickedMarker = () => {
+  setClickedMarker(null);
+  setClickedMarkerPosition(null);
+};
 
   const handleDelete = (petName: string) => {
     const updatedAddedPets = addedPets.filter((name) => name !== petName);
@@ -216,17 +220,20 @@ export const Maps = () => {
       try {
         const walksCollectionRef = collection(firebaseDb, "Public Walks");
         const walksSnapshot = await getDocs(walksCollectionRef);
-  
-        const walks = walksSnapshot.docs.map((walkDoc) => walkDoc.data() as WalkData);
+
+        const walks = walksSnapshot.docs.map(
+          (walkDoc) => walkDoc.data() as WalkData
+        );
         setPublicWalks(walks);
       } catch (error) {
         console.log("Error fetching public walks", error);
       }
     };
-  
+
     fetchPublicWalks();
   }, []);
-  
+
+  //R E T U R N
 
   return (
     <div className={classes.Map}>
@@ -352,7 +359,6 @@ export const Maps = () => {
 
               {publicWalks.map((walk) => (
                 <React.Fragment key={`walk-${walk.id}`}>
-
                   {/* Render markers */}
 
                   {Array.isArray(walk.markers) &&
@@ -371,25 +377,12 @@ export const Maps = () => {
                       />
                     ))}
 
-{/* {clickedMarker && (
-  
-  <div className={classes.walkInfo}>
-    User: {walk.walkCreator}
-  </div>
-)} */}
-{clickedMarkerPosition && (
-  <div
-    className={classes.walkInfo}
-    style={{
-      top: `${clickedMarkerPosition.lat}px`, // Set the top position dynamically
-      left: `${clickedMarkerPosition.lng}px`, // Set the left position dynamically
-    }}
-  >
-    User: {walk.walkCreator}
-  </div>
-)}
-
-
+                  {clickedMarkerPosition && (
+                    <div className={classes.walkInfo}>
+                      <p>User: {walk.walkCreator}</p>
+                      <p>km: {walk.totalDistance.toFixed(2)}</p>
+                    </div>
+                  )}
 
                   {/* Render polyline */}
 
