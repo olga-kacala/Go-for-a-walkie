@@ -54,6 +54,7 @@ export const Maps = () => {
   const [clickedMarker, setClickedMarker] = useState<{
     lat: number;
     lng: number;
+    id: number;
   } | null>(null);
   const [clickedMarkerPosition, setClickedMarkerPosition] = useState<{
     lat: number;
@@ -155,19 +156,21 @@ export const Maps = () => {
 
   const handleMarkerClick = (markerId: number, walk: WalkData) => {
     console.log("User:", walk.walkCreator);
-    setClickedMarker(markers.find((marker) => marker.id === markerId) || null);
-    console.log("marker:", clickedMarker);
-    setClickedMarkerPosition({
-      lat: walk.lat, 
-      lng: walk.lng,
-    });
-  };
 
-  // function to reset state when no marker is clicked
-const resetClickedMarker = () => {
-  setClickedMarker(null);
-  setClickedMarkerPosition(null);
-};
+    if (clickedMarker?.id !== markerId) {
+      setClickedMarker(
+        markers.find((marker) => marker.id === markerId) || null
+      );
+      setClickedMarkerPosition({
+        lat: walk.lat,
+        lng: walk.lng,
+      });
+      console.log("marker:", clickedMarker, "position", clickedMarkerPosition);
+    } else {
+      setClickedMarker(null);
+      setClickedMarkerPosition(null);
+    }
+  };
 
   const handleDelete = (petName: string) => {
     const updatedAddedPets = addedPets.filter((name) => name !== petName);
