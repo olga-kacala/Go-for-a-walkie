@@ -18,8 +18,6 @@ export type WalkData = {
   username: string;
   walkCreator: string;
   markers: { lat: number; lng: number; id: number }[];
-  lat: number;
-  lng: number;
   dateOfWalk: Date | null;
   totalDistance: number;
   addedPets: string[];
@@ -42,7 +40,7 @@ export const Maps = () => {
     lng: number;
   } | null>(null);
   const [markers, setMarkers] = useState<
-    { lat: number; lng: number; id: number; iconURL: string }[]
+    { lat: number; lng: number; id: number }[]
   >([]);
 
   const [totalDistance, setTotalDistance] = useState<number>(0);
@@ -130,6 +128,7 @@ export const Maps = () => {
   };
 
   const handleMapClick = (event: google.maps.MapMouseEvent) => {
+    console.log("Map clicked!");
     if (event.latLng) {
       const { lat, lng } = event.latLng.toJSON();
       setMarkers((prevMarkers) => [
@@ -138,11 +137,15 @@ export const Maps = () => {
           lat,
           lng,
           id: markerIdCounter.current++,
-          iconURL: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
         },
       ]);
+      console.log("Markers:", markers);  
+      console.log("dis:", totalDistance); 
+      console.log("loc:", userLocation); 
+      console.log("startma:", startingMarker);
     }
   };
+
 
   const handlePetClick = async () => {
     if (selectedPetNames.length > 0) {
@@ -162,8 +165,8 @@ export const Maps = () => {
         markers.find((marker) => marker.id === markerId) || null
       );
       setClickedMarkerPosition({
-        lat: walk.lat,
-        lng: walk.lng,
+        lat: walk.markers[0].lat,
+        lng: walk.markers[0].lng,
       });
       console.log("marker:", clickedMarker, "position", clickedMarkerPosition);
     } else {
@@ -181,7 +184,7 @@ export const Maps = () => {
     setSelectedTime(time);
   };
 
-  const handleSaveWalk = async () => {
+  const handleSaveWalk = async (walk: WalkData) => {
     if (userLocation && startingMarker && markers.length > 0) {
       // Update the icon URL for the markers
       const updatedMarkers = markers.map((marker) => ({
@@ -199,13 +202,11 @@ export const Maps = () => {
         totalDistance,
         addedPets,
       };
-
       try {
         const walksCollectionRef = collection(firebaseDb, "Public Walks");
         const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
 
         await setDoc(walkDocRef, { ...walkData, markers: updatedMarkers });
-
         setStartingMarker(null);
         setMarkers([]);
         setTotalDistance(0);
@@ -253,6 +254,10 @@ export const Maps = () => {
         >
           {userLocation && startingMarker && (
             <>
+
+{/* {publicWalks.map((walk) => (
+                <React.Fragment key={`walk-${walk.id}`}> */}
+
               {markers.map((marker) => (
                 <Marker
                   key={marker.id}
@@ -343,6 +348,7 @@ export const Maps = () => {
                       onClick={() => {
                         handleSaveWalk();
                       }}
+
                     >
                       Save
                     </button>
@@ -384,6 +390,17 @@ export const Maps = () => {
                     <div className={classes.walkInfo}>
                       <p>User: {walk.walkCreator}</p>
                       <p>km: {walk.totalDistance.toFixed(2)}</p>
+                      <p>walkId:{walk.id}</p>
+                      <p>marker:</p>
+                      <ul>
+                        {walk.markers.map((marker) => (
+                          <li key={marker.id}>{`id:${marker.id.toFixed(
+                            2
+                          )}, lat:${marker.lat.toFixed(
+                            2
+                          )}, lng:${marker.lng.toFixed(2)}`}</li>
+                        ))}
+                      </ul>
                     </div>
                   )}
 
@@ -408,6 +425,7 @@ export const Maps = () => {
                   )}
                 </React.Fragment>
               ))}
+              {/* </React.Fragment>))} */}
             </>
           )}
         </GoogleMap>
@@ -415,3 +433,5 @@ export const Maps = () => {
     </div>
   );
 };
+
+
