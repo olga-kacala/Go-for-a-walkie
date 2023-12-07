@@ -24,6 +24,8 @@
   border-radius: 4px;
   width: fit-content;
   position: inherit;
+  top: 100px;
+  left: 80vw;
 }
 
 .walksContainer {
