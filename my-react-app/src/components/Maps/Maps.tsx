@@ -5,11 +5,11 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import React from "react";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import classes from "./Maps.module.css";
 import { AppContext } from "../Providers/Providers";
 import { doc, getDocs, collection, setDoc } from "firebase/firestore";
-import { firebaseDb, firebaseApp } from "../../App";
+import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Timestamp } from "firebase/firestore";
@@ -28,10 +28,8 @@ export const Maps = () => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY || "",
   });
-
   const { myAnimalsList, username, dateOfWalk, setDateOfWalk } =
     useContext(AppContext);
-
   const [userLocation, setUserLocation] = useState<{
     lat: number;
     lng: number;
@@ -43,22 +41,11 @@ export const Maps = () => {
   const [markers, setMarkers] = useState<
     { lat: number; lng: number; id: number }[]
   >([]);
-
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const [selectedPetNames, setSelectedPetNames] = useState<string[]>([]);
   const [addedPets, setAddedPets] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
-  const [clickedMarker, setClickedMarker] = useState<{
-    lat: number;
-    lng: number;
-    id: number;
-  } | null>(null);
-  const [clickedMarkerPosition, setClickedMarkerPosition] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
-
   const [selectedMarker, setSelectedMarker] = useState<{
     marker: { lat: number; lng: number; id: number };
     walk: WalkData;
@@ -157,7 +144,6 @@ export const Maps = () => {
   };
 
   const handleMarkerClick = (markerId: number, walk: WalkData) => {
-    
     const clickedMarker = walk.markers.find((marker) => marker.id === markerId);
     if (clickedMarker) {
       setSelectedMarker({
@@ -166,20 +152,6 @@ export const Maps = () => {
       });
     } else {
       setSelectedMarker(null);
-    }
-
-    if (clickedMarker?.id !== markerId) {
-      setClickedMarker(
-        markers.find((marker) => marker.id === markerId) || null
-      );
-      setClickedMarkerPosition({
-        lat: walk.markers[0].lat,
-        lng: walk.markers[0].lng,
-      });
-      console.log("marker:", clickedMarker, "position", clickedMarkerPosition);
-    } else {
-      setClickedMarker(null);
-      setClickedMarkerPosition(null);
     }
   };
 
@@ -432,10 +404,12 @@ export const Maps = () => {
 
               {selectedMarker && (
                 <div className={classes.walkInfo}>
-                  <p>User: {selectedMarker.walk.walkCreator}</p>
-                  <p>km: {selectedMarker.walk.totalDistance.toFixed(2)}</p>
-                  <p>Date: {getDateDisplay(selectedMarker.walk.dateOfWalk)}</p>
-                  <p>Added Pets:</p>
+                  <p>walker: {selectedMarker.walk.walkCreator}</p>
+                  <p>
+                    distance: {selectedMarker.walk.totalDistance.toFixed(2)} km
+                  </p>
+                  <p>date: {getDateDisplay(selectedMarker.walk.dateOfWalk)}</p>
+                  <p>pets:</p>
                   <ul>
                     {selectedMarker.walk.addedPets.map((petName) => (
                       <li key={`${selectedMarker.walk.id}-${petName}`}>
