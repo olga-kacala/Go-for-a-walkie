@@ -13,7 +13,7 @@ import { MyPets } from "./components/MyPets/MyPets";
 import { Logout } from "./components/Logout/Logout";
 import { Maps } from "./components/Maps/Maps";
 
-const firebaseApp = initializeApp(firebaseConfig);
+export const firebaseApp = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(firebaseApp);
 export const firebaseAuth = getAuth(firebaseApp);
 export const firebaseDb = getFirestore(firebaseApp);

@@ -9,9 +9,10 @@ import { useState, useEffect, useRef, useContext } from "react";
 import classes from "./Maps.module.css";
 import { AppContext } from "../Providers/Providers";
 import { doc, getDocs, collection, setDoc } from "firebase/firestore";
-import { firebaseDb } from "../../App";
+import { firebaseDb, firebaseApp } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Timestamp } from "firebase/firestore";
 
 export type WalkData = {
   id: number;
@@ -132,7 +133,6 @@ export const Maps = () => {
   };
 
   const handleMapClick = (event: google.maps.MapMouseEvent) => {
-    console.log("Map clicked!");
     if (event.latLng) {
       const { lat, lng } = event.latLng.toJSON();
       setMarkers((prevMarkers) => [
@@ -143,10 +143,6 @@ export const Maps = () => {
           id: walkData.id,
         },
       ]);
-      console.log("Markers:", markers);
-      console.log("dis:", totalDistance);
-      console.log("loc:", userLocation);
-      console.log("startma:", startingMarker);
     }
   };
 
@@ -161,8 +157,7 @@ export const Maps = () => {
   };
 
   const handleMarkerClick = (markerId: number, walk: WalkData) => {
-    console.log("User:", walk.walkCreator);
-
+    
     const clickedMarker = walk.markers.find((marker) => marker.id === markerId);
     if (clickedMarker) {
       setSelectedMarker({
@@ -201,25 +196,14 @@ export const Maps = () => {
     id: Date.now(),
     username: `${username}`,
     walkCreator: `${username}`,
-    // markers: updatedMarkers,
     markers: markers,
-    dateOfWalk: dateOfWalk || null,
+    dateOfWalk: dateOfWalk instanceof Date ? dateOfWalk : null,
     totalDistance,
     addedPets,
   };
 
-  // if (startingMarker) {
-  //   walkData.lat = startingMarker.lat;
-  //   walkData.lng = startingMarker.lng;
-  // }
-
   const handleSaveWalk = async (walkData: WalkData) => {
     if (userLocation && startingMarker && markers.length > 0) {
-      // // Update the icon URL for the markers
-      // const updatedMarkers = markers.map((marker) => ({
-      //   ...marker,
-      // }));
-
       try {
         const walksCollectionRef = collection(firebaseDb, "Public Walks");
         const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
@@ -254,6 +238,27 @@ export const Maps = () => {
 
     fetchPublicWalks();
   }, []);
+
+  // Functions to render the date from Firebase Timestamp object to JavaScript Date object
+
+  function isDate(value: any): value is Date {
+    return value instanceof Date;
+  }
+  function isTimestamp(value: any): value is Timestamp {
+    return value && typeof value.toDate === "function";
+  }
+
+  function getDateDisplay(
+    dateOfWalk: Date | Timestamp | null | undefined
+  ): string {
+    if (isDate(dateOfWalk)) {
+      return dateOfWalk.toLocaleDateString();
+    } else if (isTimestamp(dateOfWalk)) {
+      return dateOfWalk.toDate().toLocaleDateString();
+    } else {
+      return "N/A";
+    }
+  }
 
   //R E T U R N
 
@@ -304,13 +309,14 @@ export const Maps = () => {
                   <p>Pick:</p>
                   <DatePicker
                     className={classes.walksContainer}
-                    selected={dateOfWalk}
+                    selected={dateOfWalk ? dateOfWalk : null}
                     placeholderText="Date"
                     showYearDropdown
                     dateFormat="d MMMM yyyy"
                     onChange={(date) => setDateOfWalk(date as Date)}
-                    value={dateOfWalk ? dateOfWalk.toLocaleDateString() : ""}
+                    value={dateOfWalk ? dateOfWalk?.toLocaleDateString() : ""}
                   />
+
                   <DatePicker
                     className={classes.walksContainer}
                     selected={selectedTime}
@@ -402,24 +408,6 @@ export const Maps = () => {
                       />
                     ))}
 
-                  {/* {clickedMarkerPosition && (
-                    <div className={classes.walkInfo}>
-                      <p>User: {walk.walkCreator}</p>
-                      <p>km: {walk.totalDistance.toFixed(2)}</p>
-                      <p>walkId:{walk.id}</p>
-                      <p>marker:</p>
-                      <ul>
-                        {walk.markers.map((marker) => (
-                          <li key={marker.id}>{`id:${marker.id.toFixed(
-                            2
-                          )}, lat:${marker.lat.toFixed(
-                            2
-                          )}, lng:${marker.lng.toFixed(2)}`}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )} */}
-
                   {/* Render polyline */}
 
                   {Array.isArray(walk.markers) && walk.markers.length >= 2 && (
@@ -446,6 +434,7 @@ export const Maps = () => {
                 <div className={classes.walkInfo}>
                   <p>User: {selectedMarker.walk.walkCreator}</p>
                   <p>km: {selectedMarker.walk.totalDistance.toFixed(2)}</p>
+                  <p>Date: {getDateDisplay(selectedMarker.walk.dateOfWalk)}</p>
                   <p>Added Pets:</p>
                   <ul>
                     {selectedMarker.walk.addedPets.map((petName) => (
