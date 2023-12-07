@@ -58,6 +58,11 @@ export const Maps = () => {
     lng: number;
   } | null>(null);
 
+  const [selectedMarker, setSelectedMarker] = useState<{
+    marker: { lat: number; lng: number; id: number };
+    walk: WalkData;
+  } | null>(null);
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -138,13 +143,12 @@ export const Maps = () => {
           id: walkData.id,
         },
       ]);
-      console.log("Markers:", markers);  
-      console.log("dis:", totalDistance); 
-      console.log("loc:", userLocation); 
+      console.log("Markers:", markers);
+      console.log("dis:", totalDistance);
+      console.log("loc:", userLocation);
       console.log("startma:", startingMarker);
     }
   };
-
 
   const handlePetClick = async () => {
     if (selectedPetNames.length > 0) {
@@ -158,6 +162,16 @@ export const Maps = () => {
 
   const handleMarkerClick = (markerId: number, walk: WalkData) => {
     console.log("User:", walk.walkCreator);
+
+    const clickedMarker = walk.markers.find((marker) => marker.id === markerId);
+    if (clickedMarker) {
+      setSelectedMarker({
+        marker: clickedMarker,
+        walk: walk,
+      });
+    } else {
+      setSelectedMarker(null);
+    }
 
     if (clickedMarker?.id !== markerId) {
       setClickedMarker(
@@ -188,17 +202,16 @@ export const Maps = () => {
     username: `${username}`,
     walkCreator: `${username}`,
     // markers: updatedMarkers,
-    markers:markers,
+    markers: markers,
     dateOfWalk: dateOfWalk || null,
     totalDistance,
     addedPets,
-  }
+  };
 
   // if (startingMarker) {
   //   walkData.lat = startingMarker.lat;
   //   walkData.lng = startingMarker.lng;
   // }
-  
 
   const handleSaveWalk = async (walkData: WalkData) => {
     if (userLocation && startingMarker && markers.length > 0) {
@@ -207,8 +220,6 @@ export const Maps = () => {
       //   ...marker,
       // }));
 
-      
-      
       try {
         const walksCollectionRef = collection(firebaseDb, "Public Walks");
         const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
@@ -261,8 +272,7 @@ export const Maps = () => {
         >
           {userLocation && startingMarker && (
             <>
-
-{/* {publicWalks.map((walk) => (
+              {/* {publicWalks.map((walk) => (
                 <React.Fragment key={`walk-${walk.id}`}> */}
 
               {markers.map((marker) => (
@@ -355,7 +365,6 @@ export const Maps = () => {
                       onClick={() => {
                         handleSaveWalk(walkData);
                       }}
-
                     >
                       Save
                     </button>
@@ -393,7 +402,7 @@ export const Maps = () => {
                       />
                     ))}
 
-                  {clickedMarkerPosition && (
+                  {/* {clickedMarkerPosition && (
                     <div className={classes.walkInfo}>
                       <p>User: {walk.walkCreator}</p>
                       <p>km: {walk.totalDistance.toFixed(2)}</p>
@@ -409,7 +418,7 @@ export const Maps = () => {
                         ))}
                       </ul>
                     </div>
-                  )}
+                  )} */}
 
                   {/* Render polyline */}
 
@@ -432,7 +441,21 @@ export const Maps = () => {
                   )}
                 </React.Fragment>
               ))}
-             
+
+              {selectedMarker && (
+                <div className={classes.walkInfo}>
+                  <p>User: {selectedMarker.walk.walkCreator}</p>
+                  <p>km: {selectedMarker.walk.totalDistance.toFixed(2)}</p>
+                  <p>Added Pets:</p>
+                  <ul>
+                    {selectedMarker.walk.addedPets.map((petName) => (
+                      <li key={`${selectedMarker.walk.id}-${petName}`}>
+                        {petName}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </>
           )}
         </GoogleMap>
@@ -440,5 +463,3 @@ export const Maps = () => {
     </div>
   );
 };
-
-
