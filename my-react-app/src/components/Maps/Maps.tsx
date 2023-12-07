@@ -44,7 +44,6 @@ export const Maps = () => {
   >([]);
 
   const [totalDistance, setTotalDistance] = useState<number>(0);
-  const markerIdCounter = useRef(0);
   const [selectedPetNames, setSelectedPetNames] = useState<string[]>([]);
   const [addedPets, setAddedPets] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState(new Date());
@@ -136,7 +135,7 @@ export const Maps = () => {
         {
           lat,
           lng,
-          id: markerIdCounter.current++,
+          id: walkData.id,
         },
       ]);
       console.log("Markers:", markers);  
@@ -184,29 +183,37 @@ export const Maps = () => {
     setSelectedTime(time);
   };
 
-  const handleSaveWalk = async (walk: WalkData) => {
-    if (userLocation && startingMarker && markers.length > 0) {
-      // Update the icon URL for the markers
-      const updatedMarkers = markers.map((marker) => ({
-        ...marker,
-      }));
+  const walkData: WalkData = {
+    id: Date.now(),
+    username: `${username}`,
+    walkCreator: `${username}`,
+    // markers: updatedMarkers,
+    markers:markers,
+    dateOfWalk: dateOfWalk || null,
+    totalDistance,
+    addedPets,
+  }
 
-      const walkData: WalkData = {
-        id: Date.now(),
-        username: `${username}`,
-        walkCreator: `${username}`,
-        markers: updatedMarkers,
-        lat: userLocation.lat,
-        lng: userLocation.lng,
-        dateOfWalk: dateOfWalk || null,
-        totalDistance,
-        addedPets,
-      };
+  // if (startingMarker) {
+  //   walkData.lat = startingMarker.lat;
+  //   walkData.lng = startingMarker.lng;
+  // }
+  
+
+  const handleSaveWalk = async (walkData: WalkData) => {
+    if (userLocation && startingMarker && markers.length > 0) {
+      // // Update the icon URL for the markers
+      // const updatedMarkers = markers.map((marker) => ({
+      //   ...marker,
+      // }));
+
+      
+      
       try {
         const walksCollectionRef = collection(firebaseDb, "Public Walks");
         const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
 
-        await setDoc(walkDocRef, { ...walkData, markers: updatedMarkers });
+        await setDoc(walkDocRef, { ...walkData });
         setStartingMarker(null);
         setMarkers([]);
         setTotalDistance(0);
@@ -346,7 +353,7 @@ export const Maps = () => {
                     <button
                       className={classes.buttonSave}
                       onClick={() => {
-                        handleSaveWalk();
+                        handleSaveWalk(walkData);
                       }}
 
                     >
@@ -425,7 +432,7 @@ export const Maps = () => {
                   )}
                 </React.Fragment>
               ))}
-              {/* </React.Fragment>))} */}
+             
             </>
           )}
         </GoogleMap>
