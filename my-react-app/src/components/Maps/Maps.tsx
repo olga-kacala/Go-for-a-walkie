@@ -13,6 +13,9 @@ import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Timestamp } from "firebase/firestore";
+import { AgreementModal } from "../Agreement/Agreement";
+import Modal from "react-modal";
+
 
 export type WalkData = {
   id: number;
@@ -50,6 +53,23 @@ export const Maps = () => {
     marker: { lat: number; lng: number; id: number };
     walk: WalkData;
   } | null>(null);
+  const [showAgreementModal, setShowAgreementModal] = useState(true);
+  
+
+
+  const handleAgreementClose = () => {
+    setShowAgreementModal(false);
+    localStorage.setItem("agreementAccepted", "true");
+  }
+
+  const handleAgreementAgree = () => {
+    // Handle user agreement, e.g., set a cookie or save in local storage
+    setShowAgreementModal(false);
+  };
+
+ 
+
+ 
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -235,7 +255,18 @@ export const Maps = () => {
   //R E T U R N
 
   return (
+    
     <div className={classes.Map}>
+ 
+      {/* Render the AgreementModal */}
+      <AgreementModal
+        isOpen={showAgreementModal}
+        onRequestClose={handleAgreementClose}
+        onAgree={handleAgreementAgree}
+      />
+  
+
+
       {!isLoaded ? (
         <h1>Loading...</h1>
       ) : (

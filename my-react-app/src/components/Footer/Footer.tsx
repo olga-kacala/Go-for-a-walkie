@@ -5,7 +5,7 @@ export function Footer() {
     <footer className={classes.footer}>
       <p>&copy; 2023 Walkie. All rights reserved.</p>
       <div className={classes.logos}>
-        <p>Author:</p>
+        <p>Created by:</p>
         <a href="https://github.com/olga-kacala" target="_blank">
           <img title="My GH" alt="GitHub" src={"../../Img/github-logo.png"} />
         </a>
