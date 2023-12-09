@@ -15,7 +15,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Timestamp } from "firebase/firestore";
 import { AgreementModal } from "../Agreement/Agreement";
 import Modal from "react-modal";
-
+Modal.setAppElement("#root");
 
 export type WalkData = {
   id: number;
@@ -53,23 +53,19 @@ export const Maps = () => {
     marker: { lat: number; lng: number; id: number };
     walk: WalkData;
   } | null>(null);
-  const [showAgreementModal, setShowAgreementModal] = useState(true);
-  
-
-
+  const [showAgreementModal, setShowAgreementModal] = useState(() => {
+    const agreementAccepted = localStorage.getItem("agreementAccepted");
+    return agreementAccepted !== "true";
+  });
   const handleAgreementClose = () => {
     setShowAgreementModal(false);
     localStorage.setItem("agreementAccepted", "true");
-  }
-
-  const handleAgreementAgree = () => {
-    // Handle user agreement, e.g., set a cookie or save in local storage
-    setShowAgreementModal(false);
   };
 
- 
-
- 
+  const handleAgreementAgree = () => {
+    setShowAgreementModal(false);
+    localStorage.setItem("agreementAccepted", "true");
+  };
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -255,17 +251,15 @@ export const Maps = () => {
   //R E T U R N
 
   return (
-    
     <div className={classes.Map}>
- 
       {/* Render the AgreementModal */}
-      <AgreementModal
-        isOpen={showAgreementModal}
-        onRequestClose={handleAgreementClose}
-        onAgree={handleAgreementAgree}
-      />
-  
-
+      {showAgreementModal && (
+        <AgreementModal
+          isOpen={showAgreementModal}
+          onRequestClose={handleAgreementClose}
+          onAgree={handleAgreementAgree}
+        />
+      )}
 
       {!isLoaded ? (
         <h1>Loading...</h1>
@@ -280,9 +274,6 @@ export const Maps = () => {
         >
           {userLocation && startingMarker && (
             <>
-              {/* {publicWalks.map((walk) => (
-                <React.Fragment key={`walk-${walk.id}`}> */}
-
               {markers.map((marker) => (
                 <Marker
                   key={marker.id}
