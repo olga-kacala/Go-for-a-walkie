@@ -1,3 +1,4 @@
+import classes from "./Agreement.module.css";
 import Modal from "react-modal";
 
 type AgreementModalProps = {
@@ -20,8 +21,8 @@ export const AgreementModal: React.FC<AgreementModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onRequestClose}>
-      <div>
+    <Modal className={classes.agreementContainer} isOpen={isOpen} onRequestClose={onRequestClose}>
+      
         <h2>Privacy Notice</h2>
 
         <h3>Thank you for using Walkie!</h3>
@@ -62,10 +63,10 @@ export const AgreementModal: React.FC<AgreementModalProps> = ({
           You can choose to disable geolocation services on your device, but
           please note that this may affect the functionality of our app.
         </p>
-      </div>
+      
 
-      <button onClick={handleAgree}>I agree to share my geolocation</button>
-      <button onClick={handleDontAgree}>
+      <button className={classes.button} onClick={handleAgree}>I agree to share my geolocation</button>
+      <button className={classes.button} onClick={handleDontAgree}>
         I DON'T agree to share my geolocation
       </button>
     </Modal>

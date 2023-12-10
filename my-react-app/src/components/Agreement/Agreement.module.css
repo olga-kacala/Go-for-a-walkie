@@ -1,0 +1,25 @@
+.agreementContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: rgb(200, 196, 196);
+    text-align: center;
+    width: 50vw;
+    margin:auto;
+}
+
+.button {
+        text-align: center;
+        background-color: rgb(116, 116, 187);
+        color: #fff;
+        text-decoration: none;
+        padding: 10px 30px;
+        border-radius: 5px;
+        font-weight: bold;
+        border: none;
+        margin: 5px;
+  }
+
+.button:hover {
+    background-color: #ff5500;
+}
