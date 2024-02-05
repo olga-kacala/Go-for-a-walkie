@@ -1,5 +1,6 @@
 {
   "name": "my-react-app",
+  "homepage": "https://olga-kacala.github.io/Go-for-a-walkie",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -28,6 +29,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -54,6 +57,7 @@
   "devDependencies": {
     "@types/firebase": "^3.2.1",
     "@types/react-datepicker": "^4.11.2",
-    "@types/react-modal": "^3.16.3"
+    "@types/react-modal": "^3.16.3",
+    "gh-pages": "^6.1.1"
   }
 }
