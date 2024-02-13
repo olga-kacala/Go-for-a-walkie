@@ -39,7 +39,7 @@ export function Login(): JSX.Element {
   return (
     <div className={classes.login}>
       <div className={classes.PolaBackgr}>
-        <img className={classes.loginPic} src={"/Img/Polka.png"} alt="Pola picture" />
+        <img className={classes.loginPic} src={process.env.PUBLIC_URL + "/Img/Polka.png"} title="Welcome!" alt="Pola picture" />
       </div>
       <div className={classes.inputContainer}>
         <h2>Please Log in</h2>

@@ -16,7 +16,8 @@ export function Logout(): JSX.Element {
       <div className={classes.logout}>
         <h2>Thank you for a Walk!</h2>
         <img
-          src="/Img/Perek.jpg"
+          src={process.env.PUBLIC_URL + "/Img/Perek.jpg"}
+          title="See you soon"
           alt="Bird picture"
           className={classes.Perek}
         />

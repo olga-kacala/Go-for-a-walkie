@@ -373,7 +373,7 @@ export const Maps = () => {
                         className={classes.shareLogo}
                         title="Share"
                         alt="share logo"
-                        src={"../../Img/share.png"}
+                        src={process.env.PUBLIC_URL + "/Img/share.png"}
                       />
                     </button>
                   </div>
