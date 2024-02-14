@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Go-for-a-walkie/static/css/main.3168a7ca.css",
-    "main.js": "/Go-for-a-walkie/static/js/main.55dbfff7.js",
+    "main.css": "/Go-for-a-walkie/static/css/main.78dea8bb.css",
+    "main.js": "/Go-for-a-walkie/static/js/main.a8ef2a70.js",
     "index.html": "/Go-for-a-walkie/index.html",
-    "main.3168a7ca.css.map": "/Go-for-a-walkie/static/css/main.3168a7ca.css.map",
-    "main.55dbfff7.js.map": "/Go-for-a-walkie/static/js/main.55dbfff7.js.map"
+    "main.78dea8bb.css.map": "/Go-for-a-walkie/static/css/main.78dea8bb.css.map",
+    "main.a8ef2a70.js.map": "/Go-for-a-walkie/static/js/main.a8ef2a70.js.map"
   },
   "entrypoints": [
-    "static/css/main.3168a7ca.css",
-    "static/js/main.55dbfff7.js"
+    "static/css/main.78dea8bb.css",
+    "static/js/main.a8ef2a70.js"
   ]
 }
