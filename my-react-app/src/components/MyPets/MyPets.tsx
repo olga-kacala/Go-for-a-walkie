@@ -266,7 +266,7 @@ export function MyPets(): JSX.Element {
   }
 
   return (
-    <div>
+    <div className={classes.myPetsContainer}>
       {BDToday ? (
         <div className={classes.BirthdayContainer}>
           <h2 className={classes.BirthdayText}>

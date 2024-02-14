@@ -3,13 +3,15 @@ footer {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: auto;
+  height: 10vh;
   background-color: #333;
   color: #fff;
   text-align: center;
   position: fixed;
   bottom: 0;
-  width: 100%;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
 }
 
 .logos img {

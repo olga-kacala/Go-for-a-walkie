@@ -1,9 +1,17 @@
+.myPetsContainer {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: auto;
+}
+
 .Pets {
-  margin: 0 auto;
-  padding: 20px;
+  margin: 0;
+  padding: 0;
   display: flex;
   justify-content: center;
-  padding-bottom: 124px;
+  padding-bottom: 10vh;
+  width: 100vw;
 }
 
 .BirthdayContainer {
@@ -26,8 +34,7 @@
   text-decoration: none;
 }
 
-.selectContainer
-  {
+.selectContainer {
   font-family: "Dosis", sans-serif;
   background-color: rgb(232, 240, 254);
   width: 30vw;
@@ -91,7 +98,7 @@
   flex-direction: row;
   justify-content: center;
   font-size: 25px;
-  overflow-wrap:anywhere;
+  overflow-wrap: anywhere;
 }
 
 .profilePic {

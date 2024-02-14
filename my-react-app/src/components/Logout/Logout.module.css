@@ -2,7 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 74vh;
+  height: 76vh;
+  width: 100vw;
 }
 
 .logout {

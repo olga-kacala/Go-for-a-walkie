@@ -5,6 +5,7 @@ section {
 .contentLogIn {
   flex: 1;
   height: 76vh;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;

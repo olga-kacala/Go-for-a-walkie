@@ -4,8 +4,9 @@
   background-color: #333;
   color: #fff;
   text-align: center;
-  padding-bottom: 20px;
-  height: auto;
+  padding: 0;
+  height: 14vh;
+  width: 100vw;
 }
 
 .helloUser {
@@ -18,6 +19,11 @@
 
 h1,
 p {
+  margin: 10px 0px;
+  letter-spacing: 2px;
+}
+
+p{
   margin: 10px 0px;
   letter-spacing: 2px;
 }
@@ -44,6 +50,7 @@ p {
   display: flex;
   align-items: center; 
   justify-content: space-evenly; 
+  margin: 10px;
 }
 
 
