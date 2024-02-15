@@ -41,3 +41,11 @@ form input {
   letter-spacing: 2px;
   cursor: pointer;
 }
+
+@media (max-width: 450px) {
+  form input {
+    width: auto;
+    padding: 10px;
+    margin-bottom: 0px;
+  }
+}
