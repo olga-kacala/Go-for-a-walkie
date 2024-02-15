@@ -16,7 +16,7 @@ export function Home() {
   return (
     <div>
       <section>
-        <div className={isLogged ? classes.contentLogIn : classes.contentLogOut}>
+        <div className={classes.contentLogIn}>
           <div className={classes.text}>
             <h2>Connect with fellow dog owners for dog walking adventures!</h2>
             <p>

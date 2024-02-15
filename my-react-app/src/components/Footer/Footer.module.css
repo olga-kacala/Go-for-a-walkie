@@ -1,6 +1,6 @@
 footer {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
   height: 10vh;
@@ -14,10 +14,23 @@ footer {
   padding: 0;
 }
 
+.logos {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
 .logos img {
   width: 20px;
   height: 20px;
   border-radius: 5px;
-  margin:5px
+  margin: 5px
+}
+
+@media (max-width: 450px) {
+  .logos {
+    flex-direction: row;
+  }
+  
 }
 
