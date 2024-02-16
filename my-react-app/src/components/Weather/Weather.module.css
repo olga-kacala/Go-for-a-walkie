@@ -15,3 +15,9 @@
     letter-spacing: normal;
     font-weight: normal;
   }
+
+@media (max-width: 450px) {
+  .weatherInfo >p {
+    padding: 0px 5px;
+  }
+}

@@ -96,3 +96,9 @@ align-items: center;
   padding: 0;
   margin: 0;
 }
+
+@media (max-width: 450px) {
+.Map {
+  height: 73vh;
+}
+}

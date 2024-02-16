@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 76vh;
+  height: 73vh;
   width: 100vw;
 }
 
@@ -23,4 +23,11 @@
 .bottomH2 {
   text-align: right;
   color: #ff5500;
+}
+
+
+@media (max-width: 450px) {
+.Perek {
+  width: 90vw;
+}
 }

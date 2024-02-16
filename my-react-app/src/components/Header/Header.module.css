@@ -17,14 +17,15 @@
   color: transparent;
 }
 
+.loggedLinks > *,
+.nav > *
+ {
+  padding: 0 25px;
+}
+
 
 h1,
 p {
-  margin: 0;
-  letter-spacing: 2px;
-}
-
-p{
   margin: 0;
   letter-spacing: 2px;
 }
@@ -35,23 +36,39 @@ p{
 }
 
 .nav {
+  display: flex;
+  align-items: center; 
+  justify-content: space-evenly; 
+  margin: 0px;
   text-align: end;
   font-weight: 700;
-}
-
-.nav > * {
-  padding: 0px 25px;
 }
 
 .bump {
   color: #ff5500;
 }
 
-.flexContainer {
-  display: flex;
-  align-items: center; 
-  justify-content: space-evenly; 
-  margin: 0px;
+@media (max-width: 450px) {
+  .secondTitle {
+    font-size: 14px;
+  }
+
+  .nav {
+    flex-direction: column;
+  }
+
+  .header {
+    height: 17vh;
+  }
+
+  .loggedLinks {
+    padding-bottom: 5px;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+
 }
 
 

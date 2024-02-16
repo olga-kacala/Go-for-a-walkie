@@ -120,3 +120,30 @@
   padding: 10px;
   margin-bottom: 10px;
 }
+
+
+@media (max-width: 450px) {
+
+.Pets {
+  flex-direction: column;
+}
+
+.PetList, .InputContainer,
+.selectContainer {
+  width: 100vw;
+  margin: 0;
+}
+
+.myPetsContainer h2 {
+  padding-left: 5px;
+}
+
+form {
+  margin-bottom: 2vh;
+}
+
+.selectContainer {
+  margin-bottom: 5px;
+  padding: 5px 0 5px 5px;
+}
+}

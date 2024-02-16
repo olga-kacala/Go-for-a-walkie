@@ -253,13 +253,13 @@ export const Maps = () => {
   return (
     <div className={classes.Map}>
       {/* Render the AgreementModal */}
-      {showAgreementModal && (
+      {/* {showAgreementModal && (
         <AgreementModal
           isOpen={showAgreementModal}
           onRequestClose={handleAgreementClose}
           onAgree={handleAgreementAgree}
         />
-      )}
+      )} */}
 
       {!isLoaded ? (
         <h1>Loading...</h1>

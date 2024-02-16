@@ -27,14 +27,15 @@ export function Header(): JSX.Element {
     <div>
       <header className={classes.header}>
         <Link className={classes.link} to="*">
-          <h1>Walkie</h1>
+          <h1 className={classes.title}>Walkie</h1>
         </Link>
-        <p>Find a Dog Walking Buddy </p>
+        <p className={classes.secondTitle}>Find a Dog Walking Buddy </p>
 
         {isLogged ? (
-          <nav className={`${classes.nav} ${classes.flexContainer}`}>
+          <nav className={classes.nav}>
             <Weather/>
             <span className={classes.helloUser}>Hello, {username && username.split("@")[0]}!</span>
+            <div className={classes.loggedLinks}>
             <Link className={classes.link} to="/Maps">
               Maps
             </Link>
@@ -44,6 +45,8 @@ export function Header(): JSX.Element {
             <Link className={classes.link} to="*" onClick={handleLogout}>
               Log out
             </Link>
+            </div>
+            
           </nav>
         ) : (
           <nav className={`${classes.nav} ${classes.flexContainer}`}>
