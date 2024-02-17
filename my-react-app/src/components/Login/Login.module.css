@@ -59,6 +59,7 @@
   background-image: url("../../../public/Img/Polka.png");
   background-size: cover;
   background-position: center;
+  height: 73vh;
 }
 
 .PolaBackgr {
@@ -68,7 +69,7 @@
 .inputContainer {
   display: flex;
   flex-direction: column;
-  height: 76vh;
+  height: 73vh;
   justify-content: space-evenly;
   align-items: center;
 }

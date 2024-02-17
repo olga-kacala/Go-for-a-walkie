@@ -25,9 +25,8 @@
   color: #ff5500;
 }
 
-
 @media (max-width: 450px) {
-.Perek {
-  width: 90vw;
-}
+  .Perek {
+    width: 90vw;
+  }
 }

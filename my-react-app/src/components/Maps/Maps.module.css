@@ -45,7 +45,7 @@
 
 .buttonX {
   display: flex;
-  background-color: #333;;
+  background-color: #333;
   color: #fff;
   text-decoration: none;
   padding: 9px 9px;
@@ -60,8 +60,8 @@
 }
 
 .saveContainer {
-display: flex;
-align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .buttonSave {
@@ -98,7 +98,14 @@ align-items: center;
 }
 
 @media (max-width: 450px) {
-.Map {
-  height: 73vh;
-}
+  .Map {
+    height: 73vh;
+  }
+
+  .walkInfo {
+    max-width: 47vw;
+    top: 105px;
+    left: 50vw;
+    padding: 1vw;
+  }
 }

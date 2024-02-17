@@ -145,5 +145,11 @@ form {
 .selectContainer {
   margin-bottom: 5px;
   padding: 5px 0 5px 5px;
+  width: 99vw;
+}
+
+.button {
+  width: 100vw;
+  justify-content: center;
 }
 }
