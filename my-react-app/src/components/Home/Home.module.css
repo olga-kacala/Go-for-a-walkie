@@ -48,3 +48,9 @@ background: linear-gradient(346deg, rgba(255,110,159,1) 5%, rgba(238,249,250,1) 
     height: 73vh;
   }
   }
+
+  @media (min-width: 451px) and (max-width: 1000px){
+    .contentLogIn {
+      height: 61vh;
+    }
+  }

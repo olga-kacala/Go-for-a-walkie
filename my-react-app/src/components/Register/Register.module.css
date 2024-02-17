@@ -49,3 +49,9 @@ form input {
     margin-bottom: 0px;
   }
 }
+
+@media (min-width: 451px) and (max-width: 1000px) {
+form input {
+    margin-bottom: 3px;
+  }
+}

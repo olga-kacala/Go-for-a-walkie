@@ -121,35 +121,35 @@
   margin-bottom: 10px;
 }
 
+@media (max-width: 1000px) {
+  .Pets {
+    flex-direction: column;
+  }
 
-@media (max-width: 450px) {
+  .PetList,
+  .InputContainer,
+  .selectContainer {
+    width: 100vw;
+    margin: 0;
+    padding-bottom: 5vh;
+  }
 
-.Pets {
-  flex-direction: column;
-}
+  .myPetsContainer h2 {
+    padding-left: 5px;
+  }
 
-.PetList, .InputContainer,
-.selectContainer {
-  width: 100vw;
-  margin: 0;
-}
+  form {
+    margin-bottom: 2vh;
+  }
 
-.myPetsContainer h2 {
-  padding-left: 5px;
-}
+  .selectContainer {
+    margin-bottom: 5px;
+    padding: 5px 0 5px 5px;
+    width: 99vw;
+  }
 
-form {
-  margin-bottom: 2vh;
-}
-
-.selectContainer {
-  margin-bottom: 5px;
-  padding: 5px 0 5px 5px;
-  width: 99vw;
-}
-
-.button {
-  width: 100vw;
-  justify-content: center;
-}
+  .button {
+    width: 100vw;
+    justify-content: center;
+  }
 }

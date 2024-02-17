@@ -71,4 +71,34 @@ p {
 
 }
 
+@media (min-width: 451px) and (max-width: 1000px){
+  .secondTitle {
+    font-size: 14px;
+  }
+
+  .nav {
+    flex-direction: row;
+    padding: 0;
+  }
+
+  .header {
+    height: 24vh;
+  }
+
+  .loggedLinks >*, .helloUser {
+    padding: 0 6px;
+   
+  }
+
+  .title {
+    font-size: 30px;
+  }
+
+.nav > *
+ {
+  padding: 0;
+}
+
+}
+
 

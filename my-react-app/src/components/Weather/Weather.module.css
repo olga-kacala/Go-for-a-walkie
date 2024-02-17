@@ -16,7 +16,7 @@
     font-weight: normal;
   }
 
-@media (max-width: 450px) {
+@media (max-width: 1000px) {
   .weatherInfo >p {
     padding: 0px 5px;
   }

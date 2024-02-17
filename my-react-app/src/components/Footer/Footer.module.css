@@ -34,3 +34,19 @@ footer {
   
 }
 
+@media (min-width: 451px) and (max-width: 1000px){
+  .logos {
+    flex-direction: row;
+    margin: 0 5px;
+}
+
+.logos img {
+  width: 15px;
+  height: 15px;
+}
+
+footer {
+  height: 15vh;
+}
+}
+

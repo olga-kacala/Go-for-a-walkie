@@ -109,3 +109,40 @@
     padding: 1vw;
   }
 }
+
+@media (min-width: 451px) and (max-width: 1000px) {
+  .Map {
+    height: 61vh;
+  }
+
+  .distance {
+    top: 5px;
+    width: auto;
+  }
+
+  .walkInfo {
+    max-width: 60vw;
+    top: 5px;
+    left: 73vw;
+    padding: 1vw;
+  }
+
+  .walksContainer {
+    margin: 1px;
+    padding: 1px;
+  }
+
+  .buttonSave,
+  .buttonX,
+  .share {
+    padding: 5px;
+  }
+  .shareLogo {
+    height: 10px;
+  }
+
+  .share {
+    height: 30px;
+    align-items: center;
+  }
+}

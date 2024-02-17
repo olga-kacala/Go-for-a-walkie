@@ -54,33 +54,79 @@
 }
 
 @media (max-width: 450px) {
+  .login {
+    background-image: url("../../../public/Img/Polka.png");
+    background-size: cover;
+    background-position: center;
+    height: 73vh;
+  }
 
-.login {
-  background-image: url("../../../public/Img/Polka.png");
-  background-size: cover;
-  background-position: center;
-  height: 73vh;
-}
+  .PolaBackgr {
+    display: none;
+  }
 
-.PolaBackgr {
-  display: none;
-}
+  .inputContainer {
+    display: flex;
+    flex-direction: column;
+    height: 73vh;
+    justify-content: space-evenly;
+    align-items: center;
+  }
 
-.inputContainer {
-  display: flex;
-  flex-direction: column;
-  height: 73vh;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-.login p {
-  margin: 0;
+  .login p {
+    margin: 0;
     letter-spacing: 2px;
     align-items: center;
     display: flex;
     flex-direction: column;
     color: white;
+  }
 }
- 
+
+@media (min-width: 451px) and (max-width: 1000px) {
+  .login {
+    background-image: url("../../../public/Img/Polka.png");
+    background-size: contain;
+    background-position:left;
+    background-repeat: no-repeat;
+    height: 61vh;
+  }
+
+  .PolaBackgr {
+    display: none;
+  }
+
+  .inputContainer {
+    display: flex;
+    flex-direction: column;
+    height:61vh;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 0;
+  }
+
+  .inputContainer h2 {
+    margin: 0;
+    color: #333;
+  }
+
+  .login p {
+    margin: 0;
+    letter-spacing: 2px;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    color: #333;
+  }
+
+  .button  {
+    margin: 5px 0;
+    padding: 5px;
+    min-width: 120px;
+  }
+
+  .passwordToggle {
+    min-width: 120px;
+
+  }
 }
