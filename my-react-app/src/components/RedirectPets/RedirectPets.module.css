@@ -6,9 +6,8 @@
   width: 100vw;
 }
 
-@media (min-width: 451px) and (max-width: 1000px){
+@media (min-width: 451px) and (max-width: 1000px) {
   .logoutContainer {
     height: 61vh;
   }
-
 }

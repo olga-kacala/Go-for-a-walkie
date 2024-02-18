@@ -167,33 +167,26 @@ export function MyPets(): JSX.Element {
     if (!dateOfBirth) {
       return { years: 0, months: 0 };
     }
+  
     const birthDate =
       dateOfBirth instanceof Timestamp ? dateOfBirth.toDate() : dateOfBirth;
     const today = new Date();
-
-    if (today < birthDate) {
-      // Handle future birthdate
-      return { years: -1, months: -1 };
-    }
-
+  
     let years = today.getFullYear() - birthDate.getFullYear();
     let months = today.getMonth() - birthDate.getMonth();
-    if (
-      today.getDate() < birthDate.getDate() ||
-      (today.getDate() === birthDate.getDate() &&
-        today.getHours() < birthDate.getHours())
-    ) {
+  
+    if (today.getDate() < birthDate.getDate()) {
+      months--;
+    }
+  
+    if (months < 0) {
       years--;
       months += 12;
     }
-
-    if (months >= 12) {
-      years++;
-      months = months - 12;
-    }
-
+  
     return { years, months };
   }
+  
 
   function isFormValid(): boolean {
     return (
@@ -368,6 +361,7 @@ export function MyPets(): JSX.Element {
               placeholderText="Date of Birth"
               showYearDropdown
               dateFormat="d MMMM yyyy"
+              maxDate={new Date()}
               onChange={(date) => setDateOfBirth(date as Date)}
               value={dateOfBirth ? dateOfBirth.toLocaleDateString() : ""}
             />

@@ -14,7 +14,7 @@ export function RedirectMaps(): JSX.Element {
 
   return (
     <div className={classes.logoutContainer}>
-     <h2>Loading...</h2>
+      <h2>Loading...</h2>
     </div>
   );
 }
