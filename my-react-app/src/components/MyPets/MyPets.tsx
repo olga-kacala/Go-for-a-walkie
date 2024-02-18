@@ -8,6 +8,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
 import { Timestamp } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 export type MyPetsProps = {
   upload: (
@@ -48,6 +49,7 @@ export function MyPets(): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [BDToday, setBDToday] = useState(false);
   const currentUser = useAuth();
+  const navigate = useNavigate();
 
   const addToList = async (product: Pet): Promise<void> => {
     try {
@@ -78,6 +80,7 @@ export function MyPets(): JSX.Element {
       setSelectedTemper("");
       setPhotoURL(null);
       setError("");
+      navigate("/RedirectPets");
     } catch (error) {
       console.log(error);
     }

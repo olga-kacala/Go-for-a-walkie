@@ -222,7 +222,7 @@ export const Maps = () => {
       setAddedPets([]);
       setDateOfWalk(null);
       setSelectedTime(new Date());
-      navigate("/Redirect");
+      navigate("/RedirectMaps");
     } catch (error) {
       console.log("Error saving walk:", error);
     }
@@ -233,30 +233,35 @@ export const Maps = () => {
       try {
         const walksCollectionRef = collection(firebaseDb, "Public Walks");
         const walksSnapshot = await getDocs(walksCollectionRef);
-
+  
         const walks = walksSnapshot.docs.map(
           (walkDoc) => walkDoc.data() as WalkData
         );
+  
+        const currentDate = new Date();
+  
         // Check and delete past walks
         for (const walk of walks) {
           if (
             walk.dateOfWalk &&
             walk.dateOfWalk instanceof Timestamp &&
-            walk.dateOfWalk.toDate() < new Date()
+            walk.dateOfWalk.toDate().setHours(0, 0, 0, 0) < currentDate.setHours(0, 0, 0, 0)
           ) {
             // Delete the walk if it's in the past
             const walkDocRef = doc(walksCollectionRef, walk.id.toString());
             await deleteDoc(walkDocRef);
           }
         }
+  
         // Filter walks again after deleting past walks
         const validWalks = walks.filter((walk) => {
-          return !(
+          return (
             walk.dateOfWalk &&
             walk.dateOfWalk instanceof Timestamp &&
-            walk.dateOfWalk.toDate() < new Date()
+            walk.dateOfWalk.toDate().setHours(0, 0, 0, 0) >= currentDate.setHours(0, 0, 0, 0)
           );
         });
+  
         setPublicWalks(validWalks);
       } catch (error) {
         console.log("Error fetching public walks", error);
@@ -264,6 +269,7 @@ export const Maps = () => {
     };
     fetchPublicWalks();
   }, []);
+  
 
   // Functions to render the date from Firebase Timestamp object to JavaScript Date object
 
@@ -345,6 +351,7 @@ export const Maps = () => {
                     placeholderText="Date"
                     showYearDropdown
                     dateFormat="d MMMM yyyy"
+                    minDate={new Date()} 
                     onChange={(date) => setDateOfWalk(date as Date)}
                     value={dateOfWalk ? dateOfWalk?.toLocaleDateString() : ""}
                   />
