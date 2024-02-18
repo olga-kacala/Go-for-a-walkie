@@ -8,13 +8,21 @@ import React from "react";
 import { useState, useEffect, useContext } from "react";
 import classes from "./Maps.module.css";
 import { AppContext } from "../Providers/Providers";
-import { doc, getDocs, collection, setDoc } from "firebase/firestore";
+import {
+  doc,
+  getDocs,
+  collection,
+  setDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Timestamp } from "firebase/firestore";
 import { AgreementModal } from "../Agreement/Agreement";
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
+
 Modal.setAppElement("#root");
 
 export type WalkData = {
@@ -53,6 +61,8 @@ export const Maps = () => {
     marker: { lat: number; lng: number; id: number };
     walk: WalkData;
   } | null>(null);
+  const navigate = useNavigate();
+
   const [showAgreementModal, setShowAgreementModal] = useState(() => {
     const agreementAccepted = localStorage.getItem("agreementAccepted");
     return agreementAccepted !== "true";
@@ -190,22 +200,31 @@ export const Maps = () => {
     addedPets,
   };
 
-  const handleSaveWalk = async (walkData: WalkData) => {
-    if (userLocation && startingMarker && markers.length > 0) {
-      try {
-        const walksCollectionRef = collection(firebaseDb, "Public Walks");
-        const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
+  const handleSaveWalkAndFetch = async () => {
+    const walkData: WalkData = {
+      id: Date.now(),
+      username: `${username}`,
+      walkCreator: `${username}`,
+      markers: markers,
+      dateOfWalk: dateOfWalk instanceof Date ? dateOfWalk : null,
+      totalDistance,
+      addedPets,
+    };
 
-        await setDoc(walkDocRef, { ...walkData });
-        setStartingMarker(null);
-        setMarkers([]);
-        setTotalDistance(0);
-        setAddedPets([]);
-        setDateOfWalk(null);
-        setSelectedTime(new Date());
-      } catch (error) {
-        console.log("Error saving walk:", error);
-      }
+    try {
+      const walksCollectionRef = collection(firebaseDb, "Public Walks");
+      const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
+
+      await setDoc(walkDocRef, { ...walkData });
+      setStartingMarker(null);
+      setMarkers([]);
+      setTotalDistance(0);
+      setAddedPets([]);
+      setDateOfWalk(null);
+      setSelectedTime(new Date());
+      navigate("/Redirect");
+    } catch (error) {
+      console.log("Error saving walk:", error);
     }
   };
 
@@ -218,12 +237,31 @@ export const Maps = () => {
         const walks = walksSnapshot.docs.map(
           (walkDoc) => walkDoc.data() as WalkData
         );
-        setPublicWalks(walks);
+        // Check and delete past walks
+        for (const walk of walks) {
+          if (
+            walk.dateOfWalk &&
+            walk.dateOfWalk instanceof Timestamp &&
+            walk.dateOfWalk.toDate() < new Date()
+          ) {
+            // Delete the walk if it's in the past
+            const walkDocRef = doc(walksCollectionRef, walk.id.toString());
+            await deleteDoc(walkDocRef);
+          }
+        }
+        // Filter walks again after deleting past walks
+        const validWalks = walks.filter((walk) => {
+          return !(
+            walk.dateOfWalk &&
+            walk.dateOfWalk instanceof Timestamp &&
+            walk.dateOfWalk.toDate() < new Date()
+          );
+        });
+        setPublicWalks(validWalks);
       } catch (error) {
         console.log("Error fetching public walks", error);
       }
     };
-
     fetchPublicWalks();
   }, []);
 
@@ -363,7 +401,7 @@ export const Maps = () => {
                     <button
                       className={classes.buttonSave}
                       onClick={() => {
-                        handleSaveWalk(walkData);
+                        handleSaveWalkAndFetch();
                       }}
                     >
                       Save

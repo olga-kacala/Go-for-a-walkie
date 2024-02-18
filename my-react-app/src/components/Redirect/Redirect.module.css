@@ -1,0 +1,51 @@
+.logoutContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 73vh;
+  width: 100vw;
+}
+
+.logout {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 0;
+  padding: 20px;
+  justify-content: center;
+}
+
+.Perek {
+  border-radius: 50%;
+  justify-content: center;
+}
+
+.bottomH2 {
+  text-align: right;
+  color: #ff5500;
+}
+
+@media (max-width: 450px) {
+  .Perek {
+    width: 90vw;
+  }
+}
+
+@media (min-width: 451px) and (max-width: 1000px){
+  .logoutContainer {
+    height: 61vh;
+  }
+
+  .logout {
+    padding: 0;
+  }
+
+  .logout h2 {
+    margin: 0 10px;
+  }
+
+  .Perek {
+    width: auto;
+    height: 36vh;
+  }
+}

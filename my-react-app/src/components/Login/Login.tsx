@@ -1,11 +1,14 @@
 import classes from "./Login.module.css";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../../App";
 import { Link } from "react-router-dom";
 import React from "react";
 import { AppContext } from "../Providers/Providers";
+
+
+
 
 export function Login(): JSX.Element {
   const { setIsLogged } = useContext(AppContext);
@@ -35,6 +38,9 @@ export function Login(): JSX.Element {
       }, 3000);
     }
   };
+
+
+  
 
   return (
     <div className={classes.login}>
