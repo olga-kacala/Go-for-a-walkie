@@ -24,14 +24,10 @@
   margin: 0px;
 }
 
-.BirthdayContainer > a {
+.BirthdayContainer a, .BirthdayText  {
   text-decoration: none;
   color: white;
-}
-
-.BirthdayText {
-  margin: 5px;
-  text-decoration: none;
+  margin: 0;
 }
 
 .selectContainer {

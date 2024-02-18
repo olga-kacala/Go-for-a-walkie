@@ -167,26 +167,25 @@ export function MyPets(): JSX.Element {
     if (!dateOfBirth) {
       return { years: 0, months: 0 };
     }
-  
+
     const birthDate =
       dateOfBirth instanceof Timestamp ? dateOfBirth.toDate() : dateOfBirth;
     const today = new Date();
-  
+
     let years = today.getFullYear() - birthDate.getFullYear();
     let months = today.getMonth() - birthDate.getMonth();
-  
+
     if (today.getDate() < birthDate.getDate()) {
       months--;
     }
-  
+
     if (months < 0) {
       years--;
       months += 12;
     }
-  
+
     return { years, months };
   }
-  
 
   function isFormValid(): boolean {
     return (
