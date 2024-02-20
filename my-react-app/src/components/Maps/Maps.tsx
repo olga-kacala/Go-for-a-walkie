@@ -5,6 +5,7 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import React from "react";
+import Select from "react-select";
 import { useState, useEffect, useContext } from "react";
 import classes from "./Maps.module.css";
 import { AppContext } from "../Providers/Providers";
@@ -19,11 +20,7 @@ import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Timestamp } from "firebase/firestore";
-import { AgreementModal } from "../Agreement/Agreement";
-import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-
-Modal.setAppElement("#root");
 
 export type WalkData = {
   id: number;
@@ -31,6 +28,7 @@ export type WalkData = {
   walkCreator: string;
   markers: { lat: number; lng: number; id: number }[];
   dateOfWalk: Date | null;
+  timeOfWalk: Date | null;
   totalDistance: number;
   addedPets: string[];
 };
@@ -62,20 +60,6 @@ export const Maps = () => {
     walk: WalkData;
   } | null>(null);
   const navigate = useNavigate();
-
-  const [showAgreementModal, setShowAgreementModal] = useState(() => {
-    const agreementAccepted = localStorage.getItem("agreementAccepted");
-    return agreementAccepted !== "true";
-  });
-  const handleAgreementClose = () => {
-    setShowAgreementModal(false);
-    localStorage.setItem("agreementAccepted", "true");
-  };
-
-  const handleAgreementAgree = () => {
-    setShowAgreementModal(false);
-    localStorage.setItem("agreementAccepted", "true");
-  };
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -196,6 +180,7 @@ export const Maps = () => {
     walkCreator: `${username}`,
     markers: markers,
     dateOfWalk: dateOfWalk instanceof Date ? dateOfWalk : null,
+    timeOfWalk: selectedTime instanceof Date ? selectedTime : null,
     totalDistance,
     addedPets,
   };
@@ -207,6 +192,7 @@ export const Maps = () => {
       walkCreator: `${username}`,
       markers: markers,
       dateOfWalk: dateOfWalk instanceof Date ? dateOfWalk : null,
+      timeOfWalk: selectedTime instanceof Date ? selectedTime : null,
       totalDistance,
       addedPets,
     };
@@ -233,35 +219,37 @@ export const Maps = () => {
       try {
         const walksCollectionRef = collection(firebaseDb, "Public Walks");
         const walksSnapshot = await getDocs(walksCollectionRef);
-  
+
         const walks = walksSnapshot.docs.map(
           (walkDoc) => walkDoc.data() as WalkData
         );
-  
+
         const currentDate = new Date();
-  
+
         // Check and delete past walks
         for (const walk of walks) {
           if (
             walk.dateOfWalk &&
             walk.dateOfWalk instanceof Timestamp &&
-            walk.dateOfWalk.toDate().setHours(0, 0, 0, 0) < currentDate.setHours(0, 0, 0, 0)
+            walk.dateOfWalk.toDate().setHours(0, 0, 0, 0) <
+              currentDate.setHours(0, 0, 0, 0)
           ) {
             // Delete the walk if it's in the past
             const walkDocRef = doc(walksCollectionRef, walk.id.toString());
             await deleteDoc(walkDocRef);
           }
         }
-  
+
         // Filter walks again after deleting past walks
         const validWalks = walks.filter((walk) => {
           return (
             walk.dateOfWalk &&
             walk.dateOfWalk instanceof Timestamp &&
-            walk.dateOfWalk.toDate().setHours(0, 0, 0, 0) >= currentDate.setHours(0, 0, 0, 0)
+            walk.dateOfWalk.toDate().setHours(0, 0, 0, 0) >=
+              currentDate.setHours(0, 0, 0, 0)
           );
         });
-  
+
         setPublicWalks(validWalks);
       } catch (error) {
         console.log("Error fetching public walks", error);
@@ -269,7 +257,6 @@ export const Maps = () => {
     };
     fetchPublicWalks();
   }, []);
-  
 
   // Functions to render the date from Firebase Timestamp object to JavaScript Date object
 
@@ -281,30 +268,60 @@ export const Maps = () => {
   }
 
   function getDateDisplay(
-    dateOfWalk: Date | Timestamp | null | undefined
+    dateOfWalk: Date | Timestamp | null | undefined,
+    isTime: boolean = false
   ): string {
     if (isDate(dateOfWalk)) {
-      return dateOfWalk.toLocaleDateString();
+      return isTime
+        ? dateOfWalk.toLocaleTimeString()
+        : dateOfWalk.toLocaleDateString();
     } else if (isTimestamp(dateOfWalk)) {
-      return dateOfWalk.toDate().toLocaleDateString();
+      return isTime
+        ? dateOfWalk.toDate().toLocaleTimeString()
+        : dateOfWalk.toDate().toLocaleDateString();
     } else {
       return "N/A";
     }
   }
 
+  const PetSelect = ({
+    myAnimalsList,
+    selectedPetNames,
+    setSelectedPetNames,
+  }) => {
+    const options = myAnimalsList.map((pet) => ({
+      label: (
+        <div>
+          <img
+          src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
+            // src={`${process.env.PUBLIC_URL}/${pet.photoURL}`}
+            alt={`${pet.name} Photo`}
+            style={{ width: "30px", height: "30px", marginRight: "10px" }}
+          />
+          {pet.name} - {pet.temper} - {pet.sex}
+        </div>
+      ),
+      value: pet.name,
+    }));
+
+    return (
+      <Select
+        className={classes.walksContainer}
+        isMulti
+        options={options}
+        value={options.filter((opt) => selectedPetNames.includes(opt.value))}
+        onChange={(selectedOptions) => {
+          const selectedNames = selectedOptions.map((opt) => opt.value);
+          setSelectedPetNames(selectedNames);
+        }}
+      />
+    );
+  };
+
   //R E T U R N
 
   return (
     <div className={classes.Map}>
-      {/* Render the AgreementModal */}
-      {/* {showAgreementModal && (
-        <AgreementModal
-          isOpen={showAgreementModal}
-          onRequestClose={handleAgreementClose}
-          onAgree={handleAgreementAgree}
-        />
-      )} */}
-
       {!isLoaded ? (
         <h1>Loading...</h1>
       ) : (
@@ -351,7 +368,7 @@ export const Maps = () => {
                     placeholderText="Date"
                     showYearDropdown
                     dateFormat="d MMMM yyyy"
-                    minDate={new Date()} 
+                    minDate={new Date()}
                     onChange={(date) => setDateOfWalk(date as Date)}
                     value={dateOfWalk ? dateOfWalk?.toLocaleDateString() : ""}
                   />
@@ -384,7 +401,7 @@ export const Maps = () => {
                       ))}
                     </div>
                   )}
-                  <select
+                  {/* <select
                     className={classes.walksContainer}
                     multiple
                     value={selectedPetNames}
@@ -399,11 +416,29 @@ export const Maps = () => {
                   >
                     <option value="">Select a pet</option>
                     {myAnimalsList.map((pet) => (
-                      <option key={pet.id} value={pet.name}>
-                        {pet.name}
-                      </option>
-                    ))}
-                  </select>
+  <div key={pet.id} className={classes.petContainer}>
+    <div>
+      <option value={pet.name}>
+        {pet.name} - {pet.temper} - {pet.sex}
+      </option>
+    </div>
+    <div>
+      <img
+        src={`${process.env.PUBLIC_URL}/${pet.photoURL}`}
+        alt={`${pet.name} Photo`}
+        style={{ width: '30px', height: '30px' }}
+      />
+    </div>
+  </div>
+))}
+                  </select> */}
+
+                  <PetSelect
+                    myAnimalsList={myAnimalsList}
+                    selectedPetNames={selectedPetNames}
+                    setSelectedPetNames={setSelectedPetNames}
+                  />
+
                   <div className={classes.saveContainer}>
                     <button
                       className={classes.buttonSave}
@@ -476,6 +511,9 @@ export const Maps = () => {
                     distance: {selectedMarker.walk.totalDistance.toFixed(2)} km
                   </p>
                   <p>date: {getDateDisplay(selectedMarker.walk.dateOfWalk)}</p>
+                  <p>
+                    time: {getDateDisplay(selectedMarker.walk.timeOfWalk, true)}
+                  </p>
                   <p>pets:</p>
                   <ul>
                     {selectedMarker.walk.addedPets.map((petName) => (
