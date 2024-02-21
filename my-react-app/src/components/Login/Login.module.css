@@ -16,10 +16,13 @@
   width: 30%;
 }
 
-.form input {
+form input {
   display: block;
   width: 100%;
   padding: 10px;
+  border-radius: 5px;
+  border:none;
+  margin: 5px;
 }
 
 .inputContainer h2 {
@@ -51,6 +54,7 @@
   font-size: inherit;
   letter-spacing: 2px;
   cursor: pointer;
+  margin: 5px;
 }
 
 @media (max-width: 450px) {

@@ -57,58 +57,62 @@ export function Register(): JSX.Element {
   };
 
   return (
-    <div>
+    
       <div className={classes.login}>
-        <h2>Please Register</h2>
-        <form>
-          <input
-            name="login"
-            type="email"
-            id="email"
-            value={username}
-            placeholder="Email"
-            required
-            onChange={(e) => {
-              setUsername(e.target.value);
-              setIsUsernameError(false);
-            }}
-          />
-          <input
-            name="password"
-            id="password"
-            type={showPassword ? "text" : "password"}
-            value={password}
-            placeholder="Password"
-            required
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setIsPasswordError(false);
-            }}
-          />
-          <input
-            name="repeat"
-            type="password"
-            value={repeatPassword}
-            placeholder="Repeat password"
-            required
-            onChange={(e) => {
-              setRepeatPassword(e.target.value);
-              setIsPasswordError(false);
-            }}
-          />
-          <button
-            type="button"
-            className={classes.passwordToggle}
-            onClick={togglePasswordVisibility}
-          >
-            {showPassword ? "Hide psw" : "Show psw"}
-          </button>
-          <p>{error}</p>
-          <button className={classes.button} onClick={handleSubmit}>
-            Register
-          </button>
-        </form>
+        <div className={classes.PolaBackgr}>
+        </div>
+        <div className={classes.inputContainer}>
+          <h2>Please Register</h2>
+          <form>
+            <input
+              name="login"
+              type="email"
+              id="email"
+              value={username}
+              placeholder="Email"
+              required
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setIsUsernameError(false);
+              }}
+            />
+            <input
+              name="password"
+              id="password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              placeholder="Password"
+              required
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setIsPasswordError(false);
+              }}
+            />
+            <input
+              name="repeat"
+              type="password"
+              value={repeatPassword}
+              placeholder="Repeat password"
+              required
+              onChange={(e) => {
+                setRepeatPassword(e.target.value);
+                setIsPasswordError(false);
+              }}
+            />
+            <button
+              type="button"
+              className={classes.passwordToggle}
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? "Hide psw" : "Show psw"}
+            </button>
+            <p>{error}</p>
+            <button className={classes.button} onClick={handleSubmit}>
+              Register
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+   
   );
 }

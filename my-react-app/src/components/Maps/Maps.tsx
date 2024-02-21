@@ -5,10 +5,10 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import React from "react";
-import Select from "react-select";
-import { useState, useEffect, useContext } from "react";
+import Select, { components } from "react-select";
+import { useState, useEffect, useContext, FC } from "react";
 import classes from "./Maps.module.css";
-import { AppContext } from "../Providers/Providers";
+import { AppContext, Pet } from "../Providers/Providers";
 import {
   doc,
   getDocs,
@@ -31,6 +31,13 @@ export type WalkData = {
   timeOfWalk: Date | null;
   totalDistance: number;
   addedPets: string[];
+};
+
+type PetSelectProps = {
+  myAnimalsList: Pet[];
+  selectedPetNames: string[];
+  setSelectedPetNames: (names: string[]) => void;
+  onPetClick: () => void;
 };
 
 export const Maps = () => {
@@ -165,10 +172,10 @@ export const Maps = () => {
     }
   };
 
-  const handleDelete = (petName: string) => {
-    const updatedAddedPets = addedPets.filter((name) => name !== petName);
-    setAddedPets(updatedAddedPets);
-  };
+  // const handleDelete = (petName: string) => {
+  //   const updatedAddedPets = addedPets.filter((name) => name !== petName);
+  //   setAddedPets(updatedAddedPets);
+  // };
 
   const handleTimeChange = (time: Date) => {
     setSelectedTime(time);
@@ -209,6 +216,7 @@ export const Maps = () => {
       setDateOfWalk(null);
       setSelectedTime(new Date());
       navigate("/RedirectMaps");
+      
     } catch (error) {
       console.log("Error saving walk:", error);
     }
@@ -284,17 +292,17 @@ export const Maps = () => {
     }
   }
 
-  const PetSelect = ({
+  const PetSelect: FC<PetSelectProps> = ({
     myAnimalsList,
     selectedPetNames,
     setSelectedPetNames,
+    onPetClick,
   }) => {
     const options = myAnimalsList.map((pet) => ({
       label: (
         <div>
           <img
-          src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
-            // src={`${process.env.PUBLIC_URL}/${pet.photoURL}`}
+            src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
             alt={`${pet.name} Photo`}
             style={{ width: "30px", height: "30px", marginRight: "10px" }}
           />
@@ -304,8 +312,13 @@ export const Maps = () => {
       value: pet.name,
     }));
 
+    const Option = (props: any) => (
+      <components.Option {...props} onDoubleClick={onPetClick} />
+    );
+  
     return (
-      <Select
+      <div>
+        <Select
         className={classes.walksContainer}
         isMulti
         options={options}
@@ -314,10 +327,11 @@ export const Maps = () => {
           const selectedNames = selectedOptions.map((opt) => opt.value);
           setSelectedPetNames(selectedNames);
         }}
+        components={{ Option }} // Use the custom Option component
       />
+      </div>
     );
   };
-
   //R E T U R N
 
   return (
@@ -389,14 +403,7 @@ export const Maps = () => {
                       {addedPets.map((petName) => (
                         <div key={petName} className={classes.petContainer}>
                           <p className={classes.walksContainer}>{petName}</p>
-                          <button
-                            className={classes.buttonX}
-                            onClick={() => {
-                              handleDelete(petName);
-                            }}
-                          >
-                            X
-                          </button>
+                         
                         </div>
                       ))}
                     </div>
@@ -433,11 +440,12 @@ export const Maps = () => {
 ))}
                   </select> */}
 
-                  <PetSelect
-                    myAnimalsList={myAnimalsList}
-                    selectedPetNames={selectedPetNames}
-                    setSelectedPetNames={setSelectedPetNames}
-                  />
+<PetSelect
+  myAnimalsList={myAnimalsList}
+  selectedPetNames={selectedPetNames}
+  setSelectedPetNames={setSelectedPetNames}
+  onPetClick={handlePetClick} // Pass the handlePetClick function
+/>
 
                   <div className={classes.saveContainer}>
                     <button

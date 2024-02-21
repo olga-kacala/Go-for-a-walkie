@@ -1,19 +1,29 @@
 .login {
-  margin: 0;
   display: flex;
-  flex-direction: column;
   height: 76vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
   align-items: center;
   justify-content: center;
-  width: 100vw;
-
+  
 }
 
-form input {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
+.PolaBackgr {
+  width: 40%;
+  height: 76vh;
+  background-image: url("../../../public/Img/Doggos.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.inputContainer {
+  position: absolute;
+}
+
+
+.inputContainer h2 {
+  color: white;
 }
 
 .button {
@@ -30,8 +40,9 @@ form input {
   letter-spacing: 2px;
   cursor: pointer;
 }
+
 .passwordToggle {
-  background-color: #333;
+  background-color: #979393;
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
@@ -40,18 +51,83 @@ form input {
   font-size: inherit;
   letter-spacing: 2px;
   cursor: pointer;
+  margin: 5px;
 }
 
 @media (max-width: 450px) {
-  form input {
-    width: auto;
-    padding: 10px;
-    margin-bottom: 0px;
+  .login {
+    background-image: url("../../../public/Img/Doggos.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 73vh;
+  }
+
+  .PolaBackgr {
+    display: none;
+  }
+
+  .inputContainer {
+    display: flex;
+    flex-direction: column;
+    height: 73vh;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .login p {
+    margin: 0;
+    letter-spacing: 2px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    color: white;
   }
 }
 
 @media (min-width: 451px) and (max-width: 1000px) {
-form input {
-    margin-bottom: 3px;
+  .login {
+    background-image:  url("../../../public/Img/Doggos.jpg");
+    background-size: contain;
+    background-position:left;
+    background-repeat: no-repeat;
+    height: 61vh;
+  }
+
+  .PolaBackgr {
+    display: none;
+  }
+
+  .inputContainer {
+    display: flex;
+    flex-direction: column;
+    height:61vh;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 0;
+  }
+
+  .inputContainer h2 {
+    margin: 0;
+    color: #333;
+  }
+
+  .login p {
+    margin: 0;
+    letter-spacing: 2px;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    color: #333;
+  }
+
+  .button  {
+    margin: 5px 0;
+    padding: 5px;
+    min-width: 120px;
+  }
+
+  .passwordToggle {
+    min-width: 120px;
+
   }
 }
