@@ -5,10 +5,9 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import React from "react";
-import Select, { components } from "react-select";
-import { useState, useEffect, useContext, FC } from "react";
+import { useState, useEffect, useContext } from "react";
 import classes from "./Maps.module.css";
-import { AppContext, Pet } from "../Providers/Providers";
+import { AppContext } from "../Providers/Providers";
 import {
   doc,
   getDocs,
@@ -21,6 +20,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Timestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
 
 export type WalkData = {
   id: number;
@@ -31,13 +31,6 @@ export type WalkData = {
   timeOfWalk: Date | null;
   totalDistance: number;
   addedPets: string[];
-};
-
-type PetSelectProps = {
-  myAnimalsList: Pet[];
-  selectedPetNames: string[];
-  setSelectedPetNames: (names: string[]) => void;
-  onPetClick: () => void;
 };
 
 export const Maps = () => {
@@ -90,7 +83,6 @@ export const Maps = () => {
 
   useEffect(() => {
     let distance = 0;
-
     for (let i = 1; i < markers.length; i++) {
       const prevMarker = markers[i - 1];
       const currMarker = markers[i];
@@ -172,11 +164,6 @@ export const Maps = () => {
     }
   };
 
-  // const handleDelete = (petName: string) => {
-  //   const updatedAddedPets = addedPets.filter((name) => name !== petName);
-  //   setAddedPets(updatedAddedPets);
-  // };
-
   const handleTimeChange = (time: Date) => {
     setSelectedTime(time);
   };
@@ -216,11 +203,12 @@ export const Maps = () => {
       setDateOfWalk(null);
       setSelectedTime(new Date());
       navigate("/RedirectMaps");
-      
     } catch (error) {
       console.log("Error saving walk:", error);
     }
   };
+
+  
 
   useEffect(() => {
     const fetchPublicWalks = async () => {
@@ -292,47 +280,27 @@ export const Maps = () => {
     }
   }
 
-  const PetSelect: FC<PetSelectProps> = ({
-    myAnimalsList,
-    selectedPetNames,
-    setSelectedPetNames,
-    onPetClick,
-  }) => {
-    const options = myAnimalsList.map((pet) => ({
-      label: (
-        <div>
-          <img
-            src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
-            alt={`${pet.name} Photo`}
-            style={{ width: "30px", height: "30px", marginRight: "10px" }}
-          />
-          {pet.name} - {pet.temper} - {pet.sex}
-        </div>
-      ),
-      value: pet.name,
-    }));
-
-    const Option = (props: any) => (
-      <components.Option {...props} onDoubleClick={onPetClick} />
-    );
-  
-    return (
-      <div>
-        <Select
-        className={classes.walksContainer}
-        isMulti
-        options={options}
-        value={options.filter((opt) => selectedPetNames.includes(opt.value))}
-        onChange={(selectedOptions) => {
-          const selectedNames = selectedOptions.map((opt) => opt.value);
-          setSelectedPetNames(selectedNames);
+  const CustomOption: React.FC<{ innerProps: any; label: any; data: any }> = ({
+    innerProps,
+    label,
+    data,
+  }) => (
+    <div {...innerProps}>
+      <img
+        src={data.photoURL ? data.photoURL : "/Img/profilePic.png"}
+        alt={`${data.label} Photo`}
+        style={{
+          width: "30px",
+          height: "30px",
+          marginRight: "10px",
+          borderRadius: "50%",
         }}
-        components={{ Option }} // Use the custom Option component
       />
-      </div>
-    );
-  };
-  //R E T U R N
+      {label}
+    </div>
+  );
+
+  //R E T U R N / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
   return (
     <div className={classes.Map}>
@@ -386,7 +354,6 @@ export const Maps = () => {
                     onChange={(date) => setDateOfWalk(date as Date)}
                     value={dateOfWalk ? dateOfWalk?.toLocaleDateString() : ""}
                   />
-
                   <DatePicker
                     className={classes.walksContainer}
                     selected={selectedTime}
@@ -397,56 +364,31 @@ export const Maps = () => {
                     dateFormat="h:mm aa"
                     timeCaption="Time"
                   />
-
-                  {selectedPetNames !== null && (
-                    <div>
-                      {addedPets.map((petName) => (
-                        <div key={petName} className={classes.petContainer}>
-                          <p className={classes.walksContainer}>{petName}</p>
-                         
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {/* <select
+                  <Select
                     className={classes.walksContainer}
-                    multiple
-                    value={selectedPetNames}
-                    onChange={(e) => {
-                      const selectedNames = Array.from(
-                        e.target.selectedOptions,
-                        (option) => option.value
+                    isMulti
+                    options={myAnimalsList.map((pet) => ({
+                      label: `${pet.name} - ${pet.temper} - ${pet.sex}`,
+                      value: pet.name,
+                      photoURL: pet.photoURL,
+                    }))}
+                    value={selectedPetNames.map((petName) => ({
+                      label: `${petName}`,
+                      value: petName,
+                      photoURL: myAnimalsList.find(
+                        (pet) => pet.name === petName
+                      )?.photoURL,
+                    }))}
+                    onChange={(selectedOptions) => {
+                      const selectedNames = selectedOptions.map(
+                        (opt) => opt.value
                       );
                       setSelectedPetNames(selectedNames);
                     }}
-                    onDoubleClick={handlePetClick}
-                  >
-                    <option value="">Select a pet</option>
-                    {myAnimalsList.map((pet) => (
-  <div key={pet.id} className={classes.petContainer}>
-    <div>
-      <option value={pet.name}>
-        {pet.name} - {pet.temper} - {pet.sex}
-      </option>
-    </div>
-    <div>
-      <img
-        src={`${process.env.PUBLIC_URL}/${pet.photoURL}`}
-        alt={`${pet.name} Photo`}
-        style={{ width: '30px', height: '30px' }}
-      />
-    </div>
-  </div>
-))}
-                  </select> */}
-
-<PetSelect
-  myAnimalsList={myAnimalsList}
-  selectedPetNames={selectedPetNames}
-  setSelectedPetNames={setSelectedPetNames}
-  onPetClick={handlePetClick} // Pass the handlePetClick function
-/>
-
+                    onMenuClose={handlePetClick}
+                    components={{ Option: CustomOption }}
+                  />
+                  ;
                   <div className={classes.saveContainer}>
                     <button
                       className={classes.buttonSave}

@@ -8,12 +8,16 @@
   justify-content: center;
 }
 
-.loginPic {
-  width: auto;
+.PolaBackgr {
+  width: 40%;
+  height: 76vh;
+  background-image: url("../../../public/Img/Polka.png");
+  background-size: cover;
+  background-position: center;
 }
 
-.PolaBackgr {
-  width: 30%;
+.inputContainer {
+  position: absolute;
 }
 
 form input {
@@ -55,6 +59,11 @@ form input {
   letter-spacing: 2px;
   cursor: pointer;
   margin: 5px;
+}
+
+.account {
+  display: flex;
+  flex-direction: column;
 }
 
 @media (max-width: 450px) {

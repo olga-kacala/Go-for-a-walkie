@@ -45,7 +45,6 @@ export function Login(): JSX.Element {
   return (
     <div className={classes.login}>
       <div className={classes.PolaBackgr}>
-        <img className={classes.loginPic} src={process.env.PUBLIC_URL + "/Img/Polka.png"} title="Welcome!" alt="Pola picture" />
       </div>
       <div className={classes.inputContainer}>
         <h2>Please Log in</h2>
@@ -86,13 +85,17 @@ export function Login(): JSX.Element {
             Go
           </button>
         </form>
-        <p>
+        <div className={classes.account}>
+        <h2>
           {" "}
           Don't have an account?{" "}
+          </h2>
           <Link className={classes.button} to="/Register">
             Create Account
           </Link>
-        </p>
+        
+        </div>
+     
       </div>
     </div>
   );
