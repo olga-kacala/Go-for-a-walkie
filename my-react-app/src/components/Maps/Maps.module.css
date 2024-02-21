@@ -28,6 +28,25 @@
   left: 70vw;
 }
 
+.walkInfo ul{
+  list-style-type: none; 
+  padding: 0;
+  text-align: center;
+}
+
+.renderedList {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1vh;
+}
+
+.renderedPic {
+width: 10vw;
+height: auto;  
+margin: 0;
+border-radius: 50%;
+}
+
 .walksContainer {
   font-family: "Dosis", sans-serif;
   background-color: rgb(232, 240, 254);

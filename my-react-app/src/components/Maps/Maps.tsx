@@ -382,13 +382,13 @@ export const Maps = () => {
                     onChange={(selectedOptions) => {
                       const selectedNames = selectedOptions.map(
                         (opt) => opt.value
-                      );
+                      )
                       setSelectedPetNames(selectedNames);
                     }}
                     onMenuClose={handlePetClick}
                     components={{ Option: CustomOption }}
                   />
-                  ;
+                  
                   <div className={classes.saveContainer}>
                     <button
                       className={classes.buttonSave}
@@ -454,7 +454,7 @@ export const Maps = () => {
                 </React.Fragment>
               ))}
 
-              {selectedMarker && (
+              {/* {selectedMarker && (
                 <div className={classes.walkInfo}>
                   <p>walker: {selectedMarker.walk.walkCreator}</p>
                   <p>
@@ -473,7 +473,45 @@ export const Maps = () => {
                     ))}
                   </ul>
                 </div>
-              )}
+              )} */}
+
+{selectedMarker && (
+  <div className={classes.walkInfo}>
+    <p>walker: {selectedMarker.walk.walkCreator}</p>
+    <p>distance: {selectedMarker.walk.totalDistance.toFixed(2)} km</p>
+    <p>date: {getDateDisplay(selectedMarker.walk.dateOfWalk)}</p>
+    <p>time: {getDateDisplay(selectedMarker.walk.timeOfWalk, true)}</p>
+    <p>pets:</p>
+    <ul >
+      {selectedMarker.walk.addedPets.map((petName) => {
+        const pet = myAnimalsList.find((pet) => pet.name === petName);
+        return (
+          <div className={classes.renderedList}>
+            <li key={`${selectedMarker.walk.id}-${petName}`}>
+                 {pet && (
+              <img
+              className={classes.renderedPic}
+                src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
+                alt={`${pet.name} Photo`}
+              />
+            )}
+            <div>
+            <div>
+                {petName} - {pet?.temper === 'tiger' ? '🐅' : pet?.temper === 'sloth' ? '🦥' : pet?.temper === 'octopus' ? '🐙' : pet?.temper} - {pet?.sex === 'female' ? '♀️' : pet?.sex === 'male' ? '♂️' : pet?.sex}
+              </div>
+            </div>
+           
+       
+          </li>
+          </div>
+          
+        );
+      })}
+    </ul>
+  </div>
+)}
+
+
             </>
           )}
         </GoogleMap>
