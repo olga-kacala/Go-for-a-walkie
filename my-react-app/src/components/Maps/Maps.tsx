@@ -30,7 +30,7 @@ export type WalkData = {
   dateOfWalk: Date | null;
   timeOfWalk: Date | null;
   totalDistance: number;
-  addedPets: string[];
+  addedPets: number[];
 };
 
 export const Maps = () => {
@@ -51,8 +51,8 @@ export const Maps = () => {
     { lat: number; lng: number; id: number }[]
   >([]);
   const [totalDistance, setTotalDistance] = useState<number>(0);
-  const [selectedPetNames, setSelectedPetNames] = useState<string[]>([]);
-  const [addedPets, setAddedPets] = useState<string[]>([]);
+  const [selectedPetIds, setSelectedPetIDs] = useState<number[]>([]);
+  const [addedPets, setAddedPets] = useState<number[]>([]);
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<{
@@ -142,13 +142,23 @@ export const Maps = () => {
     }
   };
 
+  // const handlePetClick = async () => {
+  //   if (selectedPetNames.length > 0) {
+  //     const uniqueSelectedPetNames = selectedPetNames.filter(
+  //       (petName) => !addedPets.includes(petName)
+  //     );
+  //     setAddedPets((prevPets) => [...prevPets, ...uniqueSelectedPetNames]);
+  //     setSelectedPetNames([]);
+  //   }
+  // };
+
   const handlePetClick = async () => {
-    if (selectedPetNames.length > 0) {
-      const uniqueSelectedPetNames = selectedPetNames.filter(
-        (petName) => !addedPets.includes(petName)
+    if (selectedPetIds.length > 0) {
+      const uniqueSelectedPetIDs = selectedPetIds.filter(
+        (petId) => !addedPets.includes(petId)
       );
-      setAddedPets((prevPets) => [...prevPets, ...uniqueSelectedPetNames]);
-      setSelectedPetNames([]);
+      setAddedPets((prevPets) => [...prevPets, ...uniqueSelectedPetIDs]);
+      setSelectedPetIDs([]);
     }
   };
 
@@ -207,8 +217,6 @@ export const Maps = () => {
       console.log("Error saving walk:", error);
     }
   };
-
-  
 
   useEffect(() => {
     const fetchPublicWalks = async () => {
@@ -368,27 +376,26 @@ export const Maps = () => {
                     className={classes.walksContainer}
                     isMulti
                     options={myAnimalsList.map((pet) => ({
-                      label: `${pet.name} - ${pet.temper} - ${pet.sex}`,
-                      value: pet.name,
+                      label: `${pet.name}`,
+                      value: pet.id,
                       photoURL: pet.photoURL,
                     }))}
-                    value={selectedPetNames.map((petName) => ({
-                      label: `${petName}`,
-                      value: petName,
-                      photoURL: myAnimalsList.find(
-                        (pet) => pet.name === petName
-                      )?.photoURL,
+                    value={selectedPetIds.map((petId) => ({
+                      label: `${petId}`,
+                      value: petId,
+                      photoURL: myAnimalsList.find((pet) => pet.id === petId)
+                        ?.photoURL,
                     }))}
                     onChange={(selectedOptions) => {
-                      const selectedNames = selectedOptions.map(
+                      const selectedIds = selectedOptions.map(
                         (opt) => opt.value
-                      )
-                      setSelectedPetNames(selectedNames);
+                      );
+                      setSelectedPetIDs(selectedIds);
                     }}
                     onMenuClose={handlePetClick}
                     components={{ Option: CustomOption }}
                   />
-                  
+
                   <div className={classes.saveContainer}>
                     <button
                       className={classes.buttonSave}
@@ -454,7 +461,7 @@ export const Maps = () => {
                 </React.Fragment>
               ))}
 
-              {/* {selectedMarker && (
+              {selectedMarker && (
                 <div className={classes.walkInfo}>
                   <p>walker: {selectedMarker.walk.walkCreator}</p>
                   <p>
@@ -466,52 +473,47 @@ export const Maps = () => {
                   </p>
                   <p>pets:</p>
                   <ul>
-                    {selectedMarker.walk.addedPets.map((petName) => (
-                      <li key={`${selectedMarker.walk.id}-${petName}`}>
-                        {petName}
-                      </li>
-                    ))}
+                    {selectedMarker.walk.addedPets.map((petId) => {
+                      const pet = myAnimalsList.find((pet) => pet.id === petId);
+                      return (
+                        <div className={classes.renderedList}>
+                          <li key={`${selectedMarker.walk.id}-${petId}`}>
+                            {pet && (
+                              <img
+                                className={classes.renderedPic}
+                                src={
+                                  pet.photoURL
+                                    ? pet.photoURL
+                                    : "/Img/profilePic.png"
+                                }
+                                alt={`${pet.name} Photo`}
+                              />
+                            )}
+                            <div>
+                              <div>
+                                {pet?.name} -{" "}
+                                {pet?.temper === "tiger"
+                                  ? "🐅"
+                                  : pet?.temper === "sloth"
+                                  ? "🦥"
+                                  : pet?.temper === "octopus"
+                                  ? "🐙"
+                                  : pet?.temper}{" "}
+                                -{" "}
+                                {pet?.sex === "female"
+                                  ? "♀️"
+                                  : pet?.sex === "male"
+                                  ? "♂️"
+                                  : pet?.sex}{" "}
+                              </div>
+                            </div>
+                          </li>
+                        </div>
+                      );
+                    })}
                   </ul>
                 </div>
-              )} */}
-
-{selectedMarker && (
-  <div className={classes.walkInfo}>
-    <p>walker: {selectedMarker.walk.walkCreator}</p>
-    <p>distance: {selectedMarker.walk.totalDistance.toFixed(2)} km</p>
-    <p>date: {getDateDisplay(selectedMarker.walk.dateOfWalk)}</p>
-    <p>time: {getDateDisplay(selectedMarker.walk.timeOfWalk, true)}</p>
-    <p>pets:</p>
-    <ul >
-      {selectedMarker.walk.addedPets.map((petName) => {
-        const pet = myAnimalsList.find((pet) => pet.name === petName);
-        return (
-          <div className={classes.renderedList}>
-            <li key={`${selectedMarker.walk.id}-${petName}`}>
-                 {pet && (
-              <img
-              className={classes.renderedPic}
-                src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
-                alt={`${pet.name} Photo`}
-              />
-            )}
-            <div>
-            <div>
-                {petName} - {pet?.temper === 'tiger' ? '🐅' : pet?.temper === 'sloth' ? '🦥' : pet?.temper === 'octopus' ? '🐙' : pet?.temper} - {pet?.sex === 'female' ? '♀️' : pet?.sex === 'male' ? '♂️' : pet?.sex}
-              </div>
-            </div>
-           
-       
-          </li>
-          </div>
-          
-        );
-      })}
-    </ul>
-  </div>
-)}
-
-
+              )}
             </>
           )}
         </GoogleMap>
