@@ -142,16 +142,6 @@ export const Maps = () => {
     }
   };
 
-  // const handlePetClick = async () => {
-  //   if (selectedPetNames.length > 0) {
-  //     const uniqueSelectedPetNames = selectedPetNames.filter(
-  //       (petName) => !addedPets.includes(petName)
-  //     );
-  //     setAddedPets((prevPets) => [...prevPets, ...uniqueSelectedPetNames]);
-  //     setSelectedPetNames([]);
-  //   }
-  // };
-
   const handlePetClick = async () => {
     if (selectedPetIds.length > 0) {
       const uniqueSelectedPetIDs = selectedPetIds.filter(
@@ -322,6 +312,7 @@ export const Maps = () => {
           }
           zoom={10}
           onClick={handleMapClick}
+
         >
           {userLocation && startingMarker && (
             <>
@@ -461,59 +452,49 @@ export const Maps = () => {
                 </React.Fragment>
               ))}
 
-              {selectedMarker && (
-                <div className={classes.walkInfo}>
-                  <p>walker: {selectedMarker.walk.walkCreator}</p>
-                  <p>
-                    distance: {selectedMarker.walk.totalDistance.toFixed(2)} km
-                  </p>
-                  <p>date: {getDateDisplay(selectedMarker.walk.dateOfWalk)}</p>
-                  <p>
-                    time: {getDateDisplay(selectedMarker.walk.timeOfWalk, true)}
-                  </p>
-                  <p>pets:</p>
-                  <ul>
-                    {selectedMarker.walk.addedPets.map((petId) => {
-                      const pet = myAnimalsList.find((pet) => pet.id === petId);
-                      return (
-                        <div className={classes.renderedList}>
-                          <li key={`${selectedMarker.walk.id}-${petId}`}>
-                            {pet && (
-                              <img
-                                className={classes.renderedPic}
-                                src={
-                                  pet.photoURL
-                                    ? pet.photoURL
-                                    : "/Img/profilePic.png"
-                                }
-                                alt={`${pet.name} Photo`}
-                              />
-                            )}
-                            <div>
-                              <div>
-                                {pet?.name} -{" "}
-                                {pet?.temper === "tiger"
-                                  ? "🐅"
-                                  : pet?.temper === "sloth"
-                                  ? "🦥"
-                                  : pet?.temper === "octopus"
-                                  ? "🐙"
-                                  : pet?.temper}{" "}
-                                -{" "}
-                                {pet?.sex === "female"
-                                  ? "♀️"
-                                  : pet?.sex === "male"
-                                  ? "♂️"
-                                  : pet?.sex}{" "}
-                              </div>
-                            </div>
-                          </li>
-                        </div>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
+{selectedMarker && (
+  <div className={classes.walkInfo}>
+    <p>walker: {selectedMarker.walk.walkCreator}</p>
+    <p>distance: {selectedMarker.walk.totalDistance.toFixed(2)} km</p>
+    <p>date: {getDateDisplay(selectedMarker.walk.dateOfWalk)}</p>
+    <p>time: {getDateDisplay(selectedMarker.walk.timeOfWalk, true)}</p>
+    <p>pets:</p>
+    <ul>
+      {selectedMarker.walk.addedPets.map((petId) => {
+        const pet = myAnimalsList.find((pet) => pet.id === petId);
+        return (
+          <li key={petId}>
+            {pet && (
+              <img
+                className={classes.renderedPic}
+                src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
+                alt={`${pet.name} Photo`}
+              />
+            )}
+            <div>
+              <div>
+                {pet?.name} -{" "}
+                {pet?.temper === "tiger"
+                  ? "🐅"
+                  : pet?.temper === "sloth"
+                  ? "🦥"
+                  : pet?.temper === "octopus"
+                  ? "🐙"
+                  : pet?.temper}{" "}
+                -{" "}
+                {pet?.sex === "female"
+                  ? "♀️"
+                  : pet?.sex === "male"
+                  ? "♂️"
+                  : pet?.sex}{" "}
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+)}
             </>
           )}
         </GoogleMap>
