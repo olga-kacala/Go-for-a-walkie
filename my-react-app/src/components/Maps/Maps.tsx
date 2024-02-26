@@ -30,7 +30,13 @@ export type WalkData = {
   dateOfWalk: Date | null;
   timeOfWalk: Date | null;
   totalDistance: number;
-  addedPets: number [];
+  addedPets: {
+    id: number;
+    name: string;
+    sex: string;
+  temper: string;
+  photoURL: string | null; 
+  }[];
 };
 
 export const Maps = () => {
@@ -169,6 +175,18 @@ export const Maps = () => {
     setSelectedTime(time);
   };
 
+  const addedPetsData = addedPets.map((petId) => {
+    const pet = myAnimalsList.find((pet) => pet.id === petId);
+    return {
+      id: petId,
+      name: pet?.name || "Unknown",
+      temper: pet?.temper || "",  // Provide a default value, e.g., an empty string
+      sex: pet?.sex || "",       // Provide a default value, e.g., an empty string
+      photoURL: pet?.photoURL || null,
+    };
+  });
+  
+  
   const walkData: WalkData = {
     id: Date.now(),
     username: `${username}`,
@@ -177,26 +195,26 @@ export const Maps = () => {
     dateOfWalk: dateOfWalk instanceof Date ? dateOfWalk : null,
     timeOfWalk: selectedTime instanceof Date ? selectedTime : null,
     totalDistance,
-    addedPets,
+    addedPets: addedPetsData,
   };
-
   const handleSaveWalkAndFetch = async () => {
     
-    const walkData: WalkData = {
-      id: Date.now(),
-      username: `${username}`,
-      walkCreator: `${username}`,
-      markers: markers,
-      dateOfWalk: dateOfWalk instanceof Date ? dateOfWalk : null,
-      timeOfWalk: selectedTime instanceof Date ? selectedTime : null,
-      totalDistance,
-      addedPets,
-    };
-
+  
+    // const walkData: WalkData = {
+    //   id: Date.now(),
+    //   username: `${username}`,
+    //   walkCreator: `${username}`,
+    //   markers: markers,
+    //   dateOfWalk: dateOfWalk instanceof Date ? dateOfWalk : null,
+    //   timeOfWalk: selectedTime instanceof Date ? selectedTime : null,
+    //   totalDistance,
+    //   addedPets: addedPetsData,
+    // };
+  
     try {
       const walksCollectionRef = collection(firebaseDb, "Public Walks");
       const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
-
+  
       await setDoc(walkDocRef, { ...walkData });
       setStartingMarker(null);
       setMarkers([]);
@@ -209,6 +227,37 @@ export const Maps = () => {
       console.log("Error saving walk:", error);
     }
   };
+  
+
+  // const handleSaveWalkAndFetch = async () => {
+    
+  //   const walkData: WalkData = {
+  //     id: Date.now(),
+  //     username: `${username}`,
+  //     walkCreator: `${username}`,
+  //     markers: markers,
+  //     dateOfWalk: dateOfWalk instanceof Date ? dateOfWalk : null,
+  //     timeOfWalk: selectedTime instanceof Date ? selectedTime : null,
+  //     totalDistance,
+  //     addedPets,
+  //   };
+
+  //   try {
+  //     const walksCollectionRef = collection(firebaseDb, "Public Walks");
+  //     const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
+
+  //     await setDoc(walkDocRef, { ...walkData });
+  //     setStartingMarker(null);
+  //     setMarkers([]);
+  //     setTotalDistance(0);
+  //     setAddedPets([]);
+  //     setDateOfWalk(null);
+  //     setSelectedTime(new Date());
+  //     navigate("/RedirectMaps");
+  //   } catch (error) {
+  //     console.log("Error saving walk:", error);
+  //   }
+  // };
 
   useEffect(() => {
     const fetchPublicWalks = async () => {
@@ -299,6 +348,8 @@ export const Maps = () => {
       {label}
     </div>
   );
+
+ 
 
   //R E T U R N / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
@@ -460,26 +511,27 @@ export const Maps = () => {
     <p>distance: {selectedMarker.walk.totalDistance.toFixed(2)} km</p>
     <p>date: {getDateDisplay(selectedMarker.walk.dateOfWalk)}</p>
     <p>time: {getDateDisplay(selectedMarker.walk.timeOfWalk, true)}</p>
-    <p>pets: {selectedMarker.walk.addedPets.join(" ," )}</p>
-    
-    <p>pets:</p>
-    <ul>
-      {selectedMarker.walk.addedPets.map((petId,) => {
-        const pet = myAnimalsList.find((pet) => pet.id === petId);
+
    
-
-
+  
+    <ul>
+      {selectedMarker.walk.addedPets.map((item) => {
+        
+       
         return (
-          <li key={petId}>
-            {pet && (
+          <li key={item.id}>
+            {item && (
               <>
                 <img
                   className={classes.renderedPic}
-                  src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
-                  alt={`${pet.name}`}
+                  src={item.photoURL ? item.photoURL : "/Img/profilePic.png"}
+                  alt={`${item.name}`}
                 />
-                <div>{pet.name}</div>
-                <div>{pet.id}</div>
+               
+                
+                <div>{item.name}</div>
+                <div>{item.temper}</div>
+                <div>{item.sex}</div>
               </>
             )}
           </li>
