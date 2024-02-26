@@ -30,7 +30,7 @@ export type WalkData = {
   dateOfWalk: Date | null;
   timeOfWalk: Date | null;
   totalDistance: number;
-  addedPets: number[];
+  addedPets: number [];
 };
 
 export const Maps = () => {
@@ -164,6 +164,7 @@ export const Maps = () => {
     }
   };
 
+
   const handleTimeChange = (time: Date) => {
     setSelectedTime(time);
   };
@@ -180,6 +181,7 @@ export const Maps = () => {
   };
 
   const handleSaveWalkAndFetch = async () => {
+    
     const walkData: WalkData = {
       id: Date.now(),
       username: `${username}`,
@@ -286,7 +288,7 @@ export const Maps = () => {
     <div {...innerProps}>
       <img
         src={data.photoURL ? data.photoURL : "/Img/profilePic.png"}
-        alt={`${data.label} Photo`}
+        alt={`${data.label}`}
         style={{
           width: "30px",
           height: "30px",
@@ -458,37 +460,28 @@ export const Maps = () => {
     <p>distance: {selectedMarker.walk.totalDistance.toFixed(2)} km</p>
     <p>date: {getDateDisplay(selectedMarker.walk.dateOfWalk)}</p>
     <p>time: {getDateDisplay(selectedMarker.walk.timeOfWalk, true)}</p>
+    <p>pets: {selectedMarker.walk.addedPets.join(" ," )}</p>
+    
     <p>pets:</p>
     <ul>
-      {selectedMarker.walk.addedPets.map((petId) => {
+      {selectedMarker.walk.addedPets.map((petId,) => {
         const pet = myAnimalsList.find((pet) => pet.id === petId);
+   
+
+
         return (
           <li key={petId}>
             {pet && (
-              <img
-                className={classes.renderedPic}
-                src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
-                alt={`${pet.name} Photo`}
-              />
+              <>
+                <img
+                  className={classes.renderedPic}
+                  src={pet.photoURL ? pet.photoURL : "/Img/profilePic.png"}
+                  alt={`${pet.name}`}
+                />
+                <div>{pet.name}</div>
+                <div>{pet.id}</div>
+              </>
             )}
-            <div>
-              <div>
-                {pet?.name} -{" "}
-                {pet?.temper === "tiger"
-                  ? "🐅"
-                  : pet?.temper === "sloth"
-                  ? "🦥"
-                  : pet?.temper === "octopus"
-                  ? "🐙"
-                  : pet?.temper}{" "}
-                -{" "}
-                {pet?.sex === "female"
-                  ? "♀️"
-                  : pet?.sex === "male"
-                  ? "♂️"
-                  : pet?.sex}{" "}
-              </div>
-            </div>
           </li>
         );
       })}
