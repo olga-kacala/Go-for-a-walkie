@@ -61,14 +61,15 @@ export const Maps = () => {
   const [addedPets, setAddedPets] = useState<number[]>([]);
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
+  const [joinWalk, setJoinWalk] = useState<boolean>(false);
   const [selectedMarker, setSelectedMarker] = useState<{
     marker: { lat: number; lng: number; id: number };
     walk: WalkData;
   } | null>(null);
   const navigate = useNavigate();
   const redDotIconUrl = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-  const blueDotIconUrl = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
-
+  const blueDotIconUrl =
+    "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -306,6 +307,18 @@ export const Maps = () => {
     </div>
   );
 
+  const handleJoinWalk = () => {
+    console.log("join")
+    setJoinWalk(true);
+  }
+
+  const handleDeleteWalk = () => {
+    const walksCollectionRef = collection(firebaseDb, "Public Walks");
+    const walkDocRef = doc(walksCollectionRef, selectedMarker?.walk.id.toString());
+    deleteDoc(walkDocRef);
+    navigate("/RedirectMaps");
+  }
+
   //R E T U R N / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
   return (
@@ -504,6 +517,24 @@ export const Maps = () => {
                       );
                     })}
                   </ul>
+                  {username !== selectedMarker.walk.walkCreator && (
+                    <button className={classes.buttonSave}
+                    onClick={()=>{handleJoinWalk()}}>
+                      Join
+                    </button>
+                  )}
+                  {joinWalk && (
+                    <div className={classes.distance}>
+                    HELLO
+                    </div>
+                  )}
+                  
+                  {username === selectedMarker.walk.walkCreator && (
+                    <button className={classes.buttonSave}
+                    onClick={()=>{handleDeleteWalk()}}>
+                      Delete
+                    </button>
+                  )}
                 </div>
               )}
             </>
