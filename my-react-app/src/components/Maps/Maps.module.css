@@ -28,10 +28,14 @@
   left: 70vw;
 }
 
-.walkInfo ul{
-  list-style-type: none; 
+.walkInfo ul {
+  list-style-type: none;
   padding: 0;
   text-align: center;
+}
+
+.walkInfo li {
+  padding-bottom: 10px;
 }
 
 .renderedList {
@@ -41,10 +45,10 @@
 }
 
 .renderedPic {
-width: 100px;
-height: auto;  
-margin: 0;
-border-radius: 50%;
+  width: 100px;
+  height: auto;
+  margin: 0;
+  border-radius: 50%;
 }
 
 .walksContainer {

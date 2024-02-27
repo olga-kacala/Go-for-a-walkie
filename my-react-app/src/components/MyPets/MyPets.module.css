@@ -24,7 +24,8 @@
   margin: 0px;
 }
 
-.BirthdayContainer a, .BirthdayText  {
+.BirthdayContainer a,
+.BirthdayText {
   text-decoration: none;
   color: white;
   margin: 0;

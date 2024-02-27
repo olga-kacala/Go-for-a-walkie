@@ -11,18 +11,21 @@
 }
 
 .helloUser {
-  background: linear-gradient(346deg, rgba(255, 110, 159, 1) 5%, rgba(238, 249, 250, 1) 24%, rgba(122, 146, 254, 1) 93%);
+  background: linear-gradient(
+    346deg,
+    rgba(255, 110, 159, 1) 5%,
+    rgba(238, 249, 250, 1) 24%,
+    rgba(122, 146, 254, 1) 93%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .loggedLinks > *,
-.nav > *
- {
+.nav > * {
   padding: 0 25px;
 }
-
 
 h1,
 p {
@@ -37,8 +40,8 @@ p {
 
 .nav {
   display: flex;
-  align-items: center; 
-  justify-content: space-evenly; 
+  align-items: center;
+  justify-content: space-evenly;
   margin: 0px;
   text-align: end;
   font-weight: 700;
@@ -68,10 +71,9 @@ p {
   .title {
     font-size: 30px;
   }
-
 }
 
-@media (min-width: 451px) and (max-width: 1000px){
+@media (min-width: 451px) and (max-width: 1000px) {
   .secondTitle {
     font-size: 14px;
   }
@@ -85,20 +87,16 @@ p {
     height: 24vh;
   }
 
-  .loggedLinks >*, .helloUser {
+  .loggedLinks > *,
+  .helloUser {
     padding: 0 6px;
-   
   }
 
   .title {
     font-size: 30px;
   }
 
-.nav > *
- {
-  padding: 0;
+  .nav > * {
+    padding: 0;
+  }
 }
-
-}
-
-

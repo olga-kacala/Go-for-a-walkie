@@ -124,7 +124,7 @@ export const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
         photoURL,
         setPhotoURL,
         dateOfWalk,
-        setDateOfWalk
+        setDateOfWalk,
       }}
     >
       {children}

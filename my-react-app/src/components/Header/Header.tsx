@@ -7,8 +7,7 @@ import { firebaseAuth } from "../../App";
 import { Weather } from "../Weather/Weather";
 
 export function Header(): JSX.Element {
-  const { isLogged, setIsLogged, username, logoPop } =
-    useContext(AppContext);
+  const { isLogged, setIsLogged, username, logoPop } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleLogout = async (): Promise<void> => {
@@ -33,20 +32,21 @@ export function Header(): JSX.Element {
 
         {isLogged ? (
           <nav className={classes.nav}>
-            <Weather/>
-            <span className={classes.helloUser}>Hello, {username && username.split("@")[0]}!</span>
+            <Weather />
+            <span className={classes.helloUser}>
+              Hello, {username && username.split("@")[0]}!
+            </span>
             <div className={classes.loggedLinks}>
-            <Link className={classes.link} to="/Maps">
-              Maps
-            </Link>
-            <Link className={bumpClasses} to="/MyPets">
-              My Pets
-            </Link>
-            <Link className={classes.link} to="*" onClick={handleLogout}>
-              Log out
-            </Link>
+              <Link className={classes.link} to="/Maps">
+                Maps
+              </Link>
+              <Link className={bumpClasses} to="/MyPets">
+                My Pets
+              </Link>
+              <Link className={classes.link} to="*" onClick={handleLogout}>
+                Log out
+              </Link>
             </div>
-            
           </nav>
         ) : (
           <nav className={`${classes.nav} ${classes.flexContainer}`}>

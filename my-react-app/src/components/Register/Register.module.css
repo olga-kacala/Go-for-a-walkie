@@ -6,7 +6,6 @@
   padding: 0;
   align-items: center;
   justify-content: center;
-  
 }
 
 .PolaBackgr {
@@ -20,7 +19,6 @@
 .inputContainer {
   position: absolute;
 }
-
 
 .inputContainer h2 {
   color: white;
@@ -86,9 +84,9 @@
 
 @media (min-width: 451px) and (max-width: 1000px) {
   .login {
-    background-image:  url("../../../public/Img/Doggos.jpg");
+    background-image: url("../../../public/Img/Doggos.jpg");
     background-size: contain;
-    background-position:left;
+    background-position: left;
     background-repeat: no-repeat;
     height: 61vh;
   }
@@ -100,7 +98,7 @@
   .inputContainer {
     display: flex;
     flex-direction: column;
-    height:61vh;
+    height: 61vh;
     justify-content: space-evenly;
     align-items: center;
     margin: 0;
@@ -120,7 +118,7 @@
     color: #333;
   }
 
-  .button  {
+  .button {
     margin: 5px 0;
     padding: 5px;
     min-width: 120px;
@@ -128,6 +126,5 @@
 
   .passwordToggle {
     min-width: 120px;
-
   }
 }

@@ -34,8 +34,8 @@ export type WalkData = {
     id: number;
     name: string;
     sex: string;
-  temper: string;
-  photoURL: string | null; 
+    temper: string;
+    photoURL: string | null;
   }[];
 };
 
@@ -170,7 +170,6 @@ export const Maps = () => {
     }
   };
 
-
   const handleTimeChange = (time: Date) => {
     setSelectedTime(time);
   };
@@ -180,13 +179,12 @@ export const Maps = () => {
     return {
       id: petId,
       name: pet?.name || "Unknown",
-      temper: pet?.temper || "",  // Provide a default value, e.g., an empty string
-      sex: pet?.sex || "",       // Provide a default value, e.g., an empty string
+      temper: pet?.temper || "",
+      sex: pet?.sex || "",
       photoURL: pet?.photoURL || null,
     };
   });
-  
-  
+
   const walkData: WalkData = {
     id: Date.now(),
     username: `${username}`,
@@ -198,23 +196,10 @@ export const Maps = () => {
     addedPets: addedPetsData,
   };
   const handleSaveWalkAndFetch = async () => {
-    
-  
-    // const walkData: WalkData = {
-    //   id: Date.now(),
-    //   username: `${username}`,
-    //   walkCreator: `${username}`,
-    //   markers: markers,
-    //   dateOfWalk: dateOfWalk instanceof Date ? dateOfWalk : null,
-    //   timeOfWalk: selectedTime instanceof Date ? selectedTime : null,
-    //   totalDistance,
-    //   addedPets: addedPetsData,
-    // };
-  
     try {
       const walksCollectionRef = collection(firebaseDb, "Public Walks");
       const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
-  
+
       await setDoc(walkDocRef, { ...walkData });
       setStartingMarker(null);
       setMarkers([]);
@@ -227,37 +212,6 @@ export const Maps = () => {
       console.log("Error saving walk:", error);
     }
   };
-  
-
-  // const handleSaveWalkAndFetch = async () => {
-    
-  //   const walkData: WalkData = {
-  //     id: Date.now(),
-  //     username: `${username}`,
-  //     walkCreator: `${username}`,
-  //     markers: markers,
-  //     dateOfWalk: dateOfWalk instanceof Date ? dateOfWalk : null,
-  //     timeOfWalk: selectedTime instanceof Date ? selectedTime : null,
-  //     totalDistance,
-  //     addedPets,
-  //   };
-
-  //   try {
-  //     const walksCollectionRef = collection(firebaseDb, "Public Walks");
-  //     const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
-
-  //     await setDoc(walkDocRef, { ...walkData });
-  //     setStartingMarker(null);
-  //     setMarkers([]);
-  //     setTotalDistance(0);
-  //     setAddedPets([]);
-  //     setDateOfWalk(null);
-  //     setSelectedTime(new Date());
-  //     navigate("/RedirectMaps");
-  //   } catch (error) {
-  //     console.log("Error saving walk:", error);
-  //   }
-  // };
 
   useEffect(() => {
     const fetchPublicWalks = async () => {
@@ -349,8 +303,6 @@ export const Maps = () => {
     </div>
   );
 
- 
-
   //R E T U R N / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
   return (
@@ -365,7 +317,6 @@ export const Maps = () => {
           }
           zoom={10}
           onClick={handleMapClick}
-
         >
           {userLocation && startingMarker && (
             <>
@@ -505,41 +456,53 @@ export const Maps = () => {
                 </React.Fragment>
               ))}
 
-{selectedMarker && (
-  <div className={classes.walkInfo}>
-    <p>walker: {selectedMarker.walk.walkCreator}</p>
-    <p>distance: {selectedMarker.walk.totalDistance.toFixed(2)} km</p>
-    <p>date: {getDateDisplay(selectedMarker.walk.dateOfWalk)}</p>
-    <p>time: {getDateDisplay(selectedMarker.walk.timeOfWalk, true)}</p>
+              {selectedMarker && (
+                <div className={classes.walkInfo}>
+                  <p>walker: {selectedMarker.walk.walkCreator}</p>
+                  <p>
+                    distance: {selectedMarker.walk.totalDistance.toFixed(2)} km
+                  </p>
+                  <p>date: {getDateDisplay(selectedMarker.walk.dateOfWalk)}</p>
+                  <p>
+                    time: {getDateDisplay(selectedMarker.walk.timeOfWalk, true)}
+                  </p>
 
-   
-  
-    <ul>
-      {selectedMarker.walk.addedPets.map((item) => {
-        
-       
-        return (
-          <li key={item.id}>
-            {item && (
-              <>
-                <img
-                  className={classes.renderedPic}
-                  src={item.photoURL ? item.photoURL : "/Img/profilePic.png"}
-                  alt={`${item.name}`}
-                />
-               
-                
-                <div>{item.name}</div>
-                <div>{item.temper}</div>
-                <div>{item.sex}</div>
-              </>
-            )}
-          </li>
-        );
-      })}
-    </ul>
-  </div>
-)}
+                  <ul>
+                    {selectedMarker.walk.addedPets.map((item) => {
+                      return (
+                        <li key={item.id}>
+                          {item && (
+                            <>
+                              <img
+                                className={classes.renderedPic}
+                                src={
+                                  item.photoURL
+                                    ? item.photoURL
+                                    : "/Img/profilePic.png"
+                                }
+                                alt={`${item.name}`}
+                              />
+                              <div>{item.name}</div>
+                              {item?.temper === "tiger"
+                                ? "🐅"
+                                : item?.temper === "sloth"
+                                ? "🦥"
+                                : item?.temper === "octopus"
+                                ? "🐙"
+                                : item?.temper}{" "}
+                              {item?.sex === "female"
+                                ? "♀️"
+                                : item?.sex === "male"
+                                ? "♂️"
+                                : item?.sex}{" "}
+                            </>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
             </>
           )}
         </GoogleMap>

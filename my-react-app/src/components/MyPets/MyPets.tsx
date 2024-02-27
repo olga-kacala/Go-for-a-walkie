@@ -330,10 +330,6 @@ export function MyPets(): JSX.Element {
                   <span className={classes.title}>temper: </span>{" "}
                   <span className={classes.child}>{pet.temper}</span>
                 </div>
-                <div>
-                  <span className={classes.title}>id: </span>{" "}
-                  <span className={classes.child}>{pet.id}</span>
-                </div>
                 <button
                   className={classes.delete}
                   onClick={() => handleDelete(pet)}

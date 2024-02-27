@@ -1,14 +1,11 @@
 import classes from "./Login.module.css";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../../App";
 import { Link } from "react-router-dom";
 import React from "react";
 import { AppContext } from "../Providers/Providers";
-
-
-
 
 export function Login(): JSX.Element {
   const { setIsLogged } = useContext(AppContext);
@@ -39,13 +36,9 @@ export function Login(): JSX.Element {
     }
   };
 
-
-  
-
   return (
     <div className={classes.login}>
-      <div className={classes.PolaBackgr}>
-      </div>
+      <div className={classes.PolaBackgr}></div>
       <div className={classes.inputContainer}>
         <h2>Please Log in</h2>
         <form>
@@ -86,16 +79,11 @@ export function Login(): JSX.Element {
           </button>
         </form>
         <div className={classes.account}>
-        <h2>
-          {" "}
-          Don't have an account?{" "}
-          </h2>
+          <h2> Don't have an account? </h2>
           <Link className={classes.button} to="/Register">
             Create Account
           </Link>
-        
         </div>
-     
       </div>
     </div>
   );
