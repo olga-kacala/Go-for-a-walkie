@@ -67,7 +67,7 @@ export const Maps = () => {
   } | null>(null);
   const navigate = useNavigate();
   const redDotIconUrl = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-  const blueDotIconUrl = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+  const blueDotIconUrl = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
 
   useEffect(() => {
