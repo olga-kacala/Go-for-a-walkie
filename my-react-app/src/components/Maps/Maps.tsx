@@ -67,6 +67,7 @@ export const Maps = () => {
   } | null>(null);
   const navigate = useNavigate();
   const redDotIconUrl = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
+  const blueDotIconUrl = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
 
   useEffect(() => {
@@ -327,7 +328,7 @@ export const Maps = () => {
                   key={marker.id}
                   position={{ lat: marker.lat, lng: marker.lng }}
                   icon={{
-                    url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                    url: blueDotIconUrl,
                     scaledSize: new window.google.maps.Size(40, 40),
                   }}
                 />
@@ -428,7 +429,7 @@ export const Maps = () => {
                         icon={{
                           url:
                             walk.username === username
-                              ? "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                              ? blueDotIconUrl
                               : redDotIconUrl,
                           scaledSize: new window.google.maps.Size(40, 40),
                         }}
