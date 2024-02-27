@@ -66,6 +66,8 @@ export const Maps = () => {
     walk: WalkData;
   } | null>(null);
   const navigate = useNavigate();
+  const redDotIconUrl = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
+
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -427,7 +429,7 @@ export const Maps = () => {
                           url:
                             walk.username === username
                               ? "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                              : "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+                              : redDotIconUrl,
                           scaledSize: new window.google.maps.Size(40, 40),
                         }}
                         onClick={() => handleMarkerClick(marker.id, walk)}
