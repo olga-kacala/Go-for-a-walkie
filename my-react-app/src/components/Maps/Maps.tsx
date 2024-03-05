@@ -610,37 +610,35 @@ export const Maps = () => {
                           Fellow Walkers: {selectedMarker.walk.joiners.length}
                         </p>
                         {selectedMarker.walk.joiners.map((pet) => (
-                          <div>
-                            <li key={pet.id}>
-                              {pet && (
-                                <>
-                                  <img
-                                    className={classes.renderedPic}
-                                    src={
-                                      pet.photoURL
-                                        ? pet.photoURL
-                                        : "/Img/profilePic.png"
-                                    }
-                                    alt={`${pet.name}`}
-                                  />
-                                  <div>{pet.name}</div>
-                                  {pet?.temper === "tiger"
-                                    ? "🐅"
-                                    : pet?.temper === "sloth"
-                                    ? "🦥"
-                                    : pet?.temper === "octopus"
-                                    ? "🐙"
-                                    : pet?.temper}{" "}
-                                  {pet?.sex === "female"
-                                    ? "♀️"
-                                    : pet?.sex === "male"
-                                    ? "♂️"
-                                    : pet?.sex}{" "}
-                                  <div>walker: {pet.walker.split("@")[0]}</div>
-                                </>
-                              )}
-                            </li>
-                          </div>
+                          <li key={pet.id}>
+                            {pet && (
+                              <>
+                                <img
+                                  className={classes.renderedPic}
+                                  src={
+                                    pet.photoURL
+                                      ? pet.photoURL
+                                      : "/Img/profilePic.png"
+                                  }
+                                  alt={`${pet.name}`}
+                                />
+                                <div>{pet.name}</div>
+                                {pet?.temper === "tiger"
+                                  ? "🐅"
+                                  : pet?.temper === "sloth"
+                                  ? "🦥"
+                                  : pet?.temper === "octopus"
+                                  ? "🐙"
+                                  : pet?.temper}{" "}
+                                {pet?.sex === "female"
+                                  ? "♀️"
+                                  : pet?.sex === "male"
+                                  ? "♂️"
+                                  : pet?.sex}{" "}
+                                <p>walker: {pet.walker.split("@")[0]}</p>
+                              </>
+                            )}
+                          </li>
                         ))}
                       </div>
                     )}
