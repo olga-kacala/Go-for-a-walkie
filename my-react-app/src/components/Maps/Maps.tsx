@@ -18,7 +18,7 @@ import {
 import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Timestamp } from "firebase/firestore";
+import { Timestamp, updateDoc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 
@@ -31,6 +31,13 @@ export type WalkData = {
   timeOfWalk: Date | null;
   totalDistance: number;
   addedPets: {
+    id: number;
+    name: string;
+    sex: string;
+    temper: string;
+    photoURL: string | null;
+  }[];
+  joiners: {
     id: number;
     name: string;
     sex: string;
@@ -58,10 +65,12 @@ export const Maps = () => {
   >([]);
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const [selectedPetIds, setSelectedPetIDs] = useState<number[]>([]);
+  const [selectedJoinPet, setSelectedJoinPet] = useState<number[]>([]);
   const [addedPets, setAddedPets] = useState<number[]>([]);
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
   const [joinWalk, setJoinWalk] = useState<boolean>(false);
+  const [selectedWalk, setSelectedWalk] = useState<WalkData | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<{
     marker: { lat: number; lng: number; id: number };
     walk: WalkData;
@@ -189,6 +198,17 @@ export const Maps = () => {
     };
   });
 
+  const addedJoinersData = selectedJoinPet.map((petId) => {
+    const pet = myAnimalsList.find((pet) => pet.id === petId);
+    return {
+      id: petId,
+      name: pet?.name || "Unknown",
+      temper: pet?.temper || "",
+      sex: pet?.sex || "",
+      photoURL: pet?.photoURL || null,
+    };
+  });
+
   const walkData: WalkData = {
     id: Date.now(),
     username: `${username}`,
@@ -198,19 +218,34 @@ export const Maps = () => {
     timeOfWalk: selectedTime instanceof Date ? selectedTime : null,
     totalDistance,
     addedPets: addedPetsData,
+    joiners: addedJoinersData,
   };
+
   const handleSaveWalkAndFetch = async () => {
     try {
       const walksCollectionRef = collection(firebaseDb, "Public Walks");
       const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
 
-      await setDoc(walkDocRef, { ...walkData });
+      // Check if the walk already exists
+      const walkDoc = await getDoc(walkDocRef);
+      if (walkDoc.exists()) {
+        // If it exists, update the joiners list
+        await updateDoc(walkDocRef, {
+          joiners: walkData.joiners,
+        });
+      } else {
+        // If it doesn't exist, create a new document
+        await setDoc(walkDocRef, { ...walkData });
+      }
+
       setStartingMarker(null);
       setMarkers([]);
       setTotalDistance(0);
       setAddedPets([]);
       setDateOfWalk(null);
       setSelectedTime(new Date());
+      setSelectedJoinPet([]);
+      setJoinWalk(false);
       navigate("/RedirectMaps");
     } catch (error) {
       console.log("Error saving walk:", error);
@@ -307,17 +342,65 @@ export const Maps = () => {
     </div>
   );
 
-  const handleJoinWalk = () => {
-    console.log("join")
-    setJoinWalk(true);
-  }
+  const handleJoinWalk = (walk: WalkData | null) => {
+    if (walk) {
+      setSelectedWalk(walk);
+      setJoinWalk(true);
+    }
+  };
+
+  const handleAddJoiners = async () => {
+    try {
+      if (selectedJoinPet.length > 0 && selectedWalk) {
+        const walksCollectionRef = collection(firebaseDb, "Public Walks");
+        const walkDocRef = doc(walksCollectionRef, selectedWalk.id.toString());
+
+        // Check if the walk already exists
+        const walkDoc = await getDoc(walkDocRef);
+        if (walkDoc.exists()) {
+          // If it exists, update the joiners list
+          const updatedJoiners = [
+            ...selectedWalk.joiners,
+            ...selectedJoinPet.map((petId) => {
+              const pet = myAnimalsList.find((pet) => pet.id === petId);
+              return {
+                id: petId,
+                name: pet?.name || "Unknown",
+                temper: pet?.temper || "",
+                sex: pet?.sex || "",
+                photoURL: pet?.photoURL || null,
+              };
+            }),
+          ];
+
+          // Update the existing walk with the new joiners
+          await updateDoc(walkDocRef, { joiners: updatedJoiners });
+
+          setSelectedJoinPet([]);
+          setJoinWalk(false);
+          navigate("/RedirectMaps");
+        } else {
+          console.log("Walk document does not exist.");
+        }
+      } else {
+        console.log(
+          "No pets selected to join the walk or selected walk is null"
+        );
+      }
+    } catch (error) {
+      console.log("Error adding joiners:", error);
+    }
+  };
 
   const handleDeleteWalk = () => {
     const walksCollectionRef = collection(firebaseDb, "Public Walks");
-    const walkDocRef = doc(walksCollectionRef, selectedMarker?.walk.id.toString());
+    const walkDocRef = doc(
+      walksCollectionRef,
+      selectedMarker?.walk.id.toString()
+    );
     deleteDoc(walkDocRef);
     navigate("/RedirectMaps");
-  }
+  };
 
   //R E T U R N / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
@@ -517,21 +600,99 @@ export const Maps = () => {
                       );
                     })}
                   </ul>
+                  {selectedMarker.walk.joiners.length >= 0 && (
+                    <div>
+                      Joiners: {selectedMarker.walk.joiners.length}
+                      {selectedMarker.walk.joiners.map((pet) => (
+                        <li key={pet.id}>
+                          {pet && (
+                            <>
+                              <img
+                                className={classes.renderedPic}
+                                src={
+                                  pet.photoURL
+                                    ? pet.photoURL
+                                    : "/Img/profilePic.png"
+                                }
+                                alt={`${pet.name}`}
+                              />
+                              <div>{pet.name}</div>
+                              {pet?.temper === "tiger"
+                                ? "🐅"
+                                : pet?.temper === "sloth"
+                                ? "🦥"
+                                : pet?.temper === "octopus"
+                                ? "🐙"
+                                : pet?.temper}{" "}
+                              {pet?.sex === "female"
+                                ? "♀️"
+                                : pet?.sex === "male"
+                                ? "♂️"
+                                : pet?.sex}{" "}
+                            </>
+                          )}
+                        </li>
+                      ))}
+                    </div>
+                  )}
+
                   {username !== selectedMarker.walk.walkCreator && (
-                    <button className={classes.buttonSave}
-                    onClick={()=>{handleJoinWalk()}}>
+                    <button
+                      className={classes.buttonSave}
+                      onClick={() => {
+                        handleJoinWalk(selectedMarker?.walk);
+                      }}
+                    >
                       Join
                     </button>
                   )}
                   {joinWalk && (
-                    <div className={classes.distance}>
-                    HELLO
-                    </div>
+                    <>
+                      <div className={classes.walkCreator}>Who will join?</div>
+                      <Select
+                        className={classes.walksContainer}
+                        isMulti
+                        options={myAnimalsList.map((pet) => ({
+                          label: `${pet.name}`,
+                          value: pet.id,
+                          photoURL: pet.photoURL,
+                        }))}
+                        value={selectedJoinPet.map((petId) => ({
+                          label: `${petId}`,
+                          value: petId,
+                          photoURL: myAnimalsList.find(
+                            (pet) => pet.id === petId
+                          )?.photoURL,
+                        }))}
+                        onChange={(selectedOptions) => {
+                          const selectedJoiners = selectedOptions.map(
+                            (opt) => opt.value
+                          );
+                          setSelectedJoinPet(selectedJoiners);
+                        }}
+                        onMenuClose={joinWalk ? handlePetClick : undefined}
+                        components={{ Option: CustomOption }}
+                      />
+                      <div className={classes.saveContainer}>
+                        <button
+                          className={classes.buttonSave}
+                          onClick={() => {
+                            handleAddJoiners();
+                          }}
+                        >
+                          Add Pet to walk
+                        </button>
+                      </div>
+                    </>
                   )}
-                  
+
                   {username === selectedMarker.walk.walkCreator && (
-                    <button className={classes.buttonSave}
-                    onClick={()=>{handleDeleteWalk()}}>
+                    <button
+                      className={classes.buttonSave}
+                      onClick={() => {
+                        handleDeleteWalk();
+                      }}
+                    >
                       Delete
                     </button>
                   )}
