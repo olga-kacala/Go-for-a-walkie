@@ -70,22 +70,6 @@
   align-items: center;
 }
 
-.buttonX {
-  display: flex;
-  background-color: #333;
-  color: #fff;
-  text-decoration: none;
-  padding: 9px 9px;
-  border-radius: 5px;
-  font-weight: bold;
-  font-family: "Dosis", sans-serif;
-  border: none;
-  font-size: inherit;
-  letter-spacing: 2px;
-  cursor: pointer;
-  width: min-content;
-}
-
 .saveContainer {
   display: flex;
   align-items: center;
@@ -122,6 +106,21 @@
   height: 20px;
   padding: 0;
   margin: 0;
+}
+
+.joiners {
+ display: flex;
+  justify-content: center;
+  background: rgba(122, 146, 254);
+  color: white;
+  padding: 10px 30px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-family: "Dosis", sans-serif;
+  border: none;
+  font-size: inherit;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
 }
 
 @media (max-width: 450px) {

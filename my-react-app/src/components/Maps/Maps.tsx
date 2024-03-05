@@ -43,6 +43,7 @@ export type WalkData = {
     sex: string;
     temper: string;
     photoURL: string | null;
+    walker: string;
   }[];
 };
 
@@ -206,6 +207,7 @@ export const Maps = () => {
       temper: pet?.temper || "",
       sex: pet?.sex || "",
       photoURL: pet?.photoURL || null,
+      walker: username || "",
     };
   });
 
@@ -369,6 +371,7 @@ export const Maps = () => {
                 temper: pet?.temper || "",
                 sex: pet?.sex || "",
                 photoURL: pet?.photoURL || null,
+                walker: username,
               };
             }),
           ];
@@ -557,7 +560,7 @@ export const Maps = () => {
 
               {selectedMarker && (
                 <div className={classes.walkInfo}>
-                  <p>walker: {selectedMarker.walk.walkCreator}</p>
+                  <p>walker: {selectedMarker.walk.walkCreator.split("@")[0]}</p>
                   <p>
                     distance: {selectedMarker.walk.totalDistance.toFixed(2)} km
                   </p>
@@ -600,41 +603,48 @@ export const Maps = () => {
                       );
                     })}
                   </ul>
-                  {selectedMarker.walk.joiners.length >= 0 && (
-                    <div>
-                      Joiners: {selectedMarker.walk.joiners.length}
-                      {selectedMarker.walk.joiners.map((pet) => (
-                        <li key={pet.id}>
-                          {pet && (
-                            <>
-                              <img
-                                className={classes.renderedPic}
-                                src={
-                                  pet.photoURL
-                                    ? pet.photoURL
-                                    : "/Img/profilePic.png"
-                                }
-                                alt={`${pet.name}`}
-                              />
-                              <div>{pet.name}</div>
-                              {pet?.temper === "tiger"
-                                ? "🐅"
-                                : pet?.temper === "sloth"
-                                ? "🦥"
-                                : pet?.temper === "octopus"
-                                ? "🐙"
-                                : pet?.temper}{" "}
-                              {pet?.sex === "female"
-                                ? "♀️"
-                                : pet?.sex === "male"
-                                ? "♂️"
-                                : pet?.sex}{" "}
-                            </>
-                          )}
-                        </li>
-                      ))}
-                    </div>
-                  )}
+                  <ul>
+                    {selectedMarker.walk.joiners.length >= 0 && (
+                      <div>
+                        <p className={classes.joiners}>
+                          Fellow Walkers: {selectedMarker.walk.joiners.length}
+                        </p>
+                        {selectedMarker.walk.joiners.map((pet) => (
+                          <div>
+                            <li key={pet.id}>
+                              {pet && (
+                                <>
+                                  <img
+                                    className={classes.renderedPic}
+                                    src={
+                                      pet.photoURL
+                                        ? pet.photoURL
+                                        : "/Img/profilePic.png"
+                                    }
+                                    alt={`${pet.name}`}
+                                  />
+                                  <div>{pet.name}</div>
+                                  {pet?.temper === "tiger"
+                                    ? "🐅"
+                                    : pet?.temper === "sloth"
+                                    ? "🦥"
+                                    : pet?.temper === "octopus"
+                                    ? "🐙"
+                                    : pet?.temper}{" "}
+                                  {pet?.sex === "female"
+                                    ? "♀️"
+                                    : pet?.sex === "male"
+                                    ? "♂️"
+                                    : pet?.sex}{" "}
+                                  <div>walker: {pet.walker.split("@")[0]}</div>
+                                </>
+                              )}
+                            </li>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </ul>
 
                   {username !== selectedMarker.walk.walkCreator && (
                     <button
