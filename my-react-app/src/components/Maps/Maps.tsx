@@ -570,8 +570,7 @@ export const Maps = () => {
                   </p>
 
                   <ul>
-                    {selectedMarker.walk.addedPets.map((item) => {
-                      return (
+                    {selectedMarker.walk.addedPets.map((item) =>  (
                         <li key={item.id}>
                           {item && (
                             <>
@@ -600,12 +599,12 @@ export const Maps = () => {
                             </>
                           )}
                         </li>
-                      );
-                    })}
+                      
+                    ))}
                   </ul>
                   <ul>
                     {selectedMarker.walk.joiners.length >= 0 && (
-                      <div>
+                      <>
                         <p className={classes.joiners}>
                           Fellow Walkers: {selectedMarker.walk.joiners.length}
                         </p>
@@ -640,7 +639,7 @@ export const Maps = () => {
                             )}
                           </li>
                         ))}
-                      </div>
+                      </>
                     )}
                   </ul>
 
