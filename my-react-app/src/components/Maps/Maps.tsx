@@ -394,6 +394,7 @@ export const Maps = () => {
       console.log("Error adding joiners:", error);
     }
   };
+  
 
   const handleDeleteWalk = () => {
     const walksCollectionRef = collection(firebaseDb, "Public Walks");
@@ -655,7 +656,7 @@ export const Maps = () => {
                   )}
                   {joinWalk && (
                     <>
-                      <div className={classes.walkCreator}>Who will join?</div>
+                      <p>Who will join?</p>
                       <Select
                         className={classes.walksContainer}
                         isMulti
