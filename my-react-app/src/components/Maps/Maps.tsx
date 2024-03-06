@@ -394,7 +394,6 @@ export const Maps = () => {
       console.log("Error adding joiners:", error);
     }
   };
-  
 
   const handleDeleteWalk = () => {
     const walksCollectionRef = collection(firebaseDb, "Public Walks");
@@ -571,36 +570,35 @@ export const Maps = () => {
                   </p>
 
                   <ul>
-                    {selectedMarker.walk.addedPets.map((item) =>  (
-                        <li key={item.id}>
-                          {item && (
-                            <>
-                              <img
-                                className={classes.renderedPic}
-                                src={
-                                  item.photoURL
-                                    ? item.photoURL
-                                    : "/Img/profilePic.png"
-                                }
-                                alt={`${item.name}`}
-                              />
-                              <div>{item.name}</div>
-                              {item?.temper === "tiger"
-                                ? "🐅"
-                                : item?.temper === "sloth"
-                                ? "🦥"
-                                : item?.temper === "octopus"
-                                ? "🐙"
-                                : item?.temper}{" "}
-                              {item?.sex === "female"
-                                ? "♀️"
-                                : item?.sex === "male"
-                                ? "♂️"
-                                : item?.sex}{" "}
-                            </>
-                          )}
-                        </li>
-                      
+                    {selectedMarker.walk.addedPets.map((item) => (
+                      <li key={item.id}>
+                        {item && (
+                          <>
+                            <img
+                              className={classes.renderedPic}
+                              src={
+                                item.photoURL
+                                  ? item.photoURL
+                                  : "/Img/profilePic.png"
+                              }
+                              alt={`${item.name}`}
+                            />
+                            <div>{item.name}</div>
+                            {item?.temper === "tiger"
+                              ? "🐅"
+                              : item?.temper === "sloth"
+                              ? "🦥"
+                              : item?.temper === "octopus"
+                              ? "🐙"
+                              : item?.temper}{" "}
+                            {item?.sex === "female"
+                              ? "♀️"
+                              : item?.sex === "male"
+                              ? "♂️"
+                              : item?.sex}{" "}
+                          </>
+                        )}
+                      </li>
                     ))}
                   </ul>
                   <ul>
@@ -656,15 +654,22 @@ export const Maps = () => {
                   )}
                   {joinWalk && (
                     <>
-                      <p>Who will join?</p>
                       <Select
-                        className={classes.walksContainer}
+                        className={classes.joinersSelect}
                         isMulti
-                        options={myAnimalsList.map((pet) => ({
-                          label: `${pet.name}`,
-                          value: pet.id,
-                          photoURL: pet.photoURL,
-                        }))}
+                        options={myAnimalsList
+                          .filter(
+                            (pet) =>
+                              !selectedJoinPet.includes(pet.id) &&
+                              !selectedMarker?.walk.joiners
+                                .map((joiner) => joiner.id)
+                                .includes(pet.id)
+                          )
+                          .map((pet) => ({
+                            label: `${pet.name}`,
+                            value: pet.id,
+                            photoURL: pet.photoURL,
+                          }))}
                         value={selectedJoinPet.map((petId) => ({
                           label: `${petId}`,
                           value: petId,
