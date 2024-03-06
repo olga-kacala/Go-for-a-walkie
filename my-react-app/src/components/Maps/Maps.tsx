@@ -514,8 +514,8 @@ export const Maps = () => {
                       );
                       setSelectedPetIDs(selectedIds);
                     }}
-                    // onMenuClose={handlePetClick}
-                    onMenuClose={selectedTime ? handlePetClick : undefined}
+                    onMenuClose={handlePetClick}
+                    // onMenuClose={selectedTime ? handlePetClick : undefined}
                     components={{ Option: CustomOption }}
                   />
 
@@ -525,7 +525,7 @@ export const Maps = () => {
                       onClick={() => {
                         handleSaveWalkAndFetch();
                       }}
-                      disabled={!isDataSelected}
+                      // disabled={!isDataSelected}
                     >
                       Save
                     </button>
