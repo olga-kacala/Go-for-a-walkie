@@ -72,8 +72,7 @@ export const Maps = () => {
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
   const [joinWalk, setJoinWalk] = useState<boolean>(false);
   const [selectedWalk, setSelectedWalk] = useState<WalkData | null>(null);
-  const [isDataSelected, setIsDataSelected] = useState<boolean>(false);
-  
+
   const [selectedMarker, setSelectedMarker] = useState<{
     marker: { lat: number; lng: number; id: number };
     walk: WalkData;
@@ -164,15 +163,6 @@ export const Maps = () => {
     }
   };
 
-  // const handlePetClick = async () => {
-  //   if (selectedPetIds.length > 0) {
-  //     const uniqueSelectedPetIDs = selectedPetIds.filter(
-  //       (petId) => !addedPets.includes(petId)
-  //     );
-  //     setAddedPets((prevPets) => [...prevPets, ...uniqueSelectedPetIDs]);
-  //     setSelectedPetIDs([]);
-  //   }
-  // };
   const handlePetClick = async () => {
     if (selectedPetIds.length > 0) {
       const uniqueSelectedPetIDs = selectedPetIds.filter(
@@ -180,7 +170,6 @@ export const Maps = () => {
       );
       setAddedPets((prevPets) => [...prevPets, ...uniqueSelectedPetIDs]);
       setSelectedPetIDs([]);
-      updateDataSelectionStatus(); // Call the function after updating pet selection
     }
   };
 
@@ -196,13 +185,8 @@ export const Maps = () => {
     }
   };
 
-  // const handleTimeChange = (time: Date) => {
-  //   setSelectedTime(time);
-  // };
-
   const handleTimeChange = (time: Date) => {
     setSelectedTime(time);
-    updateDataSelectionStatus(); // Call the function after updating time selection
   };
 
   const addedPetsData = addedPets.map((petId) => {
@@ -422,14 +406,6 @@ export const Maps = () => {
     navigate("/RedirectMaps");
   };
 
-  const updateDataSelectionStatus = () => {
-    const isDateSelected = dateOfWalk instanceof Date;
-    const isTimeSelected = selectedTime instanceof Date;
-    const arePetsSelected = selectedPetIds.length > 0;
-
-    setIsDataSelected(isDateSelected && isTimeSelected && arePetsSelected);
-  };
-
   //R E T U R N / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
   return (
@@ -503,7 +479,7 @@ export const Maps = () => {
                       photoURL: pet.photoURL,
                     }))}
                     value={selectedPetIds.map((petId) => ({
-                      label: `${petId}`,
+                      label: myAnimalsList.find((pet) => pet.id === petId)?.name || "Unknown",
                       value: petId,
                       photoURL: myAnimalsList.find((pet) => pet.id === petId)
                         ?.photoURL,
@@ -515,7 +491,6 @@ export const Maps = () => {
                       setSelectedPetIDs(selectedIds);
                     }}
                     onMenuClose={handlePetClick}
-                    // onMenuClose={selectedTime ? handlePetClick : undefined}
                     components={{ Option: CustomOption }}
                   />
 
@@ -525,7 +500,6 @@ export const Maps = () => {
                       onClick={() => {
                         handleSaveWalkAndFetch();
                       }}
-                      // disabled={!isDataSelected}
                     >
                       Save
                     </button>
@@ -698,7 +672,7 @@ export const Maps = () => {
                             photoURL: pet.photoURL,
                           }))}
                         value={selectedJoinPet.map((petId) => ({
-                          label: `${petId}`,
+                          label: myAnimalsList.find((pet) => pet.id === petId)?.name || "Unknown",
                           value: petId,
                           photoURL: myAnimalsList.find(
                             (pet) => pet.id === petId
