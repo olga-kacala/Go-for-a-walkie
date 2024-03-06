@@ -132,9 +132,14 @@
 
   .walkInfo {
     max-width: 47vw;
-    top: 105px;
+    top: 10px;
     left: 50vw;
     padding: 1vw;
+  }
+
+  .joinersSelect, .walksContainer {
+    max-width: none;
+    width: auto;
   }
 }
 
@@ -150,9 +155,9 @@
 
   .walkInfo {
     max-width: 60vw;
+    max-height: 55vh;
     top: 5px;
-    left: 73vw;
-    padding: 1vw;
+    left: 63vw;
   }
 
   .walksContainer {

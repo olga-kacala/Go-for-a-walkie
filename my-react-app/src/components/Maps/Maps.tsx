@@ -502,14 +502,14 @@ export const Maps = () => {
                     >
                       Save
                     </button>
-                    <button className={classes.share}>
+                    {/* <button className={classes.share}>
                       <img
                         className={classes.shareLogo}
                         title="Share"
                         alt="share logo"
                         src={process.env.PUBLIC_URL + "/Img/share.png"}
                       />
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               )}
