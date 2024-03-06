@@ -73,6 +73,7 @@ export const Maps = () => {
   const [joinWalk, setJoinWalk] = useState<boolean>(false);
   const [selectedWalk, setSelectedWalk] = useState<WalkData | null>(null);
   const [isDataSelected, setIsDataSelected] = useState<boolean>(false);
+  
   const [selectedMarker, setSelectedMarker] = useState<{
     marker: { lat: number; lng: number; id: number };
     walk: WalkData;
@@ -513,7 +514,8 @@ export const Maps = () => {
                       );
                       setSelectedPetIDs(selectedIds);
                     }}
-                    onMenuClose={handlePetClick}
+                    // onMenuClose={handlePetClick}
+                    onMenuClose={selectedTime ? handlePetClick : undefined}
                     components={{ Option: CustomOption }}
                   />
 
@@ -523,7 +525,7 @@ export const Maps = () => {
                       onClick={() => {
                         handleSaveWalkAndFetch();
                       }}
-                      disabled={!isDataSelected} 
+                      disabled={!isDataSelected}
                     >
                       Save
                     </button>
