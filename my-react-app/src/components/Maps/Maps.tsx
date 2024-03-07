@@ -21,6 +21,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Timestamp, updateDoc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
+import { toast } from "react-toastify";
 
 export type WalkData = {
   id: number;
@@ -292,12 +293,35 @@ export const Maps = () => {
         });
 
         setPublicWalks(validWalks);
+
+        const userCreatedWalks = validWalks.filter(
+          (walk) => walk.walkCreator === username && walk.joiners.length > 0
+        );
+
+        userCreatedWalks.forEach((walk) => {
+          const petNames = walk.joiners.map((pet) => pet.name).join(", ");
+          toast.success(
+            `Exciting News! ${petNames} can't wait to join your walk on ${getDateDisplay(
+              walk.dateOfWalk
+            )}! 🐾 Let the adventure begin! 🚀`,
+            {
+              position: "top-right",
+              autoClose: 10000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            }
+          );
+        });
       } catch (error) {
         console.log("Error fetching public walks", error);
       }
     };
     fetchPublicWalks();
-  }, []);
+  }, [username]);
 
   // Functions to render the date from Firebase Timestamp object to JavaScript Date object
 
@@ -479,7 +503,9 @@ export const Maps = () => {
                       photoURL: pet.photoURL,
                     }))}
                     value={selectedPetIds.map((petId) => ({
-                      label: myAnimalsList.find((pet) => pet.id === petId)?.name || "Unknown",
+                      label:
+                        myAnimalsList.find((pet) => pet.id === petId)?.name ||
+                        "Unknown",
                       value: petId,
                       photoURL: myAnimalsList.find((pet) => pet.id === petId)
                         ?.photoURL,
@@ -672,7 +698,9 @@ export const Maps = () => {
                             photoURL: pet.photoURL,
                           }))}
                         value={selectedJoinPet.map((petId) => ({
-                          label: myAnimalsList.find((pet) => pet.id === petId)?.name || "Unknown",
+                          label:
+                            myAnimalsList.find((pet) => pet.id === petId)
+                              ?.name || "Unknown",
                           value: petId,
                           photoURL: myAnimalsList.find(
                             (pet) => pet.id === petId

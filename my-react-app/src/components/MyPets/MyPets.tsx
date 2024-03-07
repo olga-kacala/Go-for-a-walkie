@@ -280,6 +280,10 @@ export function MyPets(): JSX.Element {
       ) : (
         <div></div>
       )}
+      {/* <div>
+        <button onClick={notify}>Notify!</button>
+      
+      </div> */}
       <div className={classes.Pets}>
         <div className={classes.PetList}>
           <h2>{resultMyPets}</h2>

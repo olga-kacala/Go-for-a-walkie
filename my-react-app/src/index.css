@@ -1,4 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Dosis:wght@200;700&display=swap");
+:root {
+  --toastify-toast-width: 25vw;
+  --toastify-toast-min-height: 100px;
+  --toastify-color-progress-success: var(--toastify-color-success);
+  --toastify-color-success: linear-gradient(
+    346deg,
+    rgba(255, 110, 159, 1) 5%,
+    rgba(122, 146, 254, 1) 93%
+  );
+}
 
 body,
 html {

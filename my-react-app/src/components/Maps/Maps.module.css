@@ -20,7 +20,7 @@
 }
 
 .walkInfo {
- text-align: center;
+  text-align: center;
   background-color: rgba(255, 255, 255, 0.8);
   padding: 8px;
   border-radius: 4px;
@@ -97,7 +97,7 @@
   display: flex;
   padding: 10px;
   margin: 0;
-  background-color:rgba(122, 146, 254);
+  background-color: rgba(122, 146, 254);
   border-radius: 4px;
   border: none;
   margin: 10px 0;
@@ -110,7 +110,7 @@
 }
 
 .joiners {
- display: flex;
+  display: flex;
   justify-content: center;
   background: rgba(122, 146, 254);
   color: white;
@@ -137,7 +137,8 @@
     padding: 1vw;
   }
 
-  .joinersSelect, .walksContainer {
+  .joinersSelect,
+  .walksContainer {
     max-width: none;
     width: auto;
   }
