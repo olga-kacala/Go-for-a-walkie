@@ -301,9 +301,9 @@ export const Maps = () => {
         userCreatedWalks.forEach((walk) => {
           const petNames = walk.joiners.map((pet) => pet.name).join(", ");
           toast.success(
-            `Exciting News! ${petNames} can't wait to join your walk on ${getDateDisplay(
+            `Exciting News! ${petNames} will join your walk on ${getDateDisplay(
               walk.dateOfWalk
-            )}! 🐾 Let the adventure begin! 🚀`,
+            )}! 🐾❤️`,
             {
               position: "top-right",
               autoClose: 10000,

@@ -9,6 +9,7 @@ import { getDoc, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
 import { Timestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export type MyPetsProps = {
   upload: (
@@ -47,7 +48,6 @@ export function MyPets(): JSX.Element {
   } = useContext(AppContext);
   const [photo, setPhoto] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [BDToday, setBDToday] = useState(false);
   const currentUser = useAuth();
   const navigate = useNavigate();
 
@@ -154,9 +154,30 @@ export function MyPets(): JSX.Element {
 
   useEffect(() => {
     if (petWithBirthday) {
-      setBDToday(true);
-    } else {
-      setBDToday(false);
+      toast.info(
+        <div className={classes.BirthdayContainer}>
+          <a
+            href="https://www.amazon.com/Dog-Birthday-Gifts/s?k=Dog+Birthday+Gifts"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <p className={classes.BirthdayText}>
+              Today is {petWithBirthday?.name}'s birthday!🎉🎉🎂 Let's get the
+              purrfect birthday present! 🎁🦴
+            </p>
+          </a>
+        </div>,
+        {
+          position: "top-right",
+          autoClose: false,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
     }
   }, [myAnimalsList, petWithBirthday]);
 
@@ -262,28 +283,6 @@ export function MyPets(): JSX.Element {
 
   return (
     <div className={classes.myPetsContainer}>
-      {BDToday ? (
-        <div className={classes.BirthdayContainer}>
-          <h2 className={classes.BirthdayText}>
-            🎉🎉Today is {petWithBirthday?.name}'s birthday!🎉🎉🎂
-          </h2>
-          <a
-            href="https://www.amazon.com/Dog-Birthday-Gifts/s?k=Dog+Birthday+Gifts"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <h2 className={classes.BirthdayText}>
-              Lets get purrfect bd present 🎁🦴
-            </h2>
-          </a>
-        </div>
-      ) : (
-        <div></div>
-      )}
-      {/* <div>
-        <button onClick={notify}>Notify!</button>
-      
-      </div> */}
       <div className={classes.Pets}>
         <div className={classes.PetList}>
           <h2>{resultMyPets}</h2>

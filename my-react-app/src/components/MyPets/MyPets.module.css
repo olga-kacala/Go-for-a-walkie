@@ -14,16 +14,6 @@
   width: 100vw;
 }
 
-.BirthdayContainer {
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  background-color: #ff5500;
-  color: white;
-  flex-direction: column;
-  margin: 0px;
-}
-
 .BirthdayContainer a,
 .BirthdayText {
   text-decoration: none;

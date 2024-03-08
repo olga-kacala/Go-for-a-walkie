@@ -3,11 +3,19 @@
   --toastify-toast-width: 25vw;
   --toastify-toast-min-height: 100px;
   --toastify-color-progress-success: var(--toastify-color-success);
+  --toastify-icon-color-success: var(--toastify-color-icon);
   --toastify-color-success: linear-gradient(
     346deg,
     rgba(255, 110, 159, 1) 5%,
     rgba(122, 146, 254, 1) 93%
   );
+  --toastify-color-info: linear-gradient(
+    346deg,
+    rgba(255, 110, 159, 1) 5%,
+    rgba(122, 146, 254, 1) 93%
+  );
+  --toastify-color-icon: transparent;
+  --toastify-text-color-info: transparent;
 }
 
 body,
