@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { AppContext, Pet } from "../Providers/Providers";
 import classes from "./MyPets.module.css";
 import { firebaseDb, firebaseAuth } from "../../App";
@@ -10,6 +10,7 @@ import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
 import { Timestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import React from "react";
 
 export type MyPetsProps = {
   upload: (
@@ -19,6 +20,8 @@ export type MyPetsProps = {
     petId: number
   ) => Promise<string | null>;
 };
+
+type Id = string | number;
 
 export function MyPets(): JSX.Element {
   const {
@@ -139,47 +142,61 @@ export function MyPets(): JSX.Element {
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
   const currentMonth = currentDate.getMonth();
-  const petWithBirthday = myAnimalsList.find((pet) => {
-    if (pet.dateOfBirth) {
-      const petDateOfBirth =
-        pet.dateOfBirth instanceof Timestamp
-          ? pet.dateOfBirth.toDate()
-          : new Date(pet.dateOfBirth);
-      const petDay = petDateOfBirth.getDate();
-      const petMonth = petDateOfBirth.getMonth();
-      return petDay === currentDay && petMonth === currentMonth;
-    }
-    return false;
-  });
+
+
+  const toastIdRef = useRef<Id | null>(null);
 
   useEffect(() => {
-    if (petWithBirthday) {
-      toast.info(
-        <div className={classes.BirthdayContainer}>
-          <a
-            href="https://www.amazon.com/Dog-Birthday-Gifts/s?k=Dog+Birthday+Gifts"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <p className={classes.BirthdayText}>
-              Today is {petWithBirthday?.name}'s birthday!🎉🎉🎂 Let's get the
-              purrfect birthday present! 🎁🦴
-            </p>
-          </a>
-        </div>,
-        {
-          position: "top-right",
-          autoClose: false,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+    const petsWithBirthday = myAnimalsList.filter((pet) => {
+      if (pet.dateOfBirth) {
+        const petDateOfBirth =
+          pet.dateOfBirth instanceof Timestamp
+            ? pet.dateOfBirth.toDate()
+            : new Date(pet.dateOfBirth);
+        const petDay = petDateOfBirth.getDate();
+        const petMonth = petDateOfBirth.getMonth();
+        return petDay === currentDay && petMonth === currentMonth;
+      }
+      return false;
+    });
+
+    if (petsWithBirthday.length > 0) {
+      const petNames = petsWithBirthday.map((pet) => pet.name).join("& ");
+
+      if (!toast.isActive(String(toastIdRef.current))) {
+        toastIdRef.current = toast.info(
+          <div className={classes.BirthdayContainer}>
+            <a
+              href="https://www.amazon.com/Dog-Birthday-Gifts/s?k=Dog+Birthday+Gifts"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <p className={classes.BirthdayText}>
+                Today is the birthday of {petNames}! 🎉🎉🎂 Let's celebrate and
+                get the purrfect birthday presents! 🎁🦴
+              </p>
+            </a>
+          </div>,
+          {
+            position: "top-right",
+            autoClose: false,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          }
+        );
+      }
     }
-  }, [myAnimalsList, petWithBirthday]);
+    return () => {
+      // Cleanup toast when component unmounts
+      if (toastIdRef.current && toast.isActive(String(toastIdRef.current))) {
+        toast.dismiss(String(toastIdRef.current));
+      }
+    };
+  }, [myAnimalsList, currentDay, currentMonth]);
 
   function calculateAge(dateOfBirth: Date | Timestamp | null): {
     years: number;
