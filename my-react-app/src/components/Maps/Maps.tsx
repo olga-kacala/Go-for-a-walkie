@@ -5,7 +5,7 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import React from "react";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import classes from "./Maps.module.css";
 import { AppContext } from "../Providers/Providers";
 import {
@@ -22,6 +22,8 @@ import { Timestamp, updateDoc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { toast } from "react-toastify";
+import html2canvas from "html2canvas";
+
 
 export type WalkData = {
   id: number;
@@ -73,6 +75,9 @@ export const Maps = () => {
   const [publicWalks, setPublicWalks] = useState<WalkData[]>([]);
   const [joinWalk, setJoinWalk] = useState<boolean>(false);
   const [selectedWalk, setSelectedWalk] = useState<WalkData | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+
+
 
   const [selectedMarker, setSelectedMarker] = useState<{
     marker: { lat: number; lng: number; id: number };
@@ -430,6 +435,42 @@ export const Maps = () => {
     navigate("/RedirectMaps");
   };
 
+  const handleShareButtonClick = () => {
+    console.log("click");
+  
+    // Create a simple div element for testing
+    const testDiv = document.createElement("div");
+    testDiv.textContent = "Hello, this is a test element!";
+    document.body.appendChild(testDiv);
+  
+    html2canvas(testDiv).then((canvas) => {
+      // Create a new window with the shared image
+      const shareWindow = window.open("", "_blank");
+  
+      if (shareWindow) {
+        const img = new Image();
+        img.src = canvas.toDataURL("image/png");
+  
+        // Wait for the image to load before appending
+        img.onload = () => {
+          shareWindow.document.body.appendChild(img);
+          shareWindow.document.title = "Shared Image";
+        };
+      } else {
+        console.error("Failed to open share window");
+      }
+  
+      // Remove the test element
+      document.body.removeChild(testDiv);
+    });
+  };
+  
+ 
+  
+  
+  
+  
+
   //R E T U R N / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
   return (
@@ -438,13 +479,12 @@ export const Maps = () => {
         <h1>Loading...</h1>
       ) : (
         <GoogleMap
-          mapContainerClassName={classes.mapContainer}
-          center={
-            userLocation || { lat: 50.65696776753784, lng: 17.9230121375674 }
-          }
-          zoom={10}
-          onClick={handleMapClick}
-        >
+  mapContainerStyle={mapContainerRef.current ? { width: "100%", height: "100%" } : undefined}
+  mapContainerClassName={classes.mapContainer}
+  center={userLocation || { lat: 50.65696776753784, lng: 17.9230121375674 }}
+  zoom={10}
+  onClick={handleMapClick}
+>
           {userLocation && startingMarker && (
             <>
               {markers.map((marker) => (
@@ -529,14 +569,7 @@ export const Maps = () => {
                     >
                       Save
                     </button>
-                    {/* <button className={classes.share}>
-                      <img
-                        className={classes.shareLogo}
-                        title="Share"
-                        alt="share logo"
-                        src={process.env.PUBLIC_URL + "/Img/share.png"}
-                      />
-                    </button> */}
+                   
                   </div>
                 </div>
               )}
@@ -634,6 +667,15 @@ export const Maps = () => {
                         <p className={classes.joiners}>
                           Fellow Walkers: {selectedMarker.walk.joiners.length}
                         </p>
+                        <button className={classes.share}
+                         onClick={handleShareButtonClick}>
+                      <img
+                        className={classes.shareLogo}
+                        title="Share"
+                        alt="share logo"
+                        src={process.env.PUBLIC_URL + "/Img/share.png"}
+                      />
+                    </button> 
                         {selectedMarker.walk.joiners.map((pet) => (
                           <li key={pet.id}>
                             {pet && (
