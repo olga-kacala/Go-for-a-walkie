@@ -718,7 +718,7 @@ export const Maps = () => {
                         <p className={classes.joiners}>
                           Fellow Walkers: {selectedMarker.walk.joiners.length}
                         </p>
-                        <button
+                        {/* <button
                           className={classes.share}
                           onClick={handleShareButtonClick}
                         >
@@ -728,7 +728,7 @@ export const Maps = () => {
                             alt="share logo"
                             src={process.env.PUBLIC_URL + "/Img/share.png"}
                           />
-                        </button>
+                        </button> */}
                         {selectedMarker.walk.joiners.map((pet) => (
                           <li key={pet.id}>
                             {pet && (
