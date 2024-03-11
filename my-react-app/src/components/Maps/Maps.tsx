@@ -24,7 +24,6 @@ import Select from "react-select";
 import { toast } from "react-toastify";
 import html2canvas from "html2canvas";
 
-
 export type WalkData = {
   id: number;
   username: string;
@@ -48,6 +47,7 @@ export type WalkData = {
     photoURL: string | null;
     walker: string;
   }[];
+  walkActivities: string[];
 };
 
 export const Maps = () => {
@@ -76,8 +76,9 @@ export const Maps = () => {
   const [joinWalk, setJoinWalk] = useState<boolean>(false);
   const [selectedWalk, setSelectedWalk] = useState<WalkData | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
-
-
+  const [selectedWalkActivities, setSelectedWalkActivities] = useState<
+    string[]
+  >([]);
 
   const [selectedMarker, setSelectedMarker] = useState<{
     marker: { lat: number; lng: number; id: number };
@@ -228,6 +229,7 @@ export const Maps = () => {
     totalDistance,
     addedPets: addedPetsData,
     joiners: addedJoinersData,
+    walkActivities: selectedWalkActivities,
   };
 
   const handleSaveWalkAndFetch = async () => {
@@ -255,6 +257,7 @@ export const Maps = () => {
       setSelectedTime(new Date());
       setSelectedJoinPet([]);
       setJoinWalk(false);
+      setSelectedWalkActivities([]);
       navigate("/RedirectMaps");
     } catch (error) {
       console.log("Error saving walk:", error);
@@ -437,20 +440,20 @@ export const Maps = () => {
 
   const handleShareButtonClick = () => {
     console.log("click");
-  
+
     // Create a simple div element for testing
     const testDiv = document.createElement("div");
     testDiv.textContent = "Hello, this is a test element!";
     document.body.appendChild(testDiv);
-  
+
     html2canvas(testDiv).then((canvas) => {
       // Create a new window with the shared image
       const shareWindow = window.open("", "_blank");
-  
+
       if (shareWindow) {
         const img = new Image();
         img.src = canvas.toDataURL("image/png");
-  
+
         // Wait for the image to load before appending
         img.onload = () => {
           shareWindow.document.body.appendChild(img);
@@ -459,17 +462,11 @@ export const Maps = () => {
       } else {
         console.error("Failed to open share window");
       }
-  
+
       // Remove the test element
       document.body.removeChild(testDiv);
     });
   };
-  
- 
-  
-  
-  
-  
 
   //R E T U R N / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
@@ -479,12 +476,18 @@ export const Maps = () => {
         <h1>Loading...</h1>
       ) : (
         <GoogleMap
-  mapContainerStyle={mapContainerRef.current ? { width: "100%", height: "100%" } : undefined}
-  mapContainerClassName={classes.mapContainer}
-  center={userLocation || { lat: 50.65696776753784, lng: 17.9230121375674 }}
-  zoom={10}
-  onClick={handleMapClick}
->
+          mapContainerStyle={
+            mapContainerRef.current
+              ? { width: "100%", height: "100%" }
+              : undefined
+          }
+          mapContainerClassName={classes.mapContainer}
+          center={
+            userLocation || { lat: 50.65696776753784, lng: 17.9230121375674 }
+          }
+          zoom={10}
+          onClick={handleMapClick}
+        >
           {userLocation && startingMarker && (
             <>
               {markers.map((marker) => (
@@ -537,6 +540,7 @@ export const Maps = () => {
                   <Select
                     className={classes.walksContainer}
                     isMulti
+                    placeholder="Choose Walk Buddy..."
                     options={myAnimalsList.map((pet) => ({
                       label: `${pet.name}`,
                       value: pet.id,
@@ -560,6 +564,31 @@ export const Maps = () => {
                     components={{ Option: CustomOption }}
                   />
 
+                  <Select
+                    className={classes.walksContainer}
+                    isMulti
+                    placeholder="Choose Walk Activities..."
+                    options={[
+                      { value: "city-walk", label: "🏙️City Walk" },
+                      { value: "free-range-walk", label: "🌳Free Range Walk" },
+                      { value: "ballie-run", label: "🎾Ballie Run" },
+                      { value: "monkey-fun", label: "🐒Monkey Fun" },
+                      { value: "swimming", label: "🏊Swimming" },
+                      { value: "obstacle-course", label: "🚧Obstacle Course" },
+                      { value: "tricks", label: "🎭Tricks" },
+                    ]}
+                    value={selectedWalkActivities.map((activity) => ({
+                      value: activity,
+                      label: activity,
+                    }))}
+                    onChange={(selectedOptions) => {
+                      const selectedActivities = selectedOptions.map(
+                        (opt) => opt.value
+                      );
+                      setSelectedWalkActivities(selectedActivities);
+                    }}
+                  />
+
                   <div className={classes.saveContainer}>
                     <button
                       className={classes.buttonSave}
@@ -569,7 +598,6 @@ export const Maps = () => {
                     >
                       Save
                     </button>
-                   
                   </div>
                 </div>
               )}
@@ -662,20 +690,45 @@ export const Maps = () => {
                     ))}
                   </ul>
                   <ul>
+  <p>planned activities:</p>
+  <li>
+    {selectedMarker.walk.walkActivities.map((activitie, index) => (
+      <React.Fragment key={activitie}>
+        {index > 0 && <span>{' '}</span>}
+        {activitie && (
+          <>
+            {activitie === "city-walk" ? "🏙️" : 
+             activitie === "free-range-walk" ? "🌳" : 
+             activitie === "ballie-run" ? "🎾" : 
+             activitie === "monkey-fun" ? "🐒" : 
+             activitie === "swimming" ? "🏊" : 
+             activitie === "obstacle-course" ? "🚧" : 
+             activitie === "tricks" ? "🎭" : activitie}
+          </>
+        )}
+      </React.Fragment>
+    ))}
+  </li>
+</ul>
+
+
+                  <ul>
                     {selectedMarker.walk.joiners.length >= 0 && (
                       <>
                         <p className={classes.joiners}>
                           Fellow Walkers: {selectedMarker.walk.joiners.length}
                         </p>
-                        <button className={classes.share}
-                         onClick={handleShareButtonClick}>
-                      <img
-                        className={classes.shareLogo}
-                        title="Share"
-                        alt="share logo"
-                        src={process.env.PUBLIC_URL + "/Img/share.png"}
-                      />
-                    </button> 
+                        <button
+                          className={classes.share}
+                          onClick={handleShareButtonClick}
+                        >
+                          <img
+                            className={classes.shareLogo}
+                            title="Share"
+                            alt="share logo"
+                            src={process.env.PUBLIC_URL + "/Img/share.png"}
+                          />
+                        </button>
                         {selectedMarker.walk.joiners.map((pet) => (
                           <li key={pet.id}>
                             {pet && (
