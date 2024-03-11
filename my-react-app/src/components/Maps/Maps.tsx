@@ -19,10 +19,9 @@ import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Timestamp, updateDoc, getDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Select from "react-select";
 import { toast } from "react-toastify";
-import html2canvas from "html2canvas";
 
 export type WalkData = {
   id: number;
@@ -79,7 +78,11 @@ export const Maps = () => {
   const [selectedWalkActivities, setSelectedWalkActivities] = useState<
     string[]
   >([]);
-
+  const [firstMarkerPosition, setFirstMarkerPosition] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  const [center, setCenter] = useState<{ lat: number; lng: number } | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<{
     marker: { lat: number; lng: number; id: number };
     walk: WalkData;
@@ -187,8 +190,10 @@ export const Maps = () => {
         marker: clickedMarker,
         walk: walk,
       });
+      setSelectedWalk(walk); // Set the selected walk
     } else {
       setSelectedMarker(null);
+      setSelectedWalk(null);
     }
   };
 
@@ -439,34 +444,45 @@ export const Maps = () => {
   };
 
   const handleShareButtonClick = () => {
-    console.log("click");
-
-    // Create a simple div element for testing
-    const testDiv = document.createElement("div");
-    testDiv.textContent = "Hello, this is a test element!";
-    document.body.appendChild(testDiv);
-
-    html2canvas(testDiv).then((canvas) => {
-      // Create a new window with the shared image
-      const shareWindow = window.open("", "_blank");
-
-      if (shareWindow) {
-        const img = new Image();
-        img.src = canvas.toDataURL("image/png");
-
-        // Wait for the image to load before appending
-        img.onload = () => {
-          shareWindow.document.body.appendChild(img);
-          shareWindow.document.title = "Shared Image";
-        };
-      } else {
-        console.error("Failed to open share window");
-      }
-
-      // Remove the test element
-      document.body.removeChild(testDiv);
-    });
+    if (selectedWalk) {
+      window.open(
+        `http://localhost:3000/Go-for-a-walkie#/Maps/${selectedWalk.id}`,
+        "_blank"
+      );
+    }
   };
+
+  const location = useLocation();
+  const walkIdFromParams = location.pathname.split("/").pop();
+
+  useEffect(() => {
+    // Check if walkIdFromParams is available
+    if (walkIdFromParams) {
+      // Find the walk with the matching ID
+      const selectedWalk = publicWalks.find((walk) => walk.id.toString() === walkIdFromParams);
+  
+      // If the walk is found, set the first marker position
+      if (selectedWalk && selectedWalk.markers.length > 0) {
+        const firstMarker = selectedWalk.markers[0];
+        setFirstMarkerPosition({
+          lat: firstMarker.lat,
+          lng: firstMarker.lng,
+        });
+      }
+    }
+  }, [walkIdFromParams, publicWalks]);
+ 
+
+  useEffect(() => {
+    // Update the center when firstMarkerPosition changes
+    if (firstMarkerPosition) {
+      setCenter({
+        lat: firstMarkerPosition.lat,
+        lng: firstMarkerPosition.lng,
+      });
+    }
+  }, [firstMarkerPosition]);
+
 
   //R E T U R N / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 
@@ -482,9 +498,7 @@ export const Maps = () => {
               : undefined
           }
           mapContainerClassName={classes.mapContainer}
-          center={
-            userLocation || { lat: 50.65696776753784, lng: 17.9230121375674 }
-          }
+          center={center || (userLocation || { lat: 50.65696776753784, lng: 17.9230121375674 })}
           zoom={10}
           onClick={handleMapClick}
         >
@@ -690,27 +704,36 @@ export const Maps = () => {
                     ))}
                   </ul>
                   <ul>
-  <p>planned activities:</p>
-  <li>
-    {selectedMarker.walk.walkActivities.map((activitie, index) => (
-      <React.Fragment key={activitie}>
-        {index > 0 && <span>{' '}</span>}
-        {activitie && (
-          <>
-            {activitie === "city-walk" ? "🏙️" : 
-             activitie === "free-range-walk" ? "🌳" : 
-             activitie === "ballie-run" ? "🎾" : 
-             activitie === "monkey-fun" ? "🐒" : 
-             activitie === "swimming" ? "🏊" : 
-             activitie === "obstacle-course" ? "🚧" : 
-             activitie === "tricks" ? "🎭" : activitie}
-          </>
-        )}
-      </React.Fragment>
-    ))}
-  </li>
-</ul>
-
+                    <p>planned activities:</p>
+                    <li>
+                      {selectedMarker.walk.walkActivities.map(
+                        (activitie, index) => (
+                          <React.Fragment key={activitie}>
+                            {index > 0 && <span> </span>}
+                            {activitie && (
+                              <>
+                                {activitie === "city-walk"
+                                  ? "🏙️"
+                                  : activitie === "free-range-walk"
+                                  ? "🌳"
+                                  : activitie === "ballie-run"
+                                  ? "🎾"
+                                  : activitie === "monkey-fun"
+                                  ? "🐒"
+                                  : activitie === "swimming"
+                                  ? "🏊"
+                                  : activitie === "obstacle-course"
+                                  ? "🚧"
+                                  : activitie === "tricks"
+                                  ? "🎭"
+                                  : activitie}
+                              </>
+                            )}
+                          </React.Fragment>
+                        )
+                      )}
+                    </li>
+                  </ul>
 
                   <ul>
                     {selectedMarker.walk.joiners.length >= 0 && (
@@ -718,7 +741,7 @@ export const Maps = () => {
                         <p className={classes.joiners}>
                           Fellow Walkers: {selectedMarker.walk.joiners.length}
                         </p>
-                        {/* <button
+                        <button
                           className={classes.share}
                           onClick={handleShareButtonClick}
                         >
@@ -728,7 +751,7 @@ export const Maps = () => {
                             alt="share logo"
                             src={process.env.PUBLIC_URL + "/Img/share.png"}
                           />
-                        </button> */}
+                        </button>
                         {selectedMarker.walk.joiners.map((pet) => (
                           <li key={pet.id}>
                             {pet && (

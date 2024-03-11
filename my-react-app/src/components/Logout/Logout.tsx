@@ -7,7 +7,7 @@ export function Logout(): JSX.Element {
 
   useEffect(() => {
     setTimeout(() => {
-      navigate("*");
+      navigate("/Home");
     }, 2000);
   }, []);
 

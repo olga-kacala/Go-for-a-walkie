@@ -25,15 +25,16 @@ function App() {
     <div className={classes.main}>
       <Header />
       <Routes>
-        <Route path="*" element={<Home />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/Register" element={<Register />} />
-        <Route path="/MyPets" element={<MyPets />} />
-        <Route path="/Logout" element={<Logout />} />
-        <Route path="/Maps" element={<Maps />} />
-        <Route path="/RedirectMaps" element={<RedirectMaps />} />
-        <Route path="/RedirectPets" element={<RedirectPets />} />
-      </Routes>
+  <Route path="/Home" element={<Home />} />
+  <Route path="/Login" element={<Login />} />
+  <Route path="/Register" element={<Register />} />
+  <Route path="/MyPets" element={<MyPets />} />
+  <Route path="/Logout" element={<Logout />} />
+  <Route path="/RedirectMaps" element={<RedirectMaps />} />
+  <Route path="/RedirectPets" element={<RedirectPets />} />
+  <Route path="/*" element={<Maps />} />
+</Routes>
+
       <Footer />
     </div>
   );
