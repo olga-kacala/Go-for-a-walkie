@@ -22,6 +22,18 @@ import { Timestamp, updateDoc, getDoc } from "firebase/firestore";
 import { useNavigate, useLocation } from "react-router-dom";
 import Select from "react-select";
 import { toast } from "react-toastify";
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  LinkedinShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  EmailIcon,
+  FacebookIcon,
+  LinkedinIcon,
+  TwitterIcon,
+  WhatsappIcon,
+} from "react-share";
 
 export type WalkData = {
   id: number;
@@ -449,7 +461,7 @@ export const Maps = () => {
   const handleShareButtonClick = () => {
     if (selectedWalk) {
       window.open(
-        `http://localhost:3000/Go-for-a-walkie#/Maps/${selectedWalk.id}`,
+        `https://olga-kacala.github.io/Go-for-a-walkie/#/Maps/${selectedWalk.id}`,
         "_blank"
       );
     }
@@ -749,17 +761,51 @@ export const Maps = () => {
                         <p className={classes.joiners}>
                           Fellow Walkers: {selectedMarker.walk.joiners.length}
                         </p>
-                        <button
-                          className={classes.share}
+                        <WhatsappShareButton
+                          url={`https://olga-kacala.github.io/Go-for-a-walkie/#/Maps/${
+                            selectedWalk?.id || ""
+                          }`}
                           onClick={handleShareButtonClick}
                         >
-                          <img
-                            className={classes.shareLogo}
-                            title="Share"
-                            alt="share logo"
-                            src={process.env.PUBLIC_URL + "/Img/share.png"}
-                          />
-                        </button>
+                          <WhatsappIcon size={32} round={true} />
+                        </WhatsappShareButton>
+
+                        <TwitterShareButton
+                          url={`https://olga-kacala.github.io/Go-for-a-walkie/#/Maps/${
+                            selectedWalk?.id || ""
+                          }`}
+                          onClick={handleShareButtonClick}
+                        >
+                          <TwitterIcon size={32} round={true} />
+                        </TwitterShareButton>
+
+                        <FacebookShareButton
+                          url={`https://olga-kacala.github.io/Go-for-a-walkie/#/Maps/${
+                            selectedWalk?.id || ""
+                          }`}
+                          onClick={handleShareButtonClick}
+                        >
+                          <FacebookIcon size={32} round={true} />
+                        </FacebookShareButton>
+
+                        <LinkedinShareButton
+                          url={`https://olga-kacala.github.io/Go-for-a-walkie/#/Maps/${
+                            selectedWalk?.id || ""
+                          }`}
+                          onClick={handleShareButtonClick}
+                        >
+                          <LinkedinIcon size={32} round={true} />
+                        </LinkedinShareButton>
+
+                        <EmailShareButton
+                          url={`https://olga-kacala.github.io/Go-for-a-walkie/#/Maps/${
+                            selectedWalk?.id || ""
+                          }`}
+                          onClick={handleShareButtonClick}
+                        >
+                          <EmailIcon size={32} round={true} />
+                        </EmailShareButton>
+
                         {selectedMarker.walk.joiners.map((pet) => (
                           <li key={pet.id}>
                             {pet && (

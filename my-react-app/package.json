@@ -28,6 +28,8 @@
     "react-router-dom": "^6.14.0",
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",
+    "react-share": "^5.1.0",
+    "react-share-social": "^0.1.55",
     "react-toastify": "^10.0.4",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
