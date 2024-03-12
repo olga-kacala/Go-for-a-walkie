@@ -463,6 +463,7 @@ export const Maps = () => {
   
       // If the walk is found, set the first marker position
       if (selectedWalk && selectedWalk.markers.length > 0) {
+                  
         const firstMarker = selectedWalk.markers[0];
         setFirstMarkerPosition({
           lat: firstMarker.lat,
@@ -483,9 +484,17 @@ export const Maps = () => {
     }
   }, [firstMarkerPosition]);
 
-
-  //R E T U R N / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
-
+  const currentURL = location.pathname;
+  const originalURL = "/Maps";
+console.log("currennt url", currentURL)
+console.log("original url", originalURL)
+  if (currentURL === originalURL) {
+    console.log("this is original URL")
+  } else {
+    console.log("this is shared URL")
+  }
+ 
+  
   return (
     <div className={classes.Map}>
       {!isLoaded ? (
@@ -858,6 +867,19 @@ export const Maps = () => {
                   )}
                 </div>
               )}
+
+{selectedWalk && (
+              <div className={classes.walkInfo}>
+                {/* Render details of the selected walk here */}
+                <p>walker: {selectedWalk.walkCreator.split("@")[0]}</p>
+                <p>
+                  distance: {selectedWalk.totalDistance.toFixed(2)} km
+                </p>
+                <p>date: {getDateDisplay(selectedWalk.dateOfWalk)}</p>
+                {/* ... other details */}
+              </div>
+            )}
+
             </>
           )}
         </GoogleMap>
