@@ -19,7 +19,7 @@ import { firebaseDb } from "../../App";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Timestamp, updateDoc, getDoc } from "firebase/firestore";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Select from "react-select";
 import { toast } from "react-toastify";
 
@@ -78,11 +78,14 @@ export const Maps = () => {
   const [selectedWalkActivities, setSelectedWalkActivities] = useState<
     string[]
   >([]);
+  const [sharedURL, setSharedURL] = useState<WalkData | null>(null);
   const [firstMarkerPosition, setFirstMarkerPosition] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
-  const [center, setCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [center, setCenter] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
   const [selectedMarker, setSelectedMarker] = useState<{
     marker: { lat: number; lng: number; id: number };
     walk: WalkData;
@@ -190,7 +193,7 @@ export const Maps = () => {
         marker: clickedMarker,
         walk: walk,
       });
-      setSelectedWalk(walk); // Set the selected walk
+      setSelectedWalk(walk);
     } else {
       setSelectedMarker(null);
       setSelectedWalk(null);
@@ -459,11 +462,16 @@ export const Maps = () => {
     // Check if walkIdFromParams is available
     if (walkIdFromParams) {
       // Find the walk with the matching ID
-      const selectedWalk = publicWalks.find((walk) => walk.id.toString() === walkIdFromParams);
-  
+      const selectedWalk = publicWalks.find(
+        (walk) => walk.id.toString() === walkIdFromParams
+      );
+      const currentURL = location.pathname;
+      const originalURL = "/Maps";
+      if (currentURL !== originalURL) {
+        setSharedURL(selectedWalk || null);
+      }
       // If the walk is found, set the first marker position
       if (selectedWalk && selectedWalk.markers.length > 0) {
-                  
         const firstMarker = selectedWalk.markers[0];
         setFirstMarkerPosition({
           lat: firstMarker.lat,
@@ -472,7 +480,6 @@ export const Maps = () => {
       }
     }
   }, [walkIdFromParams, publicWalks]);
- 
 
   useEffect(() => {
     // Update the center when firstMarkerPosition changes
@@ -484,17 +491,6 @@ export const Maps = () => {
     }
   }, [firstMarkerPosition]);
 
-  const currentURL = location.pathname;
-  const originalURL = "/Maps";
-console.log("currennt url", currentURL)
-console.log("original url", originalURL)
-  if (currentURL === originalURL) {
-    console.log("this is original URL")
-  } else {
-    console.log("this is shared URL")
-  }
- 
-  
   return (
     <div className={classes.Map}>
       {!isLoaded ? (
@@ -507,7 +503,10 @@ console.log("original url", originalURL)
               : undefined
           }
           mapContainerClassName={classes.mapContainer}
-          center={center || (userLocation || { lat: 50.65696776753784, lng: 17.9230121375674 })}
+          center={
+            center ||
+            userLocation || { lat: 50.65696776753784, lng: 17.9230121375674 }
+          }
           zoom={10}
           onClick={handleMapClick}
         >
@@ -868,18 +867,118 @@ console.log("original url", originalURL)
                 </div>
               )}
 
-{selectedWalk && (
-              <div className={classes.walkInfo}>
-                {/* Render details of the selected walk here */}
-                <p>walker: {selectedWalk.walkCreator.split("@")[0]}</p>
-                <p>
-                  distance: {selectedWalk.totalDistance.toFixed(2)} km
-                </p>
-                <p>date: {getDateDisplay(selectedWalk.dateOfWalk)}</p>
-                {/* ... other details */}
-              </div>
-            )}
+              {sharedURL && (
+                <div className={classes.walkInfo}>
+                  <p>walker: {sharedURL.walkCreator.split("@")[0]}</p>
+                  <p>distance: {sharedURL.totalDistance.toFixed(2)} km</p>
+                  <p>date: {getDateDisplay(sharedURL.dateOfWalk)}</p>
+                  <p>time: {getDateDisplay(sharedURL.timeOfWalk, true)}</p>
 
+                  <ul>
+                    {sharedURL.addedPets.map((item) => (
+                      <li key={item.id}>
+                        {item && (
+                          <>
+                            <img
+                              className={classes.renderedPic}
+                              src={
+                                item.photoURL
+                                  ? item.photoURL
+                                  : "/Img/profilePic.png"
+                              }
+                              alt={`${item.name}`}
+                            />
+                            <div>{item.name}</div>
+                            {item?.temper === "tiger"
+                              ? "🐅"
+                              : item?.temper === "sloth"
+                              ? "🦥"
+                              : item?.temper === "octopus"
+                              ? "🐙"
+                              : item?.temper}{" "}
+                            {item?.sex === "female"
+                              ? "♀️"
+                              : item?.sex === "male"
+                              ? "♂️"
+                              : item?.sex}{" "}
+                          </>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                  <ul>
+                    <p>planned activities:</p>
+                    <li>
+                      {sharedURL.walkActivities.map((activitie, index) => (
+                        <React.Fragment key={activitie}>
+                          {index > 0 && <span> </span>}
+                          {activitie && (
+                            <>
+                              {activitie === "city-walk"
+                                ? "🏙️"
+                                : activitie === "free-range-walk"
+                                ? "🌳"
+                                : activitie === "ballie-run"
+                                ? "🎾"
+                                : activitie === "monkey-fun"
+                                ? "🐒"
+                                : activitie === "swimming"
+                                ? "🏊"
+                                : activitie === "obstacle-course"
+                                ? "🚧"
+                                : activitie === "tricks"
+                                ? "🎭"
+                                : activitie}
+                            </>
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </li>
+                  </ul>
+
+                  <ul>
+                    {sharedURL.joiners.length >= 0 && (
+                      <>
+                        <p className={classes.joiners}>
+                          Fellow Walkers: {sharedURL.joiners.length}
+                        </p>
+
+                        {sharedURL.joiners.map((pet) => (
+                          <li key={pet.id}>
+                            {pet && (
+                              <>
+                                <img
+                                  className={classes.renderedPic}
+                                  src={
+                                    pet.photoURL
+                                      ? pet.photoURL
+                                      : "/Img/profilePic.png"
+                                  }
+                                  alt={`${pet.name}`}
+                                />
+                                <div>{pet.name}</div>
+                                {pet?.temper === "tiger"
+                                  ? "🐅"
+                                  : pet?.temper === "sloth"
+                                  ? "🦥"
+                                  : pet?.temper === "octopus"
+                                  ? "🐙"
+                                  : pet?.temper}{" "}
+                                {pet?.sex === "female"
+                                  ? "♀️"
+                                  : pet?.sex === "male"
+                                  ? "♂️"
+                                  : pet?.sex}{" "}
+                                <p>walker: {pet.walker.split("@")[0]}</p>
+                              </>
+                            )}
+                          </li>
+                        ))}
+                      </>
+                    )}
+                  </ul>
+                </div>
+              )}
             </>
           )}
         </GoogleMap>

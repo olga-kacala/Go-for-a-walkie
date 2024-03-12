@@ -25,7 +25,7 @@ export function Header(): JSX.Element {
   return (
     <div>
       <header className={classes.header}>
-        <Link className={classes.link} to="*">
+        <Link className={classes.link} to="/Home">
           <h1 className={classes.title}>Walkie</h1>
         </Link>
         <p className={classes.secondTitle}>Find a Dog Walking Buddy </p>
@@ -43,7 +43,7 @@ export function Header(): JSX.Element {
               <Link className={bumpClasses} to="/MyPets">
                 My Pets
               </Link>
-              <Link className={classes.link} to="*" onClick={handleLogout}>
+              <Link className={classes.link} to="/Home" onClick={handleLogout}>
                 Log out
               </Link>
             </div>
