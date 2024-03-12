@@ -458,15 +458,6 @@ export const Maps = () => {
     navigate("/RedirectMaps");
   };
 
-  const handleShareButtonClick = () => {
-    if (selectedWalk) {
-      window.open(
-        `https://olga-kacala.github.io/Go-for-a-walkie/#/Maps/${selectedWalk.id}`,
-        "_blank"
-      );
-    }
-  };
-
   const location = useLocation();
   const walkIdFromParams = location.pathname.split("/").pop();
 
@@ -765,7 +756,6 @@ export const Maps = () => {
                           url={`https://olga-kacala.github.io/Go-for-a-walkie/#/Maps/${
                             selectedWalk?.id || ""
                           }`}
-                          onClick={handleShareButtonClick}
                         >
                           <WhatsappIcon size={32} round={true} />
                         </WhatsappShareButton>
@@ -774,7 +764,6 @@ export const Maps = () => {
                           url={`https://olga-kacala.github.io/Go-for-a-walkie/#/Maps/${
                             selectedWalk?.id || ""
                           }`}
-                          onClick={handleShareButtonClick}
                         >
                           <TwitterIcon size={32} round={true} />
                         </TwitterShareButton>
@@ -783,7 +772,6 @@ export const Maps = () => {
                           url={`https://olga-kacala.github.io/Go-for-a-walkie/#/Maps/${
                             selectedWalk?.id || ""
                           }`}
-                          onClick={handleShareButtonClick}
                         >
                           <FacebookIcon size={32} round={true} />
                         </FacebookShareButton>
@@ -792,7 +780,6 @@ export const Maps = () => {
                           url={`https://olga-kacala.github.io/Go-for-a-walkie/#/Maps/${
                             selectedWalk?.id || ""
                           }`}
-                          onClick={handleShareButtonClick}
                         >
                           <LinkedinIcon size={32} round={true} />
                         </LinkedinShareButton>
@@ -801,7 +788,6 @@ export const Maps = () => {
                           url={`https://olga-kacala.github.io/Go-for-a-walkie/#/Maps/${
                             selectedWalk?.id || ""
                           }`}
-                          onClick={handleShareButtonClick}
                         >
                           <EmailIcon size={32} round={true} />
                         </EmailShareButton>
