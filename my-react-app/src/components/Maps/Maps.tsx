@@ -188,32 +188,6 @@ export const Maps = () => {
     }
   };
 
-  // const handlePetClick = async () => {
-  //   if (selectedPetIds.length > 0) {
-  //     const uniqueSelectedPetIDs = selectedPetIds.filter(
-  //       (petId) => !addedPets.includes(petId)
-  //     );
-  //     setAddedPets((prevPets) => [...prevPets, ...uniqueSelectedPetIDs]);
-  //     // setSelectedPetIDs([]);
-  //   }
-  // };
-
-  // const handlePetClick = async () => {
-  //   console.log("1", selectedPetIds);
-  //   if (selectedPetIds.length > 0) {
-  //     const uniqueSelectedPetIDs = selectedPetIds.filter(
-  //       (petId) => !addedPets.includes(petId)
-  //     );
-  //     console.log("2", uniqueSelectedPetIDs);
-  //     // Check if there are new unique pets to add
-  //     if (uniqueSelectedPetIDs.length > 0) {
-  //       console.log("3", uniqueSelectedPetIDs);
-  //       setAddedPets((prevPets) => [...prevPets, ...uniqueSelectedPetIDs]);
-  //       // setSelectedPetIDs([]);
-  //     }
-  //   }
-  // };
-
   const handleMarkerClick = (markerId: number, walk: WalkData) => {
     const clickedMarker = walk.markers.find((marker) => marker.id === markerId);
     if (clickedMarker) {
@@ -233,7 +207,6 @@ export const Maps = () => {
   };
 
   const addedPetsData = addedPets.map((petId) => {
-    console.log("addedpetsdata");
     const pet = myAnimalsList.find((pet) => pet.id === petId);
     return {
       id: petId,
@@ -245,7 +218,6 @@ export const Maps = () => {
   });
 
   const addedJoinersData = selectedJoinPet.map((petId) => {
-    console.log("joinersdata");
     const pet = myAnimalsList.find((pet) => pet.id === petId);
     return {
       id: petId,
@@ -269,40 +241,6 @@ export const Maps = () => {
     joiners: addedJoinersData,
     walkActivities: selectedWalkActivities,
   };
-
-  // const handleSaveWalkAndFetch = async () => {
-  //   console.log("1", selectedPetIds);
-  //   try {
-  //     if (selectedPetIds.length > 0) {
-  //       console.log("2", selectedPetIds);
-  //       const walksCollectionRef = collection(firebaseDb, "Public Walks");
-  //       const walkDocRef = doc(walksCollectionRef, walkData.id.toString());
-
-  //       const uniqueSelectedPetIDs = selectedPetIds.filter(
-  //         (petId) => !addedPets.includes(petId)
-  //       );
-  //       setAddedPets((prevPets) => [...prevPets, ...uniqueSelectedPetIDs]);
-  //       await setDoc(walkDocRef, { ...walkData });
-  //       
-
-
-  //       setStartingMarker(null);
-  //       setMarkers([]);
-  //       setTotalDistance(0);
-  //       setAddedPets([]);
-  //       setDateOfWalk(null);
-  //       setSelectedTime(new Date());
-  //       setSelectedJoinPet([]);
-  //       setJoinWalk(false);
-  //       setSelectedWalkActivities([]);
-  //       setSelectedPetIDs([]);
-  //       navigate("/RedirectMaps");
-  //     }
-  //   } catch (error) {
-  //     console.log("Error saving walk:", error);
-  //   }
-  // };
-
 
   const handleSaveWalkAndFetch = async () => {
     try {
@@ -909,7 +847,7 @@ export const Maps = () => {
                       Join
                     </button>
                   )}
-                  {joinWalk && (
+                  {joinWalk && username !== selectedMarker.walk.walkCreator &&(
                     <>
                       <Select
                         className={classes.joinersSelect}
