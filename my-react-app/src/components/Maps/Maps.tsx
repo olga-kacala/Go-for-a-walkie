@@ -194,7 +194,7 @@ export const Maps = () => {
         (petId) => !addedPets.includes(petId)
       );
       setAddedPets((prevPets) => [...prevPets, ...uniqueSelectedPetIDs]);
-      setSelectedPetIDs([]);
+      // setSelectedPetIDs([]);
     }
   };
 
@@ -562,6 +562,7 @@ export const Maps = () => {
                     dateFormat="h:mm aa"
                     timeCaption="Time"
                   />
+                  
                   <Select
                     className={classes.walksContainer}
                     isMulti
@@ -585,9 +586,45 @@ export const Maps = () => {
                       );
                       setSelectedPetIDs(selectedIds);
                     }}
-                    onMenuClose={handlePetClick}
+                    onMenuClose={totalDistance ?handlePetClick : undefined}
                     components={{ Option: CustomOption }}
                   />
+<Select
+                        className={classes.joinersSelect}
+                        isMulti
+                        placeholder="Choose Walk Buddy..."
+                        options={myAnimalsList
+                          .filter(
+                            (pet) =>
+                              !selectedJoinPet.includes(pet.id) &&
+                              !selectedMarker?.walk.joiners
+                                .map((joiner) => joiner.id)
+                                .includes(pet.id)
+                          )
+                          .map((pet) => ({
+                            label: `${pet.name}`,
+                            value: pet.id,
+                            photoURL: pet.photoURL,
+                          }))}
+                        value={selectedJoinPet.map((petId) => ({
+                          label:
+                            myAnimalsList.find((pet) => pet.id === petId)
+                              ?.name || "Unknown",
+                          value: petId,
+                          photoURL: myAnimalsList.find(
+                            (pet) => pet.id === petId
+                          )?.photoURL,
+                        }))}
+                        onChange={(selectedOptions) => {
+                          const selectedJoiners = selectedOptions.map(
+                            (opt) => opt.value
+                          );
+                          setSelectedJoinPet(selectedJoiners);
+                        }}
+                        onMenuClose={joinWalk ? handlePetClick : undefined}
+                        components={{ Option: CustomOption }}
+                      />
+                  
 
                   <Select
                     className={classes.walksContainer}
@@ -723,21 +760,21 @@ export const Maps = () => {
                             {index > 0 && <span> </span>}
                             {activitie && (
                               <>
-                                {activitie === "city-walk"
-                                  ? "🏙️"
-                                  : activitie === "free-range-walk"
-                                  ? "🌳"
-                                  : activitie === "ballie-run"
-                                  ? "🎾"
-                                  : activitie === "monkey-fun"
-                                  ? "🐒"
-                                  : activitie === "swimming"
-                                  ? "🏊"
-                                  : activitie === "obstacle-course"
-                                  ? "🚧"
-                                  : activitie === "tricks"
-                                  ? "🎭"
-                                  : activitie}
+                                 {activitie === "city-walk"
+              ? <span title="City Walk">🏙️</span>
+              : activitie === "free-range-walk"
+              ? <span title="Free Range Walk">🌳</span>
+              : activitie === "ballie-run"
+              ? <span title="Ballie Run">🎾</span>
+              : activitie === "monkey-fun"
+              ? <span title="Monkey Fun">🐒</span>
+              : activitie === "swimming"
+              ? <span title="Swimming">🏊</span>
+              : activitie === "obstacle-course"
+              ? <span title="Obstacle Course">🚧</span>
+              : activitie === "tricks"
+              ? <span title="Tricks">🎭</span>
+              : activitie}
                               </>
                             )}
                           </React.Fragment>
@@ -842,6 +879,7 @@ export const Maps = () => {
                       <Select
                         className={classes.joinersSelect}
                         isMulti
+                        placeholder="Choose Walk Buddy..."
                         options={myAnimalsList
                           .filter(
                             (pet) =>
@@ -873,6 +911,8 @@ export const Maps = () => {
                         onMenuClose={joinWalk ? handlePetClick : undefined}
                         components={{ Option: CustomOption }}
                       />
+
+
                       <div className={classes.saveContainer}>
                         <button
                           className={classes.buttonSave}

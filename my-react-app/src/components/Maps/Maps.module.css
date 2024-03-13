@@ -37,6 +37,7 @@
   padding: 0;
   text-align: center;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .walkInfo li {
