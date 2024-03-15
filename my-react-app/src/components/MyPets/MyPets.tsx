@@ -143,7 +143,6 @@ export function MyPets(): JSX.Element {
   const currentDay = currentDate.getDate();
   const currentMonth = currentDate.getMonth();
 
-
   const toastIdRef = useRef<Id | null>(null);
 
   useEffect(() => {
@@ -231,7 +230,8 @@ export function MyPets(): JSX.Element {
       dateOfBirth !== null &&
       breed !== "" &&
       selectedSex !== "" &&
-      selectedTemper !== ""
+      selectedTemper !== "" &&
+      photoURL !== null
     );
   }
 
@@ -381,6 +381,7 @@ export function MyPets(): JSX.Element {
               showYearDropdown
               dateFormat="d MMMM yyyy"
               maxDate={new Date()}
+              required
               onChange={(date) => setDateOfBirth(date as Date)}
               value={dateOfBirth ? dateOfBirth.toLocaleDateString() : ""}
             />
@@ -398,6 +399,7 @@ export function MyPets(): JSX.Element {
             <select
               className={classes.selectContainer}
               value={selectedSex ?? ""}
+              required
               onChange={(e) => {
                 setSelectedSex(e.target.value);
               }}
@@ -409,6 +411,7 @@ export function MyPets(): JSX.Element {
             <select
               className={classes.selectContainer}
               value={selectedTemper ?? ""}
+              required
               onChange={(e) => {
                 setSelectedTemper(e.target.value);
               }}
@@ -427,6 +430,7 @@ export function MyPets(): JSX.Element {
             <input
               className={classes.selectContainer}
               type="file"
+              required
               onChange={handleChange}
             />
             <button
