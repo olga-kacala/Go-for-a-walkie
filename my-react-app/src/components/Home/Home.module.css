@@ -3,7 +3,7 @@ section {
 }
 
 .contentLogIn {
-  flex: 1;
+  /* flex: 1; */
   height: 76vh;
   width: 100vw;
   display: flex;
@@ -11,7 +11,6 @@ section {
   align-items: center;
   text-align: center;
   color: #333;
-
   background: linear-gradient(
     346deg,
     rgba(255, 110, 159, 1) 5%,
@@ -44,6 +43,18 @@ section {
   border-radius: 5px;
   font-weight: bold;
   margin-right: 5px;
+}
+
+.movieSection {
+  height: 76vh;
+  width: 100vw;
+  background: 
+    rgba(122, 146, 254, 1) 93%;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  text-align: center;
+ padding: 2vw;
 }
 
 @media (max-width: 450px) {

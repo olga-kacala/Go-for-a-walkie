@@ -27,6 +27,17 @@ export function Home() {
           </div>
         </div>
       </section>
+      <section>
+        <div className={classes.movieSection}>
+          <video controls width="500px" height="500px" autoPlay muted>
+            <source
+              src={process.env.PUBLIC_URL + "/Movie/GoforaWalkie.mp4"}
+              type="video/mp4"
+            />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </section>
     </div>
   );
 }
