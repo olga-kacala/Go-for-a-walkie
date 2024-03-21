@@ -3,7 +3,6 @@ section {
 }
 
 .contentLogIn {
-  /* flex: 1; */
   height: 76vh;
   width: 100vw;
   display: flex;
@@ -46,15 +45,23 @@ section {
 }
 
 .movieSection {
-  height: 76vh;
+  height: 90vh;
   width: 100vw;
-  background: 
-    rgba(122, 146, 254, 1) 93%;
   display: flex;
-  justify-content: right;
+  justify-content: space-evenly;
   align-items: center;
   text-align: center;
- padding: 2vw;
+  margin-bottom: 10vh;
+
+}
+
+.descriptionWalkie {
+  width: 30vw;
+  font-size: medium;
+}
+
+.text {
+  font-size: medium;
 }
 
 @media (max-width: 450px) {

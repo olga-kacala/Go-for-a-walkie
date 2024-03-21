@@ -29,9 +29,38 @@ export function Home() {
       </section>
       <section>
         <div className={classes.movieSection}>
-          <video controls width="500px" height="500px" autoPlay muted>
+          <div className={classes.descriptionWalkie}>
+            <img
+              src={process.env.PUBLIC_URL + "/Img/Walkie.png"}
+              title="Join"
+              alt="Joining a walk"
+              className={classes.walkie}
+            />
+            <div className={classes.text}>
+              Walkie is your go-to app for planning and sharing pet-friendly
+              walks! With Walkie Pal, you can easily map out routes, schedule
+              walks, invite furry friends, and share your adventures with
+              others. Enjoy features like customizable markers, distance
+              tracking, and social sharing to make every walk memorable. Join
+              our community of pet lovers and explore the world one paw at a
+              time with Walkie!
+            </div>
+          </div>
+
+          <video controls width="940px" height="788px" autoPlay muted>
             <source
               src={process.env.PUBLIC_URL + "/Movie/GoforaWalkie.mp4"}
+              type="video/mp4"
+            />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </section>
+      <section>
+        <div className={classes.movieSection}>
+          <video controls width="940px" height="788px" autoPlay muted>
+            <source
+              src={process.env.PUBLIC_URL + "/Movie/point.mp4"}
               type="video/mp4"
             />
             Your browser does not support the video tag.
