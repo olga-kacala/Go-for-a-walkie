@@ -32,11 +32,12 @@ export function Home() {
           <div className={classes.descriptionWalkie}>
             <img
               src={process.env.PUBLIC_URL + "/Img/Walkie.png"}
-              title="Join"
-              alt="Joining a walk"
+              title="
+              Walkie"
+              alt="Walkie"
               className={classes.walkie}
             />
-            <div className={classes.text}>
+            <div className={classes.Apptext}>
               Walkie is your go-to app for planning and sharing pet-friendly
               walks! With Walkie Pal, you can easily map out routes, schedule
               walks, invite furry friends, and share your adventures with
@@ -56,7 +57,7 @@ export function Home() {
           </video>
         </div>
       </section>
-      <section>
+      <section className={classes.instruction}>
         <div className={classes.movieSection}>
           <video controls width="940px" height="788px" autoPlay muted>
             <source
