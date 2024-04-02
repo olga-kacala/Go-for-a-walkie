@@ -1,9 +1,3 @@
-import {
-  GoogleMap,
-  Marker,
-  useLoadScript,
-  Polyline,
-} from "@react-google-maps/api";
 import React from "react";
 import { useState, useEffect, useContext, useRef } from "react";
 import classes from "./Maps.module.css";
@@ -34,6 +28,7 @@ import {
   TwitterIcon,
   WhatsappIcon,
 } from "react-share";
+import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet'
 
 export type WalkData = {
   id: number;
@@ -62,9 +57,6 @@ export type WalkData = {
 };
 
 export const Maps = () => {
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY || "",
-  });
   const { myAnimalsList, username, dateOfWalk, setDateOfWalk } =
     useContext(AppContext);
   const [userLocation, setUserLocation] = useState<{
@@ -174,7 +166,7 @@ export const Maps = () => {
     return distance;
   };
 
-  const handleMapClick = (event: google.maps.MapMouseEvent) => {
+  const handleMapClick = (event:any) => {
     if (event.latLng) {
       const { lat, lng } = event.latLng.toJSON();
       setMarkers((prevMarkers) => [
@@ -503,46 +495,47 @@ export const Maps = () => {
 
   return (
     <div className={classes.Map}>
-      {!isLoaded ? (
-        <h1>Loading...</h1>
-      ) : (
-        <GoogleMap
-          mapContainerStyle={
+        <MapContainer
+          style={
             mapContainerRef.current
               ? { width: "100%", height: "100%" }
               : undefined
           }
-          mapContainerClassName={classes.mapContainer}
+          className={classes.mapContainer}
           center={
             center ||
-            userLocation || { lat: 50.65696776753784, lng: 17.9230121375674 }
+            userLocation || { lat: 50.65, lng: 17.92 }
           }
           zoom={10}
-          onClick={handleMapClick}
+          // onClick={handleMapClick}
         >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
           {userLocation && startingMarker && (
             <>
               {markers.map((marker) => (
                 <Marker
                   key={marker.id}
-                  position={{ lat: marker.lat, lng: marker.lng }}
-                  icon={{
-                    url: blueDotIconUrl,
-                    scaledSize: new window.google.maps.Size(40, 40),
-                  }}
+                  position={[marker.lat,marker.lng ]}
+                  // icon={{
+                  //   url: blueDotIconUrl,
+                  //   scaledSize: new window.google.maps.Size(40, 40),
+                  // }}
                 />
               ))}
               {markers.length >= 2 && (
                 <Polyline
-                  path={markers.map((marker) => ({
+                  positions={markers.map((marker) => ({
                     lat: marker.lat,
                     lng: marker.lng,
                   }))}
-                  options={{
-                    strokeColor: "rgba(122,146,254,1)",
-                    strokeOpacity: 1,
-                    strokeWeight: 5,
-                  }}
+                  // pathOptions={{
+                  //   strokeColor: "rgba(122,146,254,1)",
+                  //   strokeOpacity: 1,
+                  //   strokeWeight: 5,
+                  // }}
                 />
               )}
               {totalDistance > 0 && (
@@ -646,14 +639,14 @@ export const Maps = () => {
                       <Marker
                         position={{ lat: marker.lat, lng: marker.lng }}
                         key={`walk-${walk.id}-marker-${marker.id}`}
-                        icon={{
-                          url:
-                            walk.username === username
-                              ? blueDotIconUrl
-                              : redDotIconUrl,
-                          scaledSize: new window.google.maps.Size(40, 40),
-                        }}
-                        onClick={() => handleMarkerClick(marker.id, walk)}
+                        // icon={{
+                        //   url:
+                        //     walk.username === username
+                        //       ? blueDotIconUrl
+                        //       : redDotIconUrl,
+                        //   scaledSize: new window.google.maps.Size(40, 40),
+                        // }}
+                        // onClick={() => handleMarkerClick(marker.id, walk)}
                       />
                     ))}
 
@@ -661,19 +654,19 @@ export const Maps = () => {
 
                   {Array.isArray(walk.markers) && walk.markers.length >= 2 && (
                     <Polyline
-                      path={walk.markers.map((marker) => ({
+                      positions={walk.markers.map((marker) => ({
                         lat: marker.lat,
                         lng: marker.lng,
                       }))}
                       key={`walk-${walk.id}-polyline`}
-                      options={{
-                        strokeColor:
-                          walk.username === username
-                            ? "rgba(122,146,254,1)"
-                            : "red",
-                        strokeOpacity: 1,
-                        strokeWeight: 3,
-                      }}
+                      // pathOptions={{
+                      //   strokeColor:
+                      //     walk.username === username
+                      //       ? "rgba(122,146,254,1)"
+                      //       : "red",
+                      //   strokeOpacity: 1,
+                      //   strokeWeight: 3,
+                      // }}
                     />
                   )}
                 </React.Fragment>
@@ -1025,8 +1018,7 @@ export const Maps = () => {
               )}
             </>
           )}
-        </GoogleMap>
-      )}
+        </MapContainer>
     </div>
   );
 };
